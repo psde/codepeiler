@@ -8,9 +8,17 @@ int main(int argc, char *argv[])
 
     Buffer *buf = new Buffer("test.txt");
 
-    for(int i=0; i<1024*2;i++)
+    std::cout << std::endl;
+
+    for(int i=0; i<520;i++)
         std::cout << buf->getChar();
+
+    std::cout << std::endl;
+
+    buf->ungetChar(20);
     
+    for(int i=0; i<100; i++)
+        std::cout << buf->getChar();
     
     std::cout << std::endl;    
 

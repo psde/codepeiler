@@ -13,12 +13,13 @@ class Buffer
 {
 private:
     // 4kb buffer
-    static const int BUFFER_SIZE = 4096;
+    static const int BUFFER_SIZE = 1024 * 4;
     int fileDescriptor;
-    int fileLength;
+    ssize_t fileLength;
+    ssize_t filePosition;
     char* fileBuffer;
 
-    int bufferPosition;
+    ssize_t bufferPosition;
 
 public:
     
@@ -30,7 +31,9 @@ public:
         this->bufferPosition = 0;
         this->fileBuffer = (char*)valloc(Buffer::BUFFER_SIZE);
 
-        read(this->fileDescriptor, this->fileBuffer, Buffer::BUFFER_SIZE / 2);
+        // TODO: error handling, this can fail with -1 but should be BUFFER_SIZE/2
+        this->filePosition = read(this->fileDescriptor, this->fileBuffer, Buffer::BUFFER_SIZE / 2);
+        
     }
 
     ~Buffer()
@@ -40,18 +43,23 @@ public:
 
     char getChar()
     {
-        int oldPosition = this->bufferPosition++;
+        int position = this->bufferPosition++;
 
-        if(bufferPosition == 0)
+
+        if(this->bufferPosition > this->filePosition )
         {
-            read(this->fileDescriptor, this->fileBuffer, Buffer::BUFFER_SIZE / 2);
-        }
-        else if(bufferPosition == Buffer::BUFFER_SIZE / 2)
-        {
-            read(this->fileDescriptor, this->fileBuffer + Buffer::BUFFER_SIZE / 2, Buffer::BUFFER_SIZE / 2);
+            ssize_t bytesRead = read(this->fileDescriptor, this->fileBuffer + this->filePosition % Buffer::BUFFER_SIZE, Buffer::BUFFER_SIZE / 2);
+            if(bytesRead < 0)
+            {
+                // TODO: error handling
+            }
+            else
+            {
+                this->filePosition += bytesRead;
+            }
         }
 
-        return this->fileBuffer[oldPosition % Buffer::BUFFER_SIZE];
+        return this->fileBuffer[position % Buffer::BUFFER_SIZE];
     }
 
     void ungetChar(int count)
