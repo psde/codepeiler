@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     {
         Token token = lex->nextToken();
         
-        std::cout << "token: " << (int)token.type() << std::endl;
+        std::cout << "token: " << token.echo() << " (" << (int)token.type() << ")" <<  std::endl;
 
         if(token.type() == Token::TOKEN_EOF)
             loop = false;

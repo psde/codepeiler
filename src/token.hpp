@@ -1,8 +1,21 @@
 #ifndef TOKEN_HPP
 #define TOKEN_HPP
 
+#include <iostream>
+#include <string>
 
-//typedef int TType;
+// TODO: Not allowed to use std::string
+std::string TType_lookupTable[] = 
+{ "TOKEN_INVALID",
+  "TOKEN_IDENTIFIER",
+  "TOKEN_INTEGER",
+  "TOKEN_PLUS",
+  "TOKEN_MINUS",
+  "TOKEN_DIV",
+  "TOKEN_MULT",
+  "TOKEN_EQUAL",
+  "TOKEN_EOF"
+};
 
 class Token
 {
@@ -27,6 +40,12 @@ private:
 	int columnNumber;
 
 public:
+
+    // TODO: Not allowed to use std::string
+    std::string echo()
+    {
+        return TType_lookupTable[this->tokenType];
+    }
 
 	Token(TType type, int line, int column)
 	{

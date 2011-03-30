@@ -100,13 +100,11 @@ public:
         int steps = 0;
         for(;;)
         {
-            while(this->buffer->peekChar() == ' ')
+            do
             {
                 c = this->buffer->getChar();
                 steps++;
-            }
-            c = this->buffer->getChar();
-            steps++;
+            } while(c == ' ');
 
 
             // comment parsing
