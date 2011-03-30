@@ -97,9 +97,17 @@ public:
 
         char c;
 
+        int steps = 0;
         for(;;)
         {
+            while(this->buffer->peekChar() == ' ')
+            {
+                c = this->buffer->getChar();
+                steps++;
+            }
             c = this->buffer->getChar();
+            steps++;
+
 
             // comment parsing
             if(c == '(' && this->buffer->peekChar() == '*')
@@ -111,10 +119,44 @@ public:
                         break;
 
                     c = this->buffer->getChar();
+                    steps++;
                     std::cout << c;
                 }
-                std::cout << this->buffer->peekChar() << std::endl;
+
+                c = this->buffer->getChar();
+                steps++;
+            
+                std::cout << c << std::endl;
+
+                if(state == STATE_BEGIN)
+                    continue;
+                else
+                    break;
             }
+
+            unsigned int nextState = this->transitions[state][c];
+
+            // Is final state? 
+            if(this->finalState[state])
+            {
+                lastFinal = state;
+            }
+
+
+            // Is transition possible?
+            if(!nextState)
+                break;
+
+            state = nextState;
+        }
+
+        if(this->finalState[state])
+        {
+            token.type(this->finalState[state]);
+        }
+        else if(lastFinal != STATE_ERROR)
+        {
+            this->buffer->ungetChar(steps);
         }
 
         return token;
