@@ -2,13 +2,13 @@
 #define TOKEN_HPP
 
 
-typedef TType int;
+typedef int TType;
 
 class Token
 {
 private:
 
-	TType tokenType
+	TType tokenType;
 	int lineNumber;
 	int columnNumber;
 
@@ -18,7 +18,7 @@ public:
 	{
 		this->tokenType = type;
 		this->lineNumber = line;
-		this->columnNumber = colum;
+		this->columnNumber = column;
 	}
 
 	int line()

@@ -36,10 +36,11 @@ public:
         this->filePosition = read(this->fileDescriptor, this->fileBuffer, Buffer::BUFFER_SIZE / 2);
 
 		// Reading failed
-		if(this->filePosition != Buffer::BUFFER_SIZE / 2)
+		if(this->filePosition != Buffer::BUFFER_SIZE / 2 && this->filePosition != this->fileLength)
 		{
-			exit(-1);
-			//TODO: Exception?
+            std::cout << this->filePosition << std::endl;
+			//exit(-1);
+			// TODO: Exception?
 		}
         
     }
@@ -71,11 +72,12 @@ public:
         {
             ssize_t bytesToRead = Buffer::BUFFER_SIZE / 2;
 
+            // TODO: This doesn't work.
             // check if bytesToRead exceeds the file length
-            if(this->filePosition + bytesToRead > this->fileLength)
+            /*if(this->filePosition + bytesToRead > this->fileLength)
             {
                 bytesToRead = this->fileLength - this->filePosition;
-            }
+            }*/
 
             ssize_t bytesRead = read(this->fileDescriptor, this->fileBuffer + this->filePosition % Buffer::BUFFER_SIZE, bytesToRead);
             if(bytesRead != bytesToRead)
