@@ -49,16 +49,36 @@ public:
         free(this->fileBuffer);
     }
 
+    // Peeks the next char in buffer
+    unsigned char peekChar()
+    {
+        unsigned char peek = this->getChar();
+        this->ungetChar(1);
+        return peek;
+    }
+
 	// Gets next char in buffer
     unsigned char getChar()
     {
         int position = this->bufferPosition++;
-
+        
+        if(position >= this->fileLength)
+        {
+            return 0x04;
+        }
 
         if(this->bufferPosition > this->filePosition )
         {
-            ssize_t bytesRead = read(this->fileDescriptor, this->fileBuffer + this->filePosition % Buffer::BUFFER_SIZE, Buffer::BUFFER_SIZE / 2);
-            if(bytesRead != Buffer::BUFFER_SIZE / 2)
+            ssize_t bytesToRead = Buffer::BUFFER_SIZE / 2;
+
+            // check if bytesToRead exceeds the file length
+            if(this->filePosition + bytesToRead > this->fileLength)
+            {
+                bytesToRead = this->fileLength - this->filePosition;
+            }
+
+            ssize_t bytesRead = read(this->fileDescriptor, this->fileBuffer + this->filePosition % Buffer::BUFFER_SIZE, bytesToRead);
+            if(bytesRead != bytesToRead)
             {
                 // TODO: error handling
             }
@@ -74,6 +94,12 @@ public:
 	// Set the buffer position back
     void ungetChar(int count)
     {
+        if(count < 0) 
+            count = 0;
+
+        if(this->bufferPosition - count < 0)
+            count = this->bufferPosition;
+
         this->bufferPosition -= count;
     }
 
