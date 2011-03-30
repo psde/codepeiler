@@ -29,10 +29,18 @@ public:
         this->fileLength = lseek(this->fileDescriptor, 0, SEEK_END);
         lseek(this->fileDescriptor, 0, SEEK_SET);
         this->bufferPosition = 0;
+
+		// Allocate aligned space for buffer
         this->fileBuffer = (char*)valloc(Buffer::BUFFER_SIZE);
 
-        // TODO: error handling, this can fail with -1 but should be BUFFER_SIZE/2
         this->filePosition = read(this->fileDescriptor, this->fileBuffer, Buffer::BUFFER_SIZE / 2);
+
+		// Reading failed
+		if(this->filePosition != Buffer::BUFFER_SIZE / 2)
+		{
+			exit(-1);
+			//TODO: Exception?
+		}
         
     }
 
@@ -41,7 +49,8 @@ public:
         free(this->fileBuffer);
     }
 
-    char getChar()
+	// Gets next char in buffer
+    unsigned char getChar()
     {
         int position = this->bufferPosition++;
 
@@ -49,7 +58,7 @@ public:
         if(this->bufferPosition > this->filePosition )
         {
             ssize_t bytesRead = read(this->fileDescriptor, this->fileBuffer + this->filePosition % Buffer::BUFFER_SIZE, Buffer::BUFFER_SIZE / 2);
-            if(bytesRead < 0)
+            if(bytesRead != Buffer::BUFFER_SIZE / 2)
             {
                 // TODO: error handling
             }
@@ -62,6 +71,7 @@ public:
         return this->fileBuffer[position % Buffer::BUFFER_SIZE];
     }
 
+	// Set the buffer position back
     void ungetChar(int count)
     {
         this->bufferPosition -= count;
