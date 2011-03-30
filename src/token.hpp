@@ -14,6 +14,7 @@ std::string TType_lookupTable[] =
   "TOKEN_DIV",
   "TOKEN_MULT",
   "TOKEN_EQUAL",
+  "TOKEN_SEMICOLON",
   "TOKEN_EOF"
 };
 
@@ -30,6 +31,7 @@ public:
         TOKEN_DIV,
         TOKEN_MULT,
         TOKEN_EQUAL,
+        TOKEN_SEMICOLON,
         TOKEN_EOF
     };
 

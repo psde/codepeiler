@@ -39,10 +39,13 @@ private:
 
     void setup()
     {
-        for(unsigned char c = 'a'; c <= 'Z'; c++)
+        for(unsigned char c = 'A'; c <= 'Z'; c++)
         {
             this->addTransition(STATE_BEGIN, c, STATE_IDENTIFIER);
             this->addTransition(STATE_IDENTIFIER, c, STATE_IDENTIFIER);
+
+            this->addTransition(STATE_BEGIN, c + 32, STATE_IDENTIFIER);
+            this->addTransition(STATE_IDENTIFIER, c + 32, STATE_IDENTIFIER);
         }
 
         for(unsigned char c = '0'; c <= '9'; c++)
@@ -54,7 +57,6 @@ private:
 
         this->addFinalState(STATE_IDENTIFIER, Token::TOKEN_IDENTIFIER);
         this->addFinalState(STATE_INTEGER, Token::TOKEN_INTEGER); 
-
 
         this->addTransition(STATE_BEGIN, '+', STATE_SIGN_PLUS);
         this->addFinalState(STATE_SIGN_PLUS, Token::TOKEN_PLUS);
@@ -70,6 +72,9 @@ private:
 
         this->addTransition(STATE_BEGIN, '=', STATE_SIGN_EQUAL);
         this->addFinalState(STATE_SIGN_EQUAL, Token::TOKEN_EQUAL);
+
+        this->addTransition(STATE_BEGIN, ';', STATE_SIGN_SEMICOLON);
+        this->addFinalState(STATE_SIGN_SEMICOLON, Token::TOKEN_SEMICOLON);
     }
 
 public:
@@ -100,11 +105,11 @@ public:
         int steps = 0;
         for(;;)
         {
-            do
-            {
+//            do
+//            {
                 c = this->buffer->getChar();
                 steps++;
-            } while(c == ' ');
+//            } while(c == ' ');
 
 
             // comment parsing
@@ -140,20 +145,28 @@ public:
                 lastFinal = state;
             }
 
+            std::cout << state << " " << c << " " << nextState << " " << lastFinal << std::endl;
 
             // Is transition possible?
             if(!nextState)
+            {
+                std::cout << "!nextState" << std::endl;
                 break;
+            }
 
             state = nextState;
+            std::cout << "setting nextState" << std::endl;
+
         }
 
         if(this->finalState[state])
         {
+            std::cout << "finalState" << std::endl;
             token.type(this->finalState[state]);
         }
         else if(lastFinal != STATE_ERROR)
         {
+            std::cout << "STATE_ERROR, unget" << std::endl;
             this->buffer->ungetChar(steps);
         }
 
