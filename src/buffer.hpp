@@ -65,7 +65,7 @@ public:
         
         if(position >= this->fileLength)
         {
-            return 0x04;
+            return 0x00;
         }
 
         if(this->bufferPosition > this->filePosition )
