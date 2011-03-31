@@ -24,6 +24,8 @@ String LexerState_lookup[] =
     "STATE_SIGN_BRACE_R",
     "STATE_SIGN_BRACKET_L",
     "STATE_SIGN_BRACKET_R",
+    "STATE_SIGN_NOT",
+    "STATE_SIGN_AND",
     "STATE_NOSTATE"
 };
 
@@ -47,6 +49,8 @@ enum LexerState
     STATE_SIGN_BRACE_R,    
     STATE_SIGN_BRACKET_L,
     STATE_SIGN_BRACKET_R,
+    STATE_SIGN_NOT,
+    STATE_SIGN_AND,
     STATE_NOSTATE
 };
 
@@ -112,6 +116,8 @@ private:
         this->addSolitaryState(STATE_SIGN_BRACE_R, '}', Token::TOKEN_BRACE_R);
         this->addSolitaryState(STATE_SIGN_BRACKET_L, '[', Token::TOKEN_BRACKET_L);
         this->addSolitaryState(STATE_SIGN_BRACKET_R, ']', Token::TOKEN_BRACKET_R);
+        this->addSolitaryState(STATE_SIGN_NOT, '!', Token::TOKEN_NOT);
+        this->addSolitaryState(STATE_SIGN_AND, '&', Token::TOKEN_AND);
 
         this->line = 1;
         this->column = 1;
@@ -198,23 +204,33 @@ public:
                     newLines++;
                 }
 
+                if(state != STATE_BEGIN)
+                    break;
+
             } while(c == ' ' || c == '\n');
 
             // comment parsing
             if(c == '(' && this->buffer->peekChar() == '*')
             {
-                while(this->buffer->peekChar() != 0x00)
+                int commentStart = this->column;
+                while(true /*this->buffer->peekChar() != 0x00*/)
                 {
                     if(c == '*' && this->buffer->peekChar() == ')')
                         break;
 
                     c = this->getChar();
-                    //this->skipChar();
+
+                    if(c == 0x00)
+                    {
+                        token.type(Token::TOKEN_COMMENT_ERROR);
+                        token.setPosition(this->line, commentStart);
+                        return token;
+                    }
                 }
 
                 //this->skipChar();
                 c = this->getChar();
-            
+ 
                 if(state == STATE_BEGIN)
                     continue;
                 else

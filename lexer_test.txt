@@ -5,3 +5,7 @@ y = (X / X);
 Z = ((3 + 4 - 6));
 (* eine einfache Aufgabe !! *)
 Resultat = X * y;
+print2;
+print 2;
+!! == !&!&! >><<=>=<
+(* asdasdasd

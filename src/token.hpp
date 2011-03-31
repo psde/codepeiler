@@ -8,6 +8,7 @@
 String TType_lookupTable[] = 
 {
     "TOKEN_INVALID",
+    "TOKEN_COMMENT_ERROR",
     "TOKEN_IDENTIFIER",
     "TOKEN_INTEGER",
     "TOKEN_PLUS",
@@ -37,6 +38,7 @@ public:
     enum TType
     {
         TOKEN_INVALID = 0,
+        TOKEN_COMMENT_ERROR,
         TOKEN_IDENTIFIER,
         TOKEN_INTEGER,
         TOKEN_PLUS,
@@ -53,6 +55,8 @@ public:
         TOKEN_BRACE_R,
         TOKEN_BRACKET_L,
         TOKEN_BRACKET_R,
+        TOKEN_NOT,
+        TOKEN_AND,
         TOKEN_READ,
         TOKEN_PRINT,
         TOKEN_EOF
@@ -102,6 +106,15 @@ public:
     void lexem(String lexem)
     {
         this->lexemName = lexem;
+        if(lexem == "print")
+        {
+            this->type(Token::TOKEN_PRINT);
+        }
+
+        if(lexem == "read")
+        {
+            this->type(Token::TOKEN_READ);
+        }
     }
 
 	int line()

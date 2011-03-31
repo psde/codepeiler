@@ -122,7 +122,23 @@ class String
         }
 
         /*
-          
+          Checks for equality
+        */
+        bool operator==(String const& s)
+        {
+            if(this->length() != stringLength(s.chars))
+                return false;
+
+            for(int i=0; i<=this->length(); i++)
+            {
+                if(this->chars[i] != s.chars[i])
+                    return false;
+            }
+            return true;
+        }
+
+        /*
+          << blah   
         */
         friend std::ostream& operator<<(std::ostream& os, String const& str)
         {
