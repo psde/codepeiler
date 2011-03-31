@@ -155,7 +155,7 @@ public:
 //        int steps = 0;
 //        int startColumn = this->column;
         startColumn = this->column;
-		int lastFinalStep = this->steps;
+        int lastFinalStep = this->steps;
         for(;;)
         {
             static int newLines = 0;
