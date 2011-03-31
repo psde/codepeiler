@@ -106,6 +106,12 @@ public:
     void lexem(String lexem)
     {
         this->lexemName = lexem;
+
+        if(this->type() != Token::TOKEN_IDENTIFIER)
+            return;
+
+        // TODO: Kerl sayz: ich finde, print sollte kein eigenständiges token sein. (2011-03-31 23:30) 
+        // TODO: ^ maybe do this for assignment #2
         if(lexem == "print")
         {
             this->type(Token::TOKEN_PRINT);

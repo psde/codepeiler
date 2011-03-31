@@ -181,7 +181,13 @@ public:
 
 //        int steps = 0;
 //        int startColumn = this->column;
-        startColumn = this->column;
+
+        static int foo = 0;
+        startColumn = this->column + foo;
+        foo = 0;
+#ifdef LEXER_DEBUG
+        std::cout << "Setting startColum to: " << startColumn << std::endl;
+#endif
         int lastFinalStep = this->steps;
         for(;;)
         {
@@ -192,8 +198,26 @@ public:
                 this->line++;
                 this->column = 1;
                 this->startColumn = 1;
+#ifdef LEXER_DEBUG
+                std::cout << "newLine detected, column=" << this->column << " line=" << this->line << std::endl;
+#endif
             }
             newLines = 0;
+
+            /*c = this->getChar();
+
+            bool specialChars = false;
+            while(c == ' ' || c == '\n')
+            {
+                if(c == '\n')
+                    newLines++;
+
+                specialChars = true;
+                c = this->getChar();
+            }*/       
+            
+            /*if(specialChars && state == STATE_BEGIN)
+                break;            */
 
             do
             {
@@ -204,8 +228,11 @@ public:
                     newLines++;
                 }
 
-                if(state != STATE_BEGIN)
+                if(c == ' ' && state != STATE_BEGIN)
+                {
+                    foo++;
                     break;
+                }
 
             } while(c == ' ' || c == '\n');
 
@@ -240,7 +267,7 @@ public:
             unsigned int nextState = this->transitions[state][c];
 
 #ifdef LEXER_DEBUG            
-            std::cout << LexerState_lookup[state] << " -- '" << c << "'[" << steps << "] --> " << LexerState_lookup[nextState] << std::endl;
+            std::cout << LexerState_lookup[state] << " -- '" << c << "'[" << steps << "] --> " << LexerState_lookup[nextState] << " StartColumn: " << this->startColumn << std::endl;
 #endif
 
             // Is final state? 
