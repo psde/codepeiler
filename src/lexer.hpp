@@ -15,7 +15,15 @@ String LexerState_lookup[] =
     "STATE_SIGN_DIV",
     "STATE_SIGN_MULT",
     "STATE_SIGN_EQUAL",
+    "STATE_SIGN_LESSER",
+    "STATE_SIGN_GREATER",
     "STATE_SIGN_SEMICOLON",
+    "STATE_SIGN_PAREN_L",
+    "STATE_SIGN_PAREN_R",
+    "STATE_SIGN_BRACE_L",
+    "STATE_SIGN_BRACE_R",
+    "STATE_SIGN_BRACKET_L",
+    "STATE_SIGN_BRACKET_R",
     "STATE_NOSTATE"
 };
 
@@ -30,9 +38,18 @@ enum LexerState
     STATE_SIGN_DIV,
     STATE_SIGN_MULT,
     STATE_SIGN_EQUAL,
+    STATE_SIGN_LESSER,
+    STATE_SIGN_GREATER,
     STATE_SIGN_SEMICOLON,
+    STATE_SIGN_PAREN_L,
+    STATE_SIGN_PAREN_R,    
+    STATE_SIGN_BRACE_L,
+    STATE_SIGN_BRACE_R,    
+    STATE_SIGN_BRACKET_L,
+    STATE_SIGN_BRACKET_R,
     STATE_NOSTATE
 };
+
 //#define LEXER_DEBUG
 
 class Lexer
@@ -53,6 +70,12 @@ private:
         this->finalState[from] = type;
     }
 
+    void addSolitaryState(LexerState to, char c, Token::TType type)
+    {
+        this->addTransition(STATE_BEGIN, c, to);
+        this->addFinalState(to, type);
+    }
+
     void setup()
     {
         for(unsigned char c = 'A'; c <= 'Z'; c++)
@@ -71,26 +94,24 @@ private:
             this->addTransition(STATE_IDENTIFIER, c, STATE_IDENTIFIER);
         }
 
+        // TODO: Figure out a way on how to beautify this.
         this->addFinalState(STATE_IDENTIFIER, Token::TOKEN_IDENTIFIER);
         this->addFinalState(STATE_INTEGER, Token::TOKEN_INTEGER); 
 
-        this->addTransition(STATE_BEGIN, '+', STATE_SIGN_PLUS);
-        this->addFinalState(STATE_SIGN_PLUS, Token::TOKEN_PLUS);
-
-        this->addTransition(STATE_BEGIN, '-', STATE_SIGN_MINUS);
-        this->addFinalState(STATE_SIGN_MINUS, Token::TOKEN_MINUS);
-
-        this->addTransition(STATE_BEGIN, '/', STATE_SIGN_DIV);
-        this->addFinalState(STATE_SIGN_DIV, Token::TOKEN_DIV);
-
-        this->addTransition(STATE_BEGIN, '*', STATE_SIGN_MULT);
-        this->addFinalState(STATE_SIGN_MULT, Token::TOKEN_MULT);
-
-        this->addTransition(STATE_BEGIN, '=', STATE_SIGN_EQUAL);
-        this->addFinalState(STATE_SIGN_EQUAL, Token::TOKEN_EQUAL);
-
-        this->addTransition(STATE_BEGIN, ';', STATE_SIGN_SEMICOLON);
-        this->addFinalState(STATE_SIGN_SEMICOLON, Token::TOKEN_SEMICOLON);
+        this->addSolitaryState(STATE_SIGN_PLUS, '+', Token::TOKEN_PLUS);
+        this->addSolitaryState(STATE_SIGN_MINUS, '-', Token::TOKEN_MINUS);
+        this->addSolitaryState(STATE_SIGN_DIV, '/', Token::TOKEN_DIV);
+        this->addSolitaryState(STATE_SIGN_MULT, '*', Token::TOKEN_MULT);
+        this->addSolitaryState(STATE_SIGN_LESSER, '<', Token::TOKEN_LESSER);
+        this->addSolitaryState(STATE_SIGN_GREATER, '>', Token::TOKEN_GREATER);
+        this->addSolitaryState(STATE_SIGN_EQUAL, '=', Token::TOKEN_EQUAL);
+        this->addSolitaryState(STATE_SIGN_SEMICOLON, ';', Token::TOKEN_SEMICOLON);
+        this->addSolitaryState(STATE_SIGN_PAREN_L, '(', Token::TOKEN_PAREN_L);
+        this->addSolitaryState(STATE_SIGN_PAREN_R, ')', Token::TOKEN_PAREN_R);
+        this->addSolitaryState(STATE_SIGN_BRACE_L, '{', Token::TOKEN_BRACE_L);
+        this->addSolitaryState(STATE_SIGN_BRACE_R, '}', Token::TOKEN_BRACE_R);
+        this->addSolitaryState(STATE_SIGN_BRACKET_L, '[', Token::TOKEN_BRACKET_L);
+        this->addSolitaryState(STATE_SIGN_BRACKET_R, ']', Token::TOKEN_BRACKET_R);
 
         this->line = 1;
         this->column = 1;
@@ -210,9 +231,9 @@ public:
             if(nextState && this->finalState[nextState])
             {
                 lastFinal = nextState;
-				lastFinalStep = steps;
+                lastFinalStep = steps;
 #ifdef LEXER_DEBUG
-				std::cout << LexerState_lookup[nextState] << " could be a final state! (steps: " << steps << ")"<< std::endl;
+                std::cout << LexerState_lookup[nextState] << " could be a final state! (steps: " << steps << ")"<< std::endl;
 #endif
             }
 

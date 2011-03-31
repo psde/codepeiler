@@ -6,16 +6,29 @@
 
 // TODO: Not allowed to use std::string
 String TType_lookupTable[] = 
-{ "TOKEN_INVALID",
-  "TOKEN_IDENTIFIER",
-  "TOKEN_INTEGER",
-  "TOKEN_PLUS",
-  "TOKEN_MINUS",
-  "TOKEN_DIV",
-  "TOKEN_MULT",
-  "TOKEN_EQUAL",
-  "TOKEN_SEMICOLON",
-  "TOKEN_EOF"
+{
+    "TOKEN_INVALID",
+    "TOKEN_IDENTIFIER",
+    "TOKEN_INTEGER",
+    "TOKEN_PLUS",
+    "TOKEN_MINUS",
+    "TOKEN_DIV",
+    "TOKEN_MULT",
+    "TOKEN_EQUAL",
+    "TOKEN_LESSER",
+    "TOKEN_GREATER",
+    "TOKEN_SEMICOLON",
+    "TOKEN_PAREN_L",
+    "TOKEN_PAREN_R",
+    "TOKEN_BRACE_L",
+    "TOKEN_BRACE_R",
+    "TOKEN_BRACKET_L",
+    "TOKEN_BRACKET_R",
+    "TOKEN_NOT",
+    "TOKEN_AND",
+    "TOKEN_READ",
+    "TOKEN_PRINT",
+    "TOKEN_EOF"
 };
 
 class Token
@@ -31,7 +44,17 @@ public:
         TOKEN_DIV,
         TOKEN_MULT,
         TOKEN_EQUAL,
+        TOKEN_LESSER,
+        TOKEN_GREATER,
         TOKEN_SEMICOLON,
+        TOKEN_PAREN_L,
+        TOKEN_PAREN_R,
+        TOKEN_BRACE_L,
+        TOKEN_BRACE_R,
+        TOKEN_BRACKET_L,
+        TOKEN_BRACKET_R,
+        TOKEN_READ,
+        TOKEN_PRINT,
         TOKEN_EOF
     };
 
