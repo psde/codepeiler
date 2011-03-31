@@ -2,10 +2,10 @@
 #define TOKEN_HPP
 
 #include <iostream>
-#include <string>
+#include "string.hpp"
 
 // TODO: Not allowed to use std::string
-std::string TType_lookupTable[] = 
+String TType_lookupTable[] = 
 { "TOKEN_INVALID",
   "TOKEN_IDENTIFIER",
   "TOKEN_INTEGER",
@@ -40,12 +40,12 @@ private:
 	TType tokenType;
 	int lineNumber;
 	int columnNumber;
-    std::string lexemName;
+    String lexemName;
 
 public:
 
     // TODO: Not allowed to use std::string
-    std::string echo()
+    String echo()
     {
         return TType_lookupTable[this->tokenType];
     }
@@ -55,6 +55,7 @@ public:
 		this->tokenType = type;
 		this->lineNumber = line;
 		this->columnNumber = column;
+        this->lexemName = "";
 	}
 
     Token()
@@ -70,12 +71,12 @@ public:
         this->columnNumber = column;
     }
 
-    std::string lexem()
+    String lexem()
     {
         return this->lexemName;
     }
 
-    void lexem(std::string lexem)
+    void lexem(String lexem)
     {
         this->lexemName = lexem;
     }

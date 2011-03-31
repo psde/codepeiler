@@ -1,7 +1,9 @@
 #ifndef STRING_HPP
 #define STRING_HPP
 
+#include <iostream>
 #include <ostream>
+#include <cstring>
 
 class String
 {
@@ -59,7 +61,14 @@ class String
         
         unsigned int length()
         {
-            return stringLength(this.chars);
+            //return stringLength(this.chars);
+            unsigned int length;
+
+            for(length = 0; this->chars[length] != '\0'; length++)
+            { }
+
+            return length;
+
         }
 
         /*
@@ -83,12 +92,16 @@ class String
         /*
           Appends a char
         */
+        // TODO: This needs cleaning.
         void operator+=(char const& c)
         {
-            char* newChars = new char[stringLength(s.chars) + 2];
+            unsigned int length = stringLength(this->chars) + 2;
+            char* newChars = new char[length];
             
             strcpy(newChars, this->chars);
-            strcat(newChars, c);
+            //strcat(newChars, c);
+            newChars[length-2] = c;
+            newChars[length-1] = 0x00;
 
             delete[] this->chars;
             this->chars = newChars;

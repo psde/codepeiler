@@ -2,11 +2,9 @@
 #define LEXER_HPP
 
 #include "token.hpp"
+#include "string.hpp"
 
-// TODO: not allowed to use string
-#include <string>
-
-std::string LexerState_lookup[] =
+String LexerState_lookup[] =
 {
     "STATE_ERROR",
     "STATE_BEGIN",
@@ -35,7 +33,6 @@ enum LexerState
     STATE_SIGN_SEMICOLON,
     STATE_NOSTATE
 };
-
 //#define LEXER_DEBUG
 
 class Lexer
@@ -97,11 +94,13 @@ private:
 
         this->line = 1;
         this->column = 1;
+        this->startColumn = 1;
         this->steps = 0;
     }
 
     int line;
     int column;
+    int startColumn;
     int steps;
 
     unsigned char getChar()
@@ -111,6 +110,20 @@ private:
         char c = this->buffer->getChar();
 
         return c;
+    }
+
+    void skipChar()
+    {
+        this->steps++;
+        //this->column++;
+        char c = this->buffer->getChar();
+    }
+
+    void ungetChar(unsigned int count)
+    {
+        this->column -= count;
+        this->steps -= count;
+        this->buffer->ungetChar(count);
     }
 
 public:
@@ -137,10 +150,12 @@ public:
         unsigned int lastFinal = STATE_ERROR;
 
         char c;
-        std::string lexem = "";
+        String lexem = "";
 
-        int steps = 0;
-		int lastFinalStep = 0;
+//        int steps = 0;
+//        int startColumn = this->column;
+        startColumn = this->column;
+		int lastFinalStep = this->steps;
         for(;;)
         {
             static int newLines = 0;
@@ -149,20 +164,13 @@ public:
             {   
                 this->line++;
                 this->column = 1;
+                this->startColumn = 1;
             }
             newLines = 0;
 
-
             do
             {
-                c = this->getChar();//this->buffer->getChar();
-                //steps++;
-
-                /*if(c == '\n')
-                {
-                    this->line++;
-                    this->column = 0;
-                }*/
+                c = this->getChar();
 
                 if(c == '\n')
                 {
@@ -174,45 +182,37 @@ public:
             // comment parsing
             if(c == '(' && this->buffer->peekChar() == '*')
             {
-                //std::cout << "comment: " << c;
                 while(this->buffer->peekChar() != 0x00)
                 {
                     if(c == '*' && this->buffer->peekChar() == ')')
                         break;
 
-                    //c = this->getChar(); //this->buffer->getChar();
-                    c = this->buffer->getChar();
-                    steps++;
-                    //std::cout << c;
+                    c = this->getChar();
+                    //this->skipChar();
                 }
 
-                //c = this->getChar(); //this->buffer->getChar();
-                c = this->buffer->getChar();
-                steps++;
+                //this->skipChar();
+                c = this->getChar();
             
-                //std::cout << c << std::endl;
-
-               if(state == STATE_BEGIN)
+                if(state == STATE_BEGIN)
                     continue;
                 else
                     break;
             }
 
             unsigned int nextState = this->transitions[state][c];
-            
-            //lexem = lexem + c;
 
 #ifdef LEXER_DEBUG            
             std::cout << LexerState_lookup[state] << " -- '" << c << "'[" << steps << "] --> " << LexerState_lookup[nextState] << std::endl;
 #endif
 
             // Is final state? 
-            if(this->finalState[state])
+            if(nextState && this->finalState[nextState])
             {
-                lastFinal = state;
+                lastFinal = nextState;
 				lastFinalStep = steps;
 #ifdef LEXER_DEBUG
-				std::cout << "^ This could be a final state! (steps: " << steps << ")"<< std::endl;
+				std::cout << LexerState_lookup[nextState] << " could be a final state! (steps: " << steps << ")"<< std::endl;
 #endif
             }
 
@@ -222,18 +222,15 @@ public:
 #ifdef LEXER_DEBUG
                 std::cout << "No transition possible." << std::endl;
 #endif
-                this->buffer->ungetChar(1);
+                this->ungetChar(1);
+                //this->buffer->ungetChar(steps - lastFinalStep);
+                //std::cout << steps-lastFinalStep << std::endl;
                 break;
             }
 
             state = nextState;
 
-            lexem = lexem + c;
-            /*if(c == '\n')
-            {
-                this->line++;
-                this->column = 1;
-            }*/
+            lexem += c;
         }
 
         if(this->finalState[state])
@@ -243,14 +240,18 @@ public:
 #endif
             token.type(this->finalState[state]);
             token.lexem(lexem);
-            token.setPosition(this->line, this->column - lexem.size() - 2);
+            token.setPosition(this->line, startColumn);
         }
         else if(lastFinal != STATE_ERROR)
         {
 #ifdef LEXER_DEBUG
-            std::cout << "STATE_ERROR, unget" << std::endl;
+            std::cout << "STATE_ERROR, unget " << steps - lastFinalStep << std::endl;
 #endif
-            this->buffer->ungetChar(steps - lastFinalStep);
+            this->ungetChar(steps - lastFinalStep);
+        }
+        else
+        {
+            std::cout << "what" << std::endl;
         }
 
         return token;
