@@ -1,5 +1,6 @@
-X=3+4;
-y=X/X;
-Z=3+4-6;
+FooBar = Blub - Baz;
+X = 3 + 4;
+y = X / X;
+Z = 3 + 4 - 6;
 (* eine einfache Aufgabe !! *)
-Resultat=X*y;
+Resultat = X * y;

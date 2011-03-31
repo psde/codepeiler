@@ -40,6 +40,7 @@ private:
 	TType tokenType;
 	int lineNumber;
 	int columnNumber;
+    std::string lexemName;
 
 public:
 
@@ -67,6 +68,16 @@ public:
     {
         this->lineNumber = line;
         this->columnNumber = column;
+    }
+
+    std::string lexem()
+    {
+        return this->lexemName;
+    }
+
+    void lexem(std::string lexem)
+    {
+        this->lexemName = lexem;
     }
 
 	int line()
