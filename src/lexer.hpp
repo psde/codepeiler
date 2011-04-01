@@ -182,9 +182,10 @@ public:
 //        int steps = 0;
 //        int startColumn = this->column;
 
-        static int foo = 0;
-        startColumn = this->column + foo;
-        foo = 0;
+        // TODO: This fixes the starting column problem, but is kinda ugly. Fix it.
+        static int columnOffset = 0;
+        startColumn = this->column + columnOffset;
+        columnOffset = 0;
 #ifdef LEXER_DEBUG
         std::cout << "Setting startColum to: " << startColumn << std::endl;
 #endif
@@ -230,7 +231,7 @@ public:
 
                 if(c == ' ' && state != STATE_BEGIN)
                 {
-                    foo++;
+                    columnOffset++;
                     break;
                 }
 

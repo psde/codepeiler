@@ -18,7 +18,10 @@ int main(int argc, char *argv[])
     {
         Token token = lex->nextToken();
         
-        std::cout << "  " << std::setw(6) << token.line() << std::setw(8) << token.column() << std::setw(7) << (int)token.type() << std::setw(20) << token.echo() << std::setw(16) << token.lexem() << std::endl;
+        std::cout << "  " << std::setw(6) << token.line() << std::setw(8) << token.column() << std::setw(7) << (int)token.type() << std::setw(20) << token.echo() << std::setw(16) << token.lexem();
+        if(token.type() == Token::TOKEN_INTEGER)
+            std::cout << " Value: " << token.lexem().toULong();
+        std::cout << std::endl;
         //std::cout << "token: " << token.echo() << " (" << (int)token.type() << ") l: " << token.line() << " c: " << token.column() << std::endl;
 
         if(token.type() == Token::TOKEN_EOF)

@@ -59,6 +59,33 @@ class String
             delete[] this->chars;
         }
         
+        /*
+          Returns interpreted long
+        */
+        long toLong()
+        {
+            return strtol(this->chars, NULL, 10);
+        }
+        
+        /*
+          Returns interpreted unsigned long
+        */
+        long toULong()
+        {
+            return strtoul(this->chars, NULL, 10);
+        }
+
+        /*
+          Returns interpreted integer
+        */
+        long toInt()
+        {
+            return atoi(this->chars);
+        }
+
+        /*
+          Returns the string length
+        */
         unsigned int length()
         {
             //return stringLength(this.chars);
