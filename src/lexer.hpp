@@ -120,8 +120,8 @@ private:
         this->addSolitaryState(STATE_SIGN_AND, '&', Token::TOKEN_AND);
 
         this->line = 1;
-        this->column = 1;
-        this->startColumn = 1;
+        this->column = 0;
+        this->startColumn = 0;
         this->steps = 0;
     }
 
@@ -176,11 +176,8 @@ public:
         unsigned int state = STATE_BEGIN;
         unsigned int lastFinal = STATE_ERROR;
 
-        char c;
+        char c = this->getChar();
         String lexem = "";
-
-//        int steps = 0;
-//        int startColumn = this->column;
 
         // TODO: This fixes the starting column problem, but is kinda ugly. Fix it.
         static int columnOffset = 0;
@@ -205,24 +202,9 @@ public:
             }
             newLines = 0;
 
-            /*c = this->getChar();
-
-            bool specialChars = false;
-            while(c == ' ' || c == '\n')
+            while(c == ' ' || c == '\n' || c == '\r')//do
             {
-                if(c == '\n')
-                    newLines++;
-
-                specialChars = true;
-                c = this->getChar();
-            }*/       
-            
-            /*if(specialChars && state == STATE_BEGIN)
-                break;            */
-
-            do
-            {
-                c = this->getChar();
+                //c = this->getChar();
 
                 if(c == '\n')
                 {
@@ -232,16 +214,18 @@ public:
                 if(c == ' ' && state != STATE_BEGIN)
                 {
                     columnOffset++;
+                    //this->column++; 
                     break;
                 }
+                c = this->getChar();
 
-            } while(c == ' ' || c == '\n');
+            } //while(c == ' ' || c == '\n' /* || c == '\r'*/);
 
             // comment parsing
             if(c == '(' && this->buffer->peekChar() == '*')
             {
                 int commentStart = this->column;
-                while(true /*this->buffer->peekChar() != 0x00*/)
+                while(true)
                 {
                     if(c == '*' && this->buffer->peekChar() == ')')
                         break;
@@ -256,7 +240,6 @@ public:
                     }
                 }
 
-                //this->skipChar();
                 c = this->getChar();
  
                 if(state == STATE_BEGIN)
@@ -294,8 +277,8 @@ public:
             }
 
             state = nextState;
-
             lexem += c;
+            c = this->getChar();
         }
 
         if(this->finalState[state])
