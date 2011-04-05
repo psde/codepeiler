@@ -4,6 +4,8 @@
 #include <iostream>
 #include <ostream>
 #include <cstring>
+#include <stdio.h>
+#include <stdlib.h>
 
 class String
 {
