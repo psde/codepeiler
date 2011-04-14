@@ -18,6 +18,8 @@ String LexerState_lookup[] =
     "STATE_SIGN_LESSER",
     "STATE_SIGN_GREATER",
     "STATE_SIGN_SEMICOLON",
+    "STATE_SIGN_LER_INC",
+    "STATE_SIGN_LER",
     "STATE_SIGN_PAREN_L",
     "STATE_SIGN_PAREN_R",
     "STATE_SIGN_BRACE_L",
@@ -43,6 +45,8 @@ enum LexerState
     STATE_SIGN_LESSER,
     STATE_SIGN_GREATER,
     STATE_SIGN_SEMICOLON,
+    STATE_SIGN_LER_INC,
+    STATE_SIGN_LER,
     STATE_SIGN_PAREN_L,
     STATE_SIGN_PAREN_R,    
     STATE_SIGN_BRACE_L,
@@ -80,6 +84,7 @@ private:
         this->addFinalState(to, type);
     }
 
+    // Configures the state machine
     void setup()
     {
         for(unsigned char c = 'A'; c <= 'Z'; c++)
@@ -98,9 +103,12 @@ private:
             this->addTransition(STATE_IDENTIFIER, c, STATE_IDENTIFIER);
         }
 
-        // TODO: Figure out a way on how to beautify this.
         this->addFinalState(STATE_IDENTIFIER, Token::TOKEN_IDENTIFIER);
         this->addFinalState(STATE_INTEGER, Token::TOKEN_INTEGER); 
+
+        this->addTransition(STATE_SIGN_LESSER, '=', STATE_SIGN_LER_INC);
+        this->addTransition(STATE_SIGN_LER_INC, '>', STATE_SIGN_LER);
+        this->addFinalState(STATE_SIGN_LER, Token::TOKEN_LER);
 
         this->addSolitaryState(STATE_SIGN_PLUS, '+', Token::TOKEN_PLUS);
         this->addSolitaryState(STATE_SIGN_MINUS, '-', Token::TOKEN_MINUS);
@@ -125,6 +133,7 @@ private:
         this->steps = 0;
     }
 
+    // TODO: Beautify this.
     int line;
     int column;
     int startColumn;
@@ -182,7 +191,7 @@ public:
         // TODO: This fixes the starting column problem, but is kinda ugly. Fix it.
         static int columnOffset = 0;
         startColumn = this->column + columnOffset;
-        columnOffset = 0;
+        columnOffset = 0; // TODO: wtf? 
 #ifdef LEXER_DEBUG
         std::cout << "Setting startColum to: " << startColumn << std::endl;
 #endif
@@ -197,7 +206,7 @@ public:
                 this->column = 1;
                 this->startColumn = 1;
 #ifdef LEXER_DEBUG
-                std::cout << "newLine detected, column=" << this->column << " line=" << this->line << std::endl;
+                std::cout << "newline detected, column=" << this->column << " line=" << this->line << std::endl;
 #endif
             }
             newLines = 0;
@@ -209,6 +218,8 @@ public:
                 if(c == '\n')
                 {
                     newLines++;
+                    if(state != STATE_BEGIN)
+                        break;
                 }
 
                 if(c == ' ' && state != STATE_BEGIN)
@@ -241,7 +252,7 @@ public:
                 }
 
                 c = this->getChar();
- 
+
                 if(state == STATE_BEGIN)
                     continue;
                 else
@@ -270,6 +281,7 @@ public:
 #ifdef LEXER_DEBUG
                 std::cout << "No transition possible." << std::endl;
 #endif
+                // TODO: Only ungetChar(1)? This is kind of an bad assumption.
                 this->ungetChar(1);
                 //this->buffer->ungetChar(steps - lastFinalStep);
                 //std::cout << steps-lastFinalStep << std::endl;
@@ -293,13 +305,13 @@ public:
         else if(lastFinal != STATE_ERROR)
         {
 #ifdef LEXER_DEBUG
-            std::cout << "STATE_ERROR, unget " << steps - lastFinalStep << std::endl;
+            std::cout << "We got STATE_ERROR, unget " << steps - lastFinalStep << std::endl;
 #endif
             this->ungetChar(steps - lastFinalStep);
         }
         else
         {
-            std::cout << "what" << std::endl;
+            std::cout << "This should not happen. Mainly because I have no clue what exactly happend." << std::endl;
         }
 
         return token;

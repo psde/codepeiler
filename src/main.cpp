@@ -4,6 +4,25 @@
 #include "string.hpp"
 #include "buffer.hpp"
 #include "lexer.hpp"
+#include "hashtable.hpp"
+
+class Entry
+{
+
+public:
+    int type;
+
+    Entry(float t)
+    {
+        this->type = 0;
+    }
+
+    Entry(int t)
+    {
+        this->type = t;
+    }
+};
+
 
 int main(int argc, char *argv[])
 {
@@ -24,6 +43,7 @@ int main(int argc, char *argv[])
 
     Buffer *buf = new Buffer(argv[1]);
     Lexer *lex = new Lexer(buf);
+    Hashtable<Entry> symtable(100);
 
     if(output == "")
     {
@@ -36,6 +56,10 @@ int main(int argc, char *argv[])
     while(true)
     {
         token = lex->nextToken();
+
+        Entry foo(token.type());
+        symtable.put(token.lexem(), foo);
+        //token.type(symtable.get(token.lexem()).type); 
         
         if(output == "")
         {
@@ -46,7 +70,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-
+            //TODO: File output
         }
          
         if(token.type() == Token::TOKEN_EOF)
@@ -54,30 +78,4 @@ int main(int argc, char *argv[])
     }
 
     return 0;
-
-    /*
-    Buffer *buf = new Buffer("lexer_test.txt");
-    Lexer *lex = new Lexer(buf);
-
-    bool loop = true;
-    
-    std::cout << std::endl << "starting lexical analysis" << std::endl << std::endl;
-    std::cout << "  " << std::setiosflags(std::ios::left) << std::setw(6) << "line" << std::setw(8) << "column" << std::setw(7) << "TType" << std::setw(20) << "token" << std::setw(16) << "lexem" << std::endl;
-    std::cout << "  --------------------------------------------------------" << std::endl;
-    while(loop)
-    {
-        Token token = lex->nextToken();
-        
-        std::cout << "  " << std::setw(6) << token.line() << std::setw(8) << token.column() << std::setw(7) << (int)token.type() << std::setw(20) << token.echo() << std::setw(16) << token.lexem();
-        if(token.type() == Token::TOKEN_INTEGER)
-            std::cout << " Value: " << token.lexem().toULong();
-        std::cout << std::endl;
-        //std::cout << "token: " << token.echo() << " (" << (int)token.type() << ") l: " << token.line() << " c: " << token.column() << std::endl;
-
-        if(token.type() == Token::TOKEN_EOF)
-            loop = false;
-    }
-
-    std::cout << std::endl << "done" << std::endl;
-	return 0;*/
 }
