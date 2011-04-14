@@ -7,6 +7,7 @@
 #include "lexer.hpp"
 #include "hashtable.hpp"
 
+// TODO: This needs to go somewhere else
 class Entry
 {
 
@@ -43,6 +44,9 @@ int main(int argc, char *argv[])
     Lexer *lex = new Lexer(buf);
     Hashtable<Entry*> symtable(100);
 
+    symtable.put("print", new Entry(Token::TOKEN_PRINT, "print"));
+    symtable.put("read", new Entry(Token::TOKEN_READ, "read"));
+
     if(output == "")
     {
         std::cout << std::setiosflags(std::ios::left) << std::endl;
@@ -55,8 +59,19 @@ int main(int argc, char *argv[])
     {
         token = lex->nextToken();
 
-        symtable.put(token.lexem(), new Entry(token.type(), token.lexem()));
-        //token.type(symtable.get(token.lexem()).type); 
+        // Add IDENTIFIER to symtable
+        if(token.type() == Token::TOKEN_IDENTIFIER)
+        {
+            if(symtable.contains(token.lexem()))
+            {
+                // Identifier already in symtable, this could mean this is a keyword (print, read, ...)
+                token.type(symtable.get(token.lexem())->type);
+            }
+            else
+            {
+                symtable.put(token.lexem(), new Entry(token.type(), token.lexem()));
+            }
+        }
         
         if(output == "")
         {
@@ -67,7 +82,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            //TODO: File output
+            // TODO: File output
         }
          
         if(token.type() == Token::TOKEN_EOF)

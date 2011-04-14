@@ -71,9 +71,10 @@ private:
 	int columnNumber;
     String lexemName;
 
+    // TODO: We need to store a pointer to the Entry* in the symtable here
+
 public:
 
-    // TODO: Not allowed to use std::string
     String echo()
     {
         return TType_lookupTable[this->tokenType];
@@ -108,21 +109,6 @@ public:
     void lexem(String lexem)
     {
         this->lexemName = lexem;
-
-        if(this->type() != Token::TOKEN_IDENTIFIER)
-            return;
-
-        // TODO: Kerl sayz: ich finde, print sollte kein eigenständiges token sein. (2011-03-31 23:30) 
-        // TODO: ^ maybe do this for assignment #2
-        if(lexem == "print")
-        {
-            this->type(Token::TOKEN_PRINT);
-        }
-
-        if(lexem == "read")
-        {
-            this->type(Token::TOKEN_READ);
-        }
     }
 
 	int line()
