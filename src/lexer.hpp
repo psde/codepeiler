@@ -1,9 +1,11 @@
 #ifndef LEXER_HPP
 #define LEXER_HPP
 
+#include <ctype.h>
 #include "token.hpp"
 #include "string.hpp"
 
+// TODO: This really needs to be a bit less fragile...
 String LexerState_lookup[] =
 {
     "STATE_ERROR",
@@ -31,6 +33,7 @@ String LexerState_lookup[] =
     "STATE_NOSTATE"
 };
 
+// TODO: Same as above.
 enum LexerState
 {
     STATE_ERROR = 0,
@@ -60,6 +63,14 @@ enum LexerState
 
 //#define LEXER_DEBUG
 
+class Position
+{
+    public:
+    unsigned int line, column;
+
+    Position() : line(0), column(0) {};
+};
+
 class Lexer
 {
 private:
@@ -87,6 +98,12 @@ private:
     // Configures the state machine
     void setup()
     {
+        // Reset all transitions and final states first
+        for(unsigned int i = 0; i < STATE_NOSTATE; i++)
+            memset(this->transitions[i], 0, sizeof(this->transitions[i]));
+        memset(this->finalState, 0, sizeof(this->finalState));    
+
+
         for(unsigned char c = 'A'; c <= 'Z'; c++)
         {
             this->addTransition(STATE_BEGIN, c, STATE_IDENTIFIER);
@@ -127,39 +144,46 @@ private:
         this->addSolitaryState(STATE_SIGN_NOT, '!', Token::TOKEN_NOT);
         this->addSolitaryState(STATE_SIGN_AND, '&', Token::TOKEN_AND);
 
-        this->line = 1;
-        this->column = 0;
-        this->startColumn = 0;
-        this->steps = 0;
+        this->pos.line = 1;
+        this->pos.column = 0;
+
+        // TODO: We need to fill currentChar with something at start, but do it here?
+        this->getChar();
     }
 
     // TODO: Beautify this.
-    int line;
-    int column;
-    int startColumn;
-    int steps;
+    char currentChar;
+    Position pos;
 
-    unsigned char getChar()
+    void getChar()
     {
-        this->steps++;
-        this->column++;
-        char c = this->buffer->getChar();
+        this->pos.column++;
+        this->currentChar = this->buffer->getChar();
 
-        return c;
+        // skip this char, we don't need it
+        if(this->currentChar == '\r')
+        {
+            this->currentChar = this->buffer->getChar();
+        }
+
+        if(this->currentChar == '\n')
+        {
+            this->pos.line++;
+            this->pos.column = 0;
+        }
     }
 
     void skipChar()
     {
-        this->steps++;
-        //this->column++;
-        char c = this->buffer->getChar();
+        this->pos.column++;
+        this->buffer->getChar();
     }
 
     void ungetChar(unsigned int count)
     {
-        this->column -= count;
-        this->steps -= count;
-        this->buffer->ungetChar(count);
+        this->pos.column -= count + 1;
+        this->buffer->ungetChar(count + 1);
+        this->getChar();
     }
 
 public:
@@ -178,100 +202,76 @@ public:
         if(this->buffer->peekChar() == 0x00)
         {
             token.type(Token::TOKEN_EOF);
-            token.setPosition(this->line, this->column); 
+            token.setPosition(this->pos.line, this->pos.column); 
             return token;
         }
 
         unsigned int state = STATE_BEGIN;
         unsigned int lastFinal = STATE_ERROR;
+        Position lastPos = pos;
 
-        char c = this->getChar();
         String lexem = "";
 
-        // TODO: This fixes the starting column problem, but is kinda ugly. Fix it.
-        static int columnOffset = 0;
-        startColumn = this->column + columnOffset;
-        columnOffset = 0; // TODO: wtf? 
-#ifdef LEXER_DEBUG
-        std::cout << "Setting startColum to: " << startColumn << std::endl;
-#endif
-        int lastFinalStep = this->steps;
         for(;;)
         {
-            static int newLines = 0;
-
-            for(int i=0; i != newLines; i++)
-            {   
-                this->line++;
-                this->column = 1;
-                this->startColumn = 1;
-#ifdef LEXER_DEBUG
-                std::cout << "newline detected, column=" << this->column << " line=" << this->line << std::endl;
-#endif
-            }
-            newLines = 0;
-
-            while(c == ' ' || c == '\n' || c == '\r')//do
+            // Skip all whitespaces (spaces, tabs, etc...)
+            bool skipped = false;
+            while(isspace(currentChar))
             {
-                //c = this->getChar();
+                this->getChar();
+                skipped = true;
+            }
 
-                if(c == '\n')
-                {
-                    newLines++;
-                    if(state != STATE_BEGIN)
-                        break;
-                }
-
-                if(c == ' ' && state != STATE_BEGIN)
-                {
-                    columnOffset++;
-                    //this->column++; 
-                    break;
-                }
-                c = this->getChar();
-
-            } //while(c == ' ' || c == '\n' /* || c == '\r'*/);
+            if(skipped)
+            {
+                if(state == STATE_BEGIN)
+                    continue;
+                break;
+            }
 
             // comment parsing
-            if(c == '(' && this->buffer->peekChar() == '*')
+            if(currentChar == '(' && this->buffer->peekChar() == '*')
             {
-                int commentStart = this->column;
+                int commentStart = this->pos.column;
                 while(true)
                 {
-                    if(c == '*' && this->buffer->peekChar() == ')')
+                    if(currentChar == '*' && this->buffer->peekChar() == ')')
+                    {
+                        this->getChar();
                         break;
+                    }
 
-                    c = this->getChar();
+                    this->getChar();
 
-                    if(c == 0x00)
+                    // TODO: Check if this maybe skips a token
+                    if(currentChar == 0x00)
                     {
                         token.type(Token::TOKEN_COMMENT_ERROR);
-                        token.setPosition(this->line, commentStart);
+                        token.setPosition(this->pos.line, commentStart);
                         return token;
                     }
                 }
 
-                c = this->getChar();
+                this->getChar();
 
                 if(state == STATE_BEGIN)
                     continue;
-                else
-                    break;
+                break;
             }
 
-            unsigned int nextState = this->transitions[state][c];
+            unsigned int nextState = this->transitions[state][currentChar];
 
 #ifdef LEXER_DEBUG            
-            std::cout << LexerState_lookup[state] << " -- '" << c << "'[" << steps << "] --> " << LexerState_lookup[nextState] << " StartColumn: " << this->startColumn << std::endl;
+            std::cout << LexerState_lookup[state] << " -- '" << currentChar << "' --> " << LexerState_lookup[nextState] << std::endl;
 #endif
 
             // Is final state? 
             if(nextState && this->finalState[nextState])
             {
                 lastFinal = nextState;
-                lastFinalStep = steps;
+                //lastFinalStep = steps;
 #ifdef LEXER_DEBUG
-                std::cout << LexerState_lookup[nextState] << " could be a final state! (steps: " << steps << ")"<< std::endl;
+                std::cout << LexerState_lookup[nextState] << " could be a final state!" << std::endl;
 #endif
             }
 
@@ -281,16 +281,13 @@ public:
 #ifdef LEXER_DEBUG
                 std::cout << "No transition possible." << std::endl;
 #endif
-                // TODO: Only ungetChar(1)? This is kind of an bad assumption.
-                this->ungetChar(1);
-                //this->buffer->ungetChar(steps - lastFinalStep);
-                //std::cout << steps-lastFinalStep << std::endl;
                 break;
             }
 
+            lastPos = this->pos;
             state = nextState;
-            lexem += c;
-            c = this->getChar();
+            lexem += currentChar;
+            this->getChar();
         }
 
         if(this->finalState[state])
@@ -300,14 +297,12 @@ public:
 #endif
             token.type(this->finalState[state]);
             token.lexem(lexem);
-            token.setPosition(this->line, startColumn);
+            token.setPosition(lastPos.line, lastPos.column - (lexem.length() - 1));
         }
         else if(lastFinal != STATE_ERROR)
         {
-#ifdef LEXER_DEBUG
-            std::cout << "We got STATE_ERROR, unget " << steps - lastFinalStep << std::endl;
-#endif
-            this->ungetChar(steps - lastFinalStep);
+            std::cout << "meh?" << std::endl;
+            //this->ungetChar(steps - lastFinalStep);
         }
         else
         {

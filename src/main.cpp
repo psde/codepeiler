@@ -3,6 +3,7 @@
 
 #include "string.hpp"
 #include "buffer.hpp"
+#include "token.hpp"
 #include "lexer.hpp"
 #include "hashtable.hpp"
 
@@ -10,16 +11,13 @@ class Entry
 {
 
 public:
-    int type;
+    Token::TType type;
+    String lexem;
 
-    Entry(float t)
-    {
-        this->type = 0;
-    }
-
-    Entry(int t)
+    Entry(Token::TType t, String l)
     {
         this->type = t;
+        this->lexem = l;
     }
 };
 
@@ -43,7 +41,7 @@ int main(int argc, char *argv[])
 
     Buffer *buf = new Buffer(argv[1]);
     Lexer *lex = new Lexer(buf);
-    Hashtable<Entry> symtable(100);
+    Hashtable<Entry*> symtable(100);
 
     if(output == "")
     {
@@ -57,8 +55,7 @@ int main(int argc, char *argv[])
     {
         token = lex->nextToken();
 
-        Entry foo(token.type());
-        symtable.put(token.lexem(), foo);
+        symtable.put(token.lexem(), new Entry(token.type(), token.lexem()));
         //token.type(symtable.get(token.lexem()).type); 
         
         if(output == "")
