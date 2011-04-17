@@ -7,7 +7,10 @@
 class Symtable : public Hashtable<Entry*>
 {
 public:
-    Symtable(int i) : Hashtable<Entry*>(i) {};    
+    Symtable(int i) : Hashtable<Entry*>(i) 
+    {
+        this->initSymbols();
+    };    
 
     void initSymbols()
     {

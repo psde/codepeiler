@@ -4,7 +4,6 @@
 #include <iostream>
 #include "string.hpp"
 
-// TODO: Not allowed to use std::string
 String TType_lookupTable[] = 
 {
     "TOKEN_INVALID",
