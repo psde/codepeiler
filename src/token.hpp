@@ -72,7 +72,6 @@ private:
 	int columnNumber;
     String lexemName;
 
-    // TODO: We need to store a pointer to the Entry* in the symtable here
     Entry* entry;
 
 public:
@@ -103,6 +102,17 @@ public:
         this->columnNumber = column;
     }
 
+    void setEntry(Entry* e)
+    {
+        this->entry = e;
+    }
+
+    Entry* getEntry()
+    {
+        return this->entry;
+    }
+
+    // TODO: Do this with set/get
     String lexem()
     {
         return this->lexemName;

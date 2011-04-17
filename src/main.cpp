@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
 
     Buffer *buf = new Buffer(argv[1]);
     Lexer *lex = new Lexer(buf);
-    //Hashtable<Entry*> symtable(100);
     Symtable symtable(100);
 
     if(output == "")
@@ -45,15 +44,20 @@ int main(int argc, char *argv[])
         // Add IDENTIFIER to symtable
         if(token.type() == Token::TOKEN_IDENTIFIER)
         {
+            Entry* e;
+
             if(symtable.contains(token.lexem()))
             {
                 // Identifier already in symtable, this could mean this is a keyword (print, read, ...)
-                token.type(symtable.get(token.lexem())->type);
+                e = symtable.get(token.lexem());
+                token.type(e->type);
             }
             else
-            {
-                symtable.put(token.lexem(), new Entry(token.type(), token.lexem()));
+            {   
+                e = new Entry(token.type(), token.lexem());
+                symtable.put(token.lexem(), e);
             }
+            token.setEntry(e);
         }
         
         if(output == "")
