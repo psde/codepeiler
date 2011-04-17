@@ -6,22 +6,8 @@
 #include "token.hpp"
 #include "lexer.hpp"
 #include "hashtable.hpp"
-
-// TODO: This needs to go somewhere else
-class Entry
-{
-
-public:
-    Token::TType type;
-    String lexem;
-
-    Entry(Token::TType t, String l)
-    {
-        this->type = t;
-        this->lexem = l;
-    }
-};
-
+#include "symtable.hpp"
+#include "entry.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -42,7 +28,8 @@ int main(int argc, char *argv[])
 
     Buffer *buf = new Buffer(argv[1]);
     Lexer *lex = new Lexer(buf);
-    Hashtable<Entry*> symtable(100);
+    //Hashtable<Entry*> symtable(100);
+    Symtable symtable(100);
 
     symtable.put("print", new Entry(Token::TOKEN_PRINT, "print"));
     symtable.put("read", new Entry(Token::TOKEN_READ, "read"));
