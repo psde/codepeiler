@@ -31,9 +31,6 @@ int main(int argc, char *argv[])
     //Hashtable<Entry*> symtable(100);
     Symtable symtable(100);
 
-    symtable.put("print", new Entry(Token::TOKEN_PRINT, "print"));
-    symtable.put("read", new Entry(Token::TOKEN_READ, "read"));
-
     if(output == "")
     {
         std::cout << std::setiosflags(std::ios::left) << std::endl;
