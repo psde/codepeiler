@@ -11,7 +11,8 @@ public:
 
     void initSymbols()
     {
-
+        this->put("print", new Entry(Token::TOKEN_PRINT, "print"));
+        this->put("read", new Entry(Token::TOKEN_READ, "read"));
     }
 };
 
