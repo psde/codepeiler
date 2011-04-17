@@ -319,7 +319,7 @@ public:
         }
         else
         {
-            std::cout << "This should not happen. Mainly because I have no clue what exactly happend." << std::endl;
+            this->getChar();
         }
 
         return token;
