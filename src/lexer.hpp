@@ -149,14 +149,18 @@ private:
 
         // TODO: We need to fill currentChar with something at start, but do it here?
         this->getChar();
+
+        this->steps = 0;
     }
 
     // TODO: Beautify this.
     char currentChar;
     Position pos;
+    unsigned int steps;
 
     void getChar()
     {
+        this->steps++;
         this->pos.column++;
         this->currentChar = this->buffer->getChar();
 
@@ -181,6 +185,8 @@ private:
 
     void ungetChar(unsigned int count)
     {
+        // TODO: This is kinda weird I guess
+        this->steps -= count + 1;
         this->pos.column -= count + 1;
         this->buffer->ungetChar(count + 1);
         this->getChar();
@@ -212,6 +218,8 @@ public:
 
         String lexem = "";
 
+        // TODO: temp
+        unsigned int lastFinalSteps = this->steps;
         for(;;)
         {
             // Skip all whitespaces (spaces, tabs, etc...)
@@ -269,7 +277,7 @@ public:
             if(nextState && this->finalState[nextState])
             {
                 lastFinal = nextState;
-                //lastFinalStep = steps;
+                lastFinalSteps = steps;
 #ifdef LEXER_DEBUG
                 std::cout << LexerState_lookup[nextState] << " could be a final state!" << std::endl;
 #endif
@@ -299,10 +307,15 @@ public:
             token.lexem(lexem);
             token.setPosition(lastPos.line, lastPos.column - (lexem.length() - 1));
         }
+        // TODO: This is just for '<=>' (LER) for now
         else if(lastFinal != STATE_ERROR)
         {
-            std::cout << "meh?" << std::endl;
-            //this->ungetChar(steps - lastFinalStep);
+            token.type(this->finalState[lastFinal]); 
+            token.setPosition(lastPos.line, lastPos.column - (lexem.length() - 1));
+            lexem[lexem.length()-1] = '\0';
+            token.lexem(lexem);
+            this->ungetChar(this->steps - lastFinalSteps - 1);
+            this->pos = lastPos;
         }
         else
         {
