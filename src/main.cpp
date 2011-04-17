@@ -7,7 +7,6 @@
 #include "lexer.hpp"
 #include "hashtable.hpp"
 #include "symtable.hpp"
-#include "entry.hpp"
 
 int main(int argc, char *argv[])
 {

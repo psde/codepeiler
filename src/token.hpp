@@ -4,6 +4,8 @@
 #include <iostream>
 #include "string.hpp"
 
+class Entry;
+
 String TType_lookupTable[] = 
 {
     "TOKEN_INVALID",
@@ -71,6 +73,7 @@ private:
     String lexemName;
 
     // TODO: We need to store a pointer to the Entry* in the symtable here
+    Entry* entry;
 
 public:
 
@@ -128,6 +131,21 @@ public:
     void type(TType token)
     {
         this->tokenType = token;
+    }
+};
+
+
+class Entry
+{
+
+public:
+    Token::TType type;
+    String lexem;
+
+    Entry(Token::TType t, String l)
+    {
+        this->type = t;
+        this->lexem = l;
     }
 };
 

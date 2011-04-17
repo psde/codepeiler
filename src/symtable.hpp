@@ -2,7 +2,7 @@
 #define SYMTABLE_HPP
 
 #include "hashtable.hpp"
-#include "entry.hpp"
+#include "token.hpp"
 
 class Symtable : public Hashtable<Entry*>
 {
