@@ -31,6 +31,10 @@ String TType_lookupTable[] =
     "TOKEN_AND",
     "TOKEN_READ",
     "TOKEN_PRINT",
+    "TOKEN_IF",
+    "TOKEN_ELSE",
+    "TOKEN_WHILE",
+    "TOKEN_INT",
     "TOKEN_EOF"
 };
 
@@ -62,6 +66,10 @@ public:
         TOKEN_AND,
         TOKEN_READ,
         TOKEN_PRINT,
+        TOKEN_IF,
+        TOKEN_ELSE,
+        TOKEN_WHILE,
+        TOKEN_INT,
         TOKEN_EOF
     };
 
