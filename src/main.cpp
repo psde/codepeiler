@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     // Redirect stdout to file if needed
     if(output)
     {
-    	freopen(outputFile, "w+", stdout);
+    freopen(outputFile, "w+", stdout);
     }
 
     std::cout << std::setiosflags(std::ios::left);
@@ -61,14 +61,14 @@ int main(int argc, char *argv[])
             token.setEntry(e);
         }
         
-		std::cout << std::setw(20) << token.getTokenDescription() <<  " Line: " << std::setw(5) << token.getLine() << "Column: " << std::setw(5) << token.getColumn();
-		if(token.getType() == Token::TOKEN_IDENTIFIER)
-			std::cout << " Lexem: " << token.getLexem();
+        std::cout << std::setw(20) << token.getTokenDescription() <<  " Line: " << std::setw(5) << token.getLine() << "Column: " << std::setw(5) << token.getColumn();
+        if(token.getType() == Token::TOKEN_IDENTIFIER)
+        std::cout << " Lexem: " << token.getLexem();
 
-		if(token.getType() == Token::TOKEN_INTEGER)
-			std::cout << " Value: " << token.getLexem().toULong();
+        if(token.getType() == Token::TOKEN_INTEGER)
+        std::cout << " Value: " << token.getLexem().toULong();
 
-		std::cout << std::endl;
+        std::cout << std::endl;
          
         if(token.getType() == Token::TOKEN_EOF)
             break;

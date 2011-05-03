@@ -175,7 +175,7 @@ private:
     }
 
 public:
-	
+
     Lexer(Buffer *buffer)
     {
         this->buffer = buffer;
@@ -236,12 +236,18 @@ public:
 
                     this->getChar();
 
-                    // TODO: Check if this maybe skips a token
                     if(currentChar == 0x00)
                     {
-                        token.setType(Token::TOKEN_COMMENT_ERROR);
-                        token.setPosition(this->pos.line, commentStart);
-                        return token;
+                        if(state != STATE_BEGIN)
+                        {
+
+                        }
+                        else
+                        {
+                            token.setType(Token::TOKEN_COMMENT_ERROR);
+                            token.setPosition(this->pos.line, commentStart);
+                            return token;
+                        }
                     }
                 }
 
