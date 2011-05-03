@@ -43,6 +43,9 @@ int main(int argc, char *argv[])
     {
         token = lex->nextToken();
 
+        if(token.getType() == Token::TOKEN_EOF)
+            break;
+
         if(token.getType() == Token::TOKEN_IDENTIFIER)
         {
             Entry* e;
@@ -68,9 +71,6 @@ int main(int argc, char *argv[])
         std::cout << " Value: " << token.getLexem().toULong();
 
         std::cout << std::endl;
-         
-        if(token.getType() == Token::TOKEN_EOF)
-            break;
     }
 
     if(output)

@@ -60,6 +60,7 @@ enum LexerState
     STATE_NOSTATE
 };
 
+//#define LEXER_DEBUG
 
 class Position
 {
@@ -168,6 +169,7 @@ private:
 
     void ungetChar(unsigned int count)
     {
+        // TODO: This will break when ungetting the first char in a line, resulting in a negativ column
         this->steps -= count + 1;
         this->pos.column -= count + 1;
         this->buffer->ungetChar(count + 1);
@@ -189,6 +191,7 @@ public:
         this->steps = 0;
     }
 
+    // TODO: Big monolith, split this up in many small functions
     Token nextToken()
     {
         Token token;
@@ -198,6 +201,30 @@ public:
             token.setType(Token::TOKEN_EOF);
             token.setPosition(this->pos.line, this->pos.column); 
             return token;
+        }
+
+        if(currentChar == '(' && this->buffer->peekChar() == '*')
+        {
+            Position commentStart = this->pos;
+            while(true)
+            {
+                if(currentChar == '*' && this->buffer->peekChar() == ')')
+                {
+                    // do this twice, so that ')' is not the current char anymore
+                    this->getChar();
+                    this->getChar();
+                    break;
+                }
+
+                this->getChar();
+
+                if(currentChar == 0x00)
+                {
+                    token.setType(Token::TOKEN_COMMENT_ERROR);
+                    token.setPosition(commentStart.line, commentStart.column);
+                    return token;
+                }
+            }
         }
 
         unsigned int state = STATE_BEGIN;
@@ -226,36 +253,6 @@ public:
 
             if(currentChar == '(' && this->buffer->peekChar() == '*')
             {
-                int commentStart = this->pos.column;
-                while(true)
-                {
-                    if(currentChar == '*' && this->buffer->peekChar() == ')')
-                    {
-                        this->getChar();
-                        break;
-                    }
-
-                    this->getChar();
-
-                    if(currentChar == 0x00)
-                    {
-                        if(state != STATE_BEGIN)
-                        {
-
-                        }
-                        else
-                        {
-                            token.setType(Token::TOKEN_COMMENT_ERROR);
-                            token.setPosition(this->pos.line, commentStart);
-                            return token;
-                        }
-                    }
-                }
-
-                this->getChar();
-
-                if(state == STATE_BEGIN)
-                    continue;
                 break;
             }
 
@@ -308,6 +305,7 @@ public:
         }
         else
         {
+            token.setPosition(lastPos.line, lastPos.column);
             this->getChar();
         }
 
