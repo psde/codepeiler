@@ -132,20 +132,20 @@ public:
         this->lexemName = lexem;
     }
 
-int getLine()
-{
-return this->lineNumber;
-}
+    int getLine()
+    {
+        return this->lineNumber;
+    }
 
-int getColumn()
-{
-return this->columnNumber;
-}
+    int getColumn()
+    {
+        return this->columnNumber;
+    }
 
-TType getType()
-{
-return this->tokenType;
-}
+    TType getType()
+    {
+        return this->tokenType;
+    }
 
     void setType(TType token)
     {
