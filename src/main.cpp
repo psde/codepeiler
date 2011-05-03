@@ -18,22 +18,29 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    String output = "";
+    char* outputFile;
+    bool output = false;
 
     if(argc == 3)
     {
-        output = argv[2];
+        outputFile = argv[2];
+        output = true;
     }
 
     Buffer *buf = new Buffer(argv[1]);
     Lexer *lex = new Lexer(buf);
     Symtable symtable(100);
 
-    if(output == "")
+    std::cout << std::setiosflags(std::ios::left) << std::endl;
+
+    if(!output)
     {
-        std::cout << std::setiosflags(std::ios::left) << std::endl;
         std::cout << "  " << std::setw(6) << "line" << std::setw(8) << "column" << std::setw(20) << "token" << std::setw(16) << "lexem" << std::endl;
         std::cout << "  --------------------------------------------------------" << std::endl;
+    }
+    else
+    {
+        freopen(outputFile, "w+", stdout);
     }
 
     Token token;
@@ -42,38 +49,51 @@ int main(int argc, char *argv[])
         token = lex->nextToken();
 
         // Add IDENTIFIER to symtable
-        if(token.type() == Token::TOKEN_IDENTIFIER)
+        if(token.getType() == Token::TOKEN_IDENTIFIER)
         {
             Entry* e;
 
-            if(symtable.contains(token.lexem()))
+            if(symtable.contains(token.getLexem()))
             {
                 // Identifier already in symtable, this could mean this is a keyword (print, read, ...)
-                e = symtable.get(token.lexem());
-                token.type(e->type);
+                e = symtable.get(token.getLexem());
+                token.setType(e->type);
             }
             else
             {   
-                e = new Entry(token.type(), token.lexem());
-                symtable.put(token.lexem(), e);
+                e = new Entry(token.getType(), token.getLexem());
+                symtable.put(token.getLexem(), e);
             }
             token.setEntry(e);
         }
         
-        if(output == "")
+        if(!output)
         {
-            std::cout << "  " << std::setw(6) << token.line() << std::setw(8) << token.column() << std::setw(20) << token.echo() << std::setw(16) << token.lexem();
-            if(token.type() == Token::TOKEN_INTEGER)
-                std::cout << " Value: " << token.lexem().toULong();
+            std::cout << "  " << std::setw(6) << token.getLine() << std::setw(8) << token.getColumn() << std::setw(20) << token.echo() << std::setw(16) << token.getLexem();
+            if(token.getType() == Token::TOKEN_INTEGER)
+                std::cout << " Value: " << token.getLexem().toULong();
             std::cout << std::endl;
         }
         else
         {
             // TODO: File output
+            std::cout << std::setw(20) << token.echo() <<  " Line: " << std::setw(5) << token.getLine() << "Column: " << std::setw(5) << token.getColumn();
+            if(token.getType() == Token::TOKEN_IDENTIFIER)
+                std::cout << " Lexem: " << token.getLexem();
+
+            if(token.getType() == Token::TOKEN_INTEGER)
+                std::cout << " Value: " << token.getLexem().toULong();
+    
+            std::cout << std::endl;
         }
          
-        if(token.type() == Token::TOKEN_EOF)
+        if(token.getType() == Token::TOKEN_EOF)
             break;
+    }
+
+    if(output)
+    {
+        fclose(stdout);
     }
 
     return 0;

@@ -120,33 +120,32 @@ public:
         return this->entry;
     }
 
-    // TODO: Do this with set/get
-    String lexem()
+    String getLexem()
     {
         return this->lexemName;
     }
 
-    void lexem(String lexem)
+    void setLexem(String lexem)
     {
         this->lexemName = lexem;
     }
 
-	int line()
+	int getLine()
 	{	
 		return this->lineNumber;
 	}
 
-	int column()
+	int getColumn()
 	{
 		return this->columnNumber;
 	}
 
-	TType type()
+	TType getType()
 	{
 		return this->tokenType;
 	}
 
-    void type(TType token)
+    void setType(TType token)
     {
         this->tokenType = token;
     }

@@ -207,7 +207,7 @@ public:
         // check for EOF
         if(this->buffer->peekChar() == 0x00)
         {
-            token.type(Token::TOKEN_EOF);
+            token.setType(Token::TOKEN_EOF);
             token.setPosition(this->pos.line, this->pos.column); 
             return token;
         }
@@ -254,7 +254,7 @@ public:
                     // TODO: Check if this maybe skips a token
                     if(currentChar == 0x00)
                     {
-                        token.type(Token::TOKEN_COMMENT_ERROR);
+                        token.setType(Token::TOKEN_COMMENT_ERROR);
                         token.setPosition(this->pos.line, commentStart);
                         return token;
                     }
@@ -303,17 +303,17 @@ public:
 #ifdef LEXER_DEBUG
             std::cout << "We got a final state: " << LexerState_lookup[state] << std::endl;
 #endif
-            token.type(this->finalState[state]);
-            token.lexem(lexem);
+            token.setType(this->finalState[state]);
+            token.setLexem(lexem);
             token.setPosition(lastPos.line, lastPos.column - (lexem.length() - 1));
         }
         // TODO: This is just for '<=>' (LER) for now
         else if(lastFinal != STATE_ERROR)
         {
-            token.type(this->finalState[lastFinal]); 
+            token.setType(this->finalState[lastFinal]); 
             token.setPosition(lastPos.line, lastPos.column - (lexem.length() - 1));
             lexem[lexem.length()-1] = '\0';
-            token.lexem(lexem);
+            token.setLexem(lexem);
             this->ungetChar(this->steps - lastFinalSteps - 1);
             this->pos = lastPos;
         }
