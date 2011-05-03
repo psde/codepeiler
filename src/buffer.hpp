@@ -12,7 +12,6 @@
 class Buffer
 {
 private:
-    // 4kb buffer
     static const int BUFFER_SIZE = 1024 * 4;
     int fileDescriptor;
     ssize_t fileLength;
@@ -37,11 +36,7 @@ public:
 
 		// Reading failed
 		if(this->filePosition != Buffer::BUFFER_SIZE / 2 && this->filePosition != this->fileLength)
-		{
-            std::cout << this->filePosition << std::endl;
-			//exit(-1);
-			// TODO: Exception?
-		}
+			throw "Error while reading from File";
         
     }
 
@@ -72,17 +67,10 @@ public:
         {
             ssize_t bytesToRead = Buffer::BUFFER_SIZE / 2;
 
-            // TODO: This doesn't work.
-            // check if bytesToRead exceeds the file length
-            /*if(this->filePosition + bytesToRead > this->fileLength)
-            {
-                bytesToRead = this->fileLength - this->filePosition;
-            }*/
-
             ssize_t bytesRead = read(this->fileDescriptor, this->fileBuffer + this->filePosition % Buffer::BUFFER_SIZE, bytesToRead);
             if(bytesRead != bytesToRead)
             {
-                // TODO: error handling
+                throw "Unrecoverable error while Buffer::getChar()";
             }
             else
             {

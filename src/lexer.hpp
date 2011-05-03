@@ -5,8 +5,7 @@
 #include "token.hpp"
 #include "string.hpp"
 
-// TODO: This really needs to be a bit less fragile...
-String LexerState_lookup[] =
+String LexerStateStrings[] =
 {
     "STATE_ERROR",
     "STATE_BEGIN",
@@ -33,7 +32,6 @@ String LexerState_lookup[] =
     "STATE_NOSTATE"
 };
 
-// TODO: Same as above.
 enum LexerState
 {
     STATE_ERROR = 0,
@@ -78,6 +76,10 @@ private:
 
     unsigned int transitions[STATE_NOSTATE+1][256];
     Token::TType finalState[STATE_NOSTATE+1];
+
+    char currentChar;
+    Position pos;
+    unsigned int steps;
 
     void addTransition(LexerState from, char c, LexerState to)
     {
@@ -143,20 +145,7 @@ private:
         this->addSolitaryState(STATE_SIGN_BRACKET_R, ']', Token::TOKEN_BRACKET_R);
         this->addSolitaryState(STATE_SIGN_NOT, '!', Token::TOKEN_NOT);
         this->addSolitaryState(STATE_SIGN_AND, '&', Token::TOKEN_AND);
-
-        this->pos.line = 1;
-        this->pos.column = 0;
-
-        // TODO: We need to fill currentChar with something at start, but do it here?
-        this->getChar();
-
-        this->steps = 0;
     }
-
-    // TODO: Beautify this.
-    char currentChar;
-    Position pos;
-    unsigned int steps;
 
     void getChar()
     {
@@ -177,15 +166,8 @@ private:
         }
     }
 
-    void skipChar()
-    {
-        this->pos.column++;
-        this->buffer->getChar();
-    }
-
     void ungetChar(unsigned int count)
     {
-        // TODO: This is kinda weird I guess
         this->steps -= count + 1;
         this->pos.column -= count + 1;
         this->buffer->ungetChar(count + 1);
@@ -198,13 +180,19 @@ public:
     {
         this->buffer = buffer;
         this->setup();
+
+        this->pos.line = 1;
+        this->pos.column = 0;
+
+        this->getChar();
+
+        this->steps = 0;
     }
 
     Token nextToken()
     {
         Token token;
-       
-        // check for EOF
+
         if(this->buffer->peekChar() == 0x00)
         {
             token.setType(Token::TOKEN_EOF);
@@ -218,8 +206,6 @@ public:
 
         String lexem = "";
 
-        // TODO: temp
-        unsigned int lastFinalSteps = this->steps;
         for(;;)
         {
             // Skip all whitespaces (spaces, tabs, etc...)
@@ -237,7 +223,6 @@ public:
                 break;
             }
 
-            // comment parsing
             if(currentChar == '(' && this->buffer->peekChar() == '*')
             {
                 int commentStart = this->pos.column;
@@ -270,20 +255,18 @@ public:
             unsigned int nextState = this->transitions[state][currentChar];
 
 #ifdef LEXER_DEBUG            
-            std::cout << LexerState_lookup[state] << " -- '" << currentChar << "' --> " << LexerState_lookup[nextState] << std::endl;
+            std::cout << LexerStateStrings[state] << " -- '" << currentChar << "' --> " << LexerStateStrings[nextState] << std::endl;
 #endif
 
-            // Is final state? 
             if(nextState && this->finalState[nextState])
             {
                 lastFinal = nextState;
                 lastFinalSteps = steps;
 #ifdef LEXER_DEBUG
-                std::cout << LexerState_lookup[nextState] << " could be a final state!" << std::endl;
+                std::cout << LexerStateStrings[nextState] << " could be a final state!" << std::endl;
 #endif
             }
 
-            // Is transition possible?
             if(!nextState)
             {
 #ifdef LEXER_DEBUG
@@ -301,13 +284,12 @@ public:
         if(this->finalState[state])
         {
 #ifdef LEXER_DEBUG
-            std::cout << "We got a final state: " << LexerState_lookup[state] << std::endl;
+            std::cout << "We got a final state: " << LexerStateStrings[state] << std::endl;
 #endif
             token.setType(this->finalState[state]);
             token.setLexem(lexem);
             token.setPosition(lastPos.line, lastPos.column - (lexem.length() - 1));
         }
-        // TODO: This is just for '<=>' (LER) for now
         else if(lastFinal != STATE_ERROR)
         {
             token.setType(this->finalState[lastFinal]); 

@@ -121,14 +121,12 @@ class String
         /*
           Appends a char
         */
-        // TODO: This needs cleaning.
         void operator+=(char const& c)
         {
             unsigned int length = stringLength(this->chars) + 2;
             char* newChars = new char[length];
             
             strcpy(newChars, this->chars);
-            //strcat(newChars, c);
             newChars[length-2] = c;
             newChars[length-1] = 0x00;
 
