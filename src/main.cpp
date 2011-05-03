@@ -5,7 +5,6 @@
 #include "buffer.hpp"
 #include "token.hpp"
 #include "lexer.hpp"
-#include "hashtable.hpp"
 #include "symtable.hpp"
 
 int main(int argc, char *argv[])
@@ -34,7 +33,7 @@ int main(int argc, char *argv[])
     // Redirect stdout to file if needed
     if(output)
     {
-    freopen(outputFile, "w+", stdout);
+        freopen(outputFile, "w+", stdout);
     }
 
     std::cout << std::setiosflags(std::ios::left);

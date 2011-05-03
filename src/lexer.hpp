@@ -3,6 +3,7 @@
 
 #include <ctype.h>
 #include "token.hpp"
+#include "buffer.hpp"
 #include "string.hpp"
 
 String LexerStateStrings[] =
@@ -49,9 +50,9 @@ enum LexerState
     STATE_SIGN_LER_INC,
     STATE_SIGN_LER,
     STATE_SIGN_PAREN_L,
-    STATE_SIGN_PAREN_R,    
+    STATE_SIGN_PAREN_R,
     STATE_SIGN_BRACE_L,
-    STATE_SIGN_BRACE_R,    
+    STATE_SIGN_BRACE_R,
     STATE_SIGN_BRACKET_L,
     STATE_SIGN_BRACKET_R,
     STATE_SIGN_NOT,
@@ -59,7 +60,6 @@ enum LexerState
     STATE_NOSTATE
 };
 
-//#define LEXER_DEBUG
 
 class Position
 {
@@ -206,6 +206,7 @@ public:
 
         String lexem = "";
 
+        int lastFinalSteps = this->steps;
         for(;;)
         {
             // Skip all whitespaces (spaces, tabs, etc...)
