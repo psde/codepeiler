@@ -64,11 +64,12 @@ int main(int argc, char *argv[])
         }
         
         std::cout << std::setw(20) << token.getTokenDescription() <<  " Line: " << std::setw(5) << token.getLine() << "Column: " << std::setw(5) << token.getColumn();
+        
         if(token.getType() == Token::TOKEN_IDENTIFIER)
-        std::cout << " Lexem: " << token.getLexem();
+            std::cout << " Lexem: " << token.getLexem();
 
         if(token.getType() == Token::TOKEN_INTEGER)
-        std::cout << " Value: " << token.getLexem().toULong();
+            std::cout << " Value: " << token.getLexem().toULong();
 
         std::cout << std::endl;
     }
