@@ -75,24 +75,23 @@ int main(int argc, char *argv[])
 
             if(output)
             {
-                writer->write(token.getTokenDescription());
-                writer->write(" Line: ");
-                writer->write(token.getLine());
-                writer->write(" Column: ");
-                
+                writer->stream()
+                    << token.getTokenDescription()
+                    << " Line: "
+                    << token.getLine()
+                    << " Column: ";
+
                 if(token.getType() == Token::TOKEN_IDENTIFIER)
                 {
-                    writer->write(" Lexem: ");
-                    writer->write(token.getLexem());
+                    writer->stream() << " Lexem: " << token.getLexem();
                 }
 
                 if(token.getType() == Token::TOKEN_INTEGER)
                 {
-                    writer->write(" Value: ");
-                    writer->write(tokenInteger);
+                    writer->stream() << " Value: " << tokenInteger;
                 }
 
-                writer->write("\n");
+                writer->stream() << "\n";
             }
             else
             {

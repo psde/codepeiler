@@ -2,6 +2,7 @@
 #define BUFFERWRITER_HPP
 
 #include <errno.h>
+#include <iostream>
 #include "String.hpp"
 
 class BufferWriter
@@ -21,9 +22,54 @@ private:
             this->flush();
     }
 
+    class StreamBuf : public std::streambuf
+    {
+    public:
+        StreamBuf(BufferWriter& writer) : writer(writer) {}
+
+
+        std::streamsize xsputn(const char* s, std::streamsize n)
+        {
+            writer.write(s, n);
+            return n;
+        }
+
+        int sync()
+        {
+            writer.flush();
+            return 0;
+        }
+
+        int overflow(int c = -1) {
+            if (c != -1)
+            {
+                char ch = c;
+                writer.write(&ch, 1);
+            }
+            writer.flush();
+            return 0;
+        }
+
+    private:
+        BufferWriter& writer;
+
+        StreamBuf(const StreamBuf&);
+        StreamBuf& operator=(const StreamBuf&);
+    };
+
+    StreamBuf streambuf;
+
+    std::ostream ostream;
+
 public:
 
+    std::ostream& stream()
+    {
+        return ostream;
+    }
+
     BufferWriter(const char* file)
+      : streambuf(*this), ostream(&streambuf)
     {
         this->fileDescriptor = open(file, O_DIRECT | O_CREAT | O_TRUNC | O_WRONLY, S_IRWXU);
 
@@ -38,19 +84,12 @@ public:
         this->flush();
     }
 
-    void write(String s)
+    void write(const char* s, unsigned int length)
     {
-        for(int i=0; i < s.length(); i++)
+        for(unsigned int i=0; i < length; i++)
         {
             this->addToBuffer(s[i]);
         }
-    }
-
-    void write(long l)
-    {
-        char buffer[sizeof(long)*8+1];
-        sprintf(buffer, "%i", l);
-        this->write(buffer);
     }
 
     void flush()
