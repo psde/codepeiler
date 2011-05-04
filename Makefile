@@ -1,11 +1,7 @@
 # vim: set tabstop=4 noexpandtab:
 OBJS = $(addsuffix .o,$(basename $(wildcard src/*.cpp)))
-ifdef DEBUG
-    CXXFLAGS = -DLEXER_DEBUG
-endif
-
 CXXFLAGS := $(CXXFLAGS)
-#LIBS := 
+LIBS := 
 BIN = codepeiler
 
 $(BIN): $(OBJS)

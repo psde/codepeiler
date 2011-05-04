@@ -128,6 +128,9 @@ void Lexer::getChar()
 void Lexer::ungetChar(unsigned int count)
 {
     // TODO: This will break when ungetting the first char in a line, resulting in a negativ column
+    // Possible fix: a) keep track of all lines and their length
+    // b) Unget on a char-by-char basis, if we detect a \n, unget the whole line to get the line length
+
     this->steps -= count + 1;
     this->pos.column -= count + 1;
     this->buffer->ungetChar(count + 1);
