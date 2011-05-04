@@ -79,6 +79,7 @@ class String
             unsigned long l = strtoul(this->chars, NULL, 10);
             if(errno == ERANGE)
             {
+                errno = 0;
                 throw std::range_error("Could not convert to unsigned long");
             }
             return l;
