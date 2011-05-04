@@ -62,6 +62,7 @@ public:
     void setEntry(Entry* e);
     Entry* getEntry();
 
+    unsigned long getULong();
     String getLexem();
     void setLexem(String lexem);
 

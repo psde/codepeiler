@@ -68,6 +68,11 @@ Entry* Token::getEntry()
     return this->entry;
 }
 
+unsigned long Token::getULong()
+{
+    return this->lexemName.toULong();
+}
+
 String Token::getLexem()
 {
     return this->lexemName;

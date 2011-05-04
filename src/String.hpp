@@ -6,6 +6,8 @@
 #include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdexcept>
+#include <errno.h>
 
 class String
 {
@@ -72,9 +74,14 @@ class String
         /*
           Returns interpreted unsigned long
         */
-        long toULong()
+        unsigned long toULong()
         {
-            return strtoul(this->chars, NULL, 10);
+            unsigned long l = strtoul(this->chars, NULL, 10);
+            if(errno == ERANGE)
+            {
+                throw std::range_error("Could not convert to unsigned long");
+            }
+            return l;
         }
 
         /*
