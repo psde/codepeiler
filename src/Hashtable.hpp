@@ -1,8 +1,8 @@
 #ifndef HASHTABLE_HPP
 #define HASHTABLE_HPP
 
-#include "list.hpp"
-#include "string.hpp"
+#include "List.hpp"
+#include "String.hpp"
 #include <exception>
 
 //using namespace std;

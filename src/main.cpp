@@ -1,11 +1,11 @@
 #include <iostream>
 #include <iomanip>
 
-#include "string.hpp"
-#include "buffer.hpp"
-#include "token.hpp"
-#include "lexer.hpp"
-#include "symtable.hpp"
+#include "String.hpp"
+#include "BufferReader.hpp"
+#include "Token.hpp"
+#include "Lexer.hpp"
+#include "Symtable.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
         output = true;
     }
 
-    Buffer *buf = new Buffer(argv[1]);
+    BufferReader *buf = new BufferReader(argv[1]);
     Lexer *lex = new Lexer(buf);
     Symtable symtable(100);
 

@@ -1,8 +1,8 @@
 #ifndef SYMTABLE_HPP
 #define SYMTABLE_HPP
 
-#include "hashtable.hpp"
-#include "token.hpp"
+#include "Hashtable.hpp"
+#include "Token.hpp"
 
 class Symtable : public Hashtable<Entry*>
 {

@@ -1,4 +1,4 @@
-#include "lexer.hpp"
+#include "Lexer.hpp"
 
 //#define LEXER_DEBUG
 
@@ -29,7 +29,7 @@ String LexerStateStrings[] =
     "STATE_NOSTATE"
 };
 
-Lexer::Lexer(Buffer *buffer)
+Lexer::Lexer(BufferReader *buffer)
 {
     this->buffer = buffer;
     this->setup();

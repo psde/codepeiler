@@ -2,9 +2,9 @@
 #define LEXER_HPP
 
 #include <ctype.h>
-#include "token.hpp"
-#include "buffer.hpp"
-#include "string.hpp"
+#include "Token.hpp"
+#include "BufferReader.hpp"
+#include "String.hpp"
 
 //#define LEXER_DEBUG
 
@@ -46,7 +46,7 @@ private:
         STATE_NOSTATE
     };
 
-    Buffer *buffer;
+    BufferReader *buffer;
 
     unsigned int transitions[STATE_NOSTATE+1][256];
     Token::TType finalState[STATE_NOSTATE+1];
@@ -65,7 +65,7 @@ private:
     void ungetChar(unsigned int count);
 
 public:
-    Lexer(Buffer *buffer);
+    Lexer(BufferReader *buffer);
 
     Token nextToken();
 };

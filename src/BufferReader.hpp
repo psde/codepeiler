@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-class Buffer
+class BufferReader
 {
 private:
     static const int BUFFER_SIZE = 1024 * 4;
@@ -22,7 +22,7 @@ private:
 
 public:
     
-    Buffer(const char* file)
+    BufferReader(const char* file)
     {
         this->fileDescriptor = open(file, O_DIRECT);
         this->fileLength = lseek(this->fileDescriptor, 0, SEEK_END);
@@ -30,17 +30,17 @@ public:
         this->bufferPosition = 0;
 
         // Allocate aligned space for buffer
-        this->fileBuffer = (char*)valloc(Buffer::BUFFER_SIZE);
+        this->fileBuffer = (char*)valloc(BufferReader::BUFFER_SIZE);
 
-        this->filePosition = read(this->fileDescriptor, this->fileBuffer, Buffer::BUFFER_SIZE / 2);
+        this->filePosition = read(this->fileDescriptor, this->fileBuffer, BufferReader::BUFFER_SIZE / 2);
 
         // Reading failed
-        if(this->filePosition != Buffer::BUFFER_SIZE / 2 && this->filePosition != this->fileLength)
+        if(this->filePosition != BufferReader::BUFFER_SIZE / 2 && this->filePosition != this->fileLength)
             throw "Error while reading from File";
         
     }
 
-    ~Buffer()
+    ~BufferReader()
     {
         free(this->fileBuffer);
     }
@@ -65,9 +65,9 @@ public:
 
         if(this->bufferPosition > this->filePosition )
         {
-            ssize_t bytesToRead = Buffer::BUFFER_SIZE / 2;
+            ssize_t bytesToRead = BufferReader::BUFFER_SIZE / 2;
 
-            ssize_t bytesRead = read(this->fileDescriptor, this->fileBuffer + this->filePosition % Buffer::BUFFER_SIZE, bytesToRead);
+            ssize_t bytesRead = read(this->fileDescriptor, this->fileBuffer + this->filePosition % BufferReader::BUFFER_SIZE, bytesToRead);
             /*if(bytesRead != bytesToRead)
             {
                 std::cout << "shit man" << std::endl;
@@ -79,7 +79,7 @@ public:
             }
         }
 
-        return this->fileBuffer[position % Buffer::BUFFER_SIZE];
+        return this->fileBuffer[position % BufferReader::BUFFER_SIZE];
     }
 
     // Set the buffer position back

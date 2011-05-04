@@ -2,7 +2,7 @@
 #define TOKEN_HPP
 
 #include <iostream>
-#include "string.hpp"
+#include "String.hpp"
 
 class Entry;
 
