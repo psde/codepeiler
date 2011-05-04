@@ -29,17 +29,16 @@ int main(int argc, char *argv[])
 
     BufferReader *buf = new BufferReader(argv[1]);
     BufferWriter *writer;
+    std::ostream* out = &std::cout;
     Lexer *lex = new Lexer(buf);
     Symtable symtable(100);
 
     if(output)
     {
         writer = new BufferWriter(outputFile);
+        out = &writer->stream();
     }
-    else
-    {
-        std::cout << std::setiosflags(std::ios::left);
-    }
+    *out << std::setiosflags(std::ios::left);
 
     Token token;
     while(true)
@@ -73,42 +72,19 @@ int main(int argc, char *argv[])
             if(token.getType() == Token::TOKEN_INTEGER)
                 tokenInteger = token.getLexem().toULong();
 
-            if(output)
-            {
-                writer->stream()
-                    << token.getTokenDescription()
-                    << " Line: "
-                    << token.getLine()
-                    << " Column: ";
+              *out << std::setw(20) << token.getTokenDescription() <<  " Line: " << std::setw(10) << token.getLine() << "Column: " << std::setw(10) << token.getColumn();
 
-                if(token.getType() == Token::TOKEN_IDENTIFIER)
-                {
-                    writer->stream() << " Lexem: " << token.getLexem();
-                }
+              if(token.getType() == Token::TOKEN_IDENTIFIER)
+                  *out << " Lexem: " << token.getLexem();
 
-                if(token.getType() == Token::TOKEN_INTEGER)
-                {
-                    writer->stream() << " Value: " << tokenInteger;
-                }
+              if(token.getType() == Token::TOKEN_INTEGER)
+                  *out << " Value: " << tokenInteger;
 
-                writer->stream() << "\n";
-            }
-            else
-            {
-                std::cout << std::setw(20) << token.getTokenDescription() <<  " Line: " << std::setw(10) << token.getLine() << "Column: " << std::setw(10) << token.getColumn();
-
-                if(token.getType() == Token::TOKEN_IDENTIFIER)
-                    std::cout << " Lexem: " << token.getLexem();
-                
-                if(token.getType() == Token::TOKEN_INTEGER)
-                    std::cout << " Value: " << tokenInteger;
-
-                std::cout << std::endl;
-            }
+              *out << std::endl;
         }
         catch(std::range_error e)
         {
-            std::cout << "Line: " << token.getLine() << " Column: " << token.getColumn() << ": Error while trying to parse '" << token.getLexem() << "': Out of range." << std::endl;
+            *out << "Line: " << token.getLine() << " Column: " << token.getColumn() << ": Error while trying to parse '" << token.getLexem() << "': Out of range." << std::endl;
         }
     }
 
