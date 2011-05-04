@@ -164,7 +164,7 @@ class String
             if(this->length() != stringLength(s.chars))
                 return false;
 
-            for(int i=0; i<=this->length(); i++)
+            for(unsigned int i=0; i<=this->length(); i++)
             {
                 if(this->chars[i] != s.chars[i])
                     return false;
