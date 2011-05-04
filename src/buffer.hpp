@@ -68,11 +68,12 @@ public:
             ssize_t bytesToRead = Buffer::BUFFER_SIZE / 2;
 
             ssize_t bytesRead = read(this->fileDescriptor, this->fileBuffer + this->filePosition % Buffer::BUFFER_SIZE, bytesToRead);
-            if(bytesRead != bytesToRead)
+            /*if(bytesRead != bytesToRead)
             {
+                std::cout << "shit man" << std::endl;
                 throw "Unrecoverable error while Buffer::getChar()";
             }
-            else
+            else*/
             {
                 this->filePosition += bytesRead;
             }

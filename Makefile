@@ -5,7 +5,7 @@ LIBS :=
 BIN = codepeiler
 
 $(BIN): $(OBJS)
-	$(CXX) -o $@ $(OBJS) #$(LIBS)
+	$(CXX) -o $@ $(OBJS) $(LIBS)
 
 clean:
 	$(RM) $(BIN) $(OBJS)

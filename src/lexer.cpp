@@ -1,5 +1,7 @@
 #include "lexer.hpp"
 
+//#define LEXER_DEBUG
+
 String LexerStateStrings[] =
 {
     "STATE_ERROR",

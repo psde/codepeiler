@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
             token.setEntry(e);
         }
         
-        std::cout << std::setw(20) << token.getTokenDescription() <<  " Line: " << std::setw(5) << token.getLine() << "Column: " << std::setw(5) << token.getColumn();
+        std::cout << std::setw(20) << token.getTokenDescription() <<  " Line: " << std::setw(10) << token.getLine() << "Column: " << std::setw(10) << token.getColumn();
         
         if(token.getType() == Token::TOKEN_IDENTIFIER)
             std::cout << " Lexem: " << token.getLexem();
