@@ -3,6 +3,7 @@
 
 #include "String.hpp"
 #include "BufferReader.hpp"
+#include "BufferWriter.hpp"
 #include "Token.hpp"
 #include "Lexer.hpp"
 #include "Symtable.hpp"
@@ -27,16 +28,18 @@ int main(int argc, char *argv[])
     }
 
     BufferReader *buf = new BufferReader(argv[1]);
+    BufferWriter *writer;
     Lexer *lex = new Lexer(buf);
     Symtable symtable(100);
 
-    // Redirect stdout to file if needed
     if(output)
     {
-        freopen(outputFile, "w+", stdout);
+        writer = new BufferWriter(outputFile);
     }
-
-    std::cout << std::setiosflags(std::ios::left);
+    else
+    {
+        std::cout << std::setiosflags(std::ios::left);
+    }
 
     Token token;
     while(true)
@@ -63,21 +66,60 @@ int main(int argc, char *argv[])
             token.setEntry(e);
         }
         
-        std::cout << std::setw(20) << token.getTokenDescription() <<  " Line: " << std::setw(10) << token.getLine() << "Column: " << std::setw(10) << token.getColumn();
-        
-        if(token.getType() == Token::TOKEN_IDENTIFIER)
-            std::cout << " Lexem: " << token.getLexem();
+        // 
+        unsigned long tokenInteger;
+        try
+        {
+            if(token.getType() == Token::TOKEN_INTEGER)
+                tokenInteger = token.getLexem().toULong();
 
-        if(token.getType() == Token::TOKEN_INTEGER)
-            std::cout << " Value: " << token.getLexem().toULong();
+            if(output)
+            {
+                writer->write(token.getTokenDescription());
+                writer->write(" Line: ");
+                writer->write(token.getLine());
+                writer->write(" Column: ");
+                
+                if(token.getType() == Token::TOKEN_IDENTIFIER)
+                {
+                    writer->write(" Lexem: ");
+                    writer->write(token.getLexem());
+                }
 
-        std::cout << std::endl;
+                if(token.getType() == Token::TOKEN_INTEGER)
+                {
+                    writer->write(" Value: ");
+                    writer->write(tokenInteger);
+                }
+
+                writer->write("\n");
+            }
+            else
+            {
+                std::cout << std::setw(20) << token.getTokenDescription() <<  " Line: " << std::setw(10) << token.getLine() << "Column: " << std::setw(10) << token.getColumn();
+
+                if(token.getType() == Token::TOKEN_IDENTIFIER)
+                    std::cout << " Lexem: " << token.getLexem();
+                
+                if(token.getType() == Token::TOKEN_INTEGER)
+                    std::cout << " Value: " << tokenInteger;
+
+                std::cout << std::endl;
+            }
+        }
+        catch(std::range_error e)
+        {
+            std::cout << "Line: " << token.getLine() << " Column: " << token.getColumn() << ": Error while trying to parse '" << token.getLexem() << "': Out of range." << std::endl;
+        }
     }
 
     if(output)
     {
-        fclose(stdout);
+        delete writer;
     }
+
+    delete buf;
+    delete lex;
 
     return 0;
 }
