@@ -1,12 +1,15 @@
 # vim: set tabstop=4 noexpandtab:
 OBJS = $(addsuffix .o,$(basename $(wildcard src/*.cpp)))
 CXXFLAGS := -MD $(CXXFLAGS)
-DEBUGFLAGS := -Wall -Wextra -pedantic -ansi
+DEBUGFLAGS := -DDEBUG -Wall -Wextra -pedantic -ansi $(CXXFLAGS)
 LIBS := 
 BIN = codepeiler
 
-debug: CXXFLAGS += $(DEBUGFLAGS)
-debug: $(BIN)
+release:
+	$(MAKE) CXXFLAGS="$(CXXFLAGS)" $(BIN)
+
+debug:
+	$(MAKE) CXXFLAGS="$(DEBUGFLAGS)" $(BIN)
 
 $(BIN): $(OBJS)
 	$(CXX) -o $@ $(OBJS) $(LIBS)
