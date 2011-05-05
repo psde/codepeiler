@@ -65,14 +65,17 @@ int main(int argc, char *argv[])
             token.setEntry(e);
         }
         
-        // 
         unsigned long tokenInteger;
         try
         {
             if(token.getType() == Token::TOKEN_INTEGER)
                 tokenInteger = token.getLexem().toULong();
 
-              *out << std::setw(20) << token.getTokenDescription() <<  " Line: " << std::setw(10) << token.getLine() << "Column: " << std::setw(10) << token.getColumn();
+              *out << std::setw(20) 
+                   << token.getTokenDescription() 
+                   <<  " Line: " << std::setw(10) 
+                   << token.getLine() << "Column: " 
+                   << std::setw(10) << token.getColumn();
 
               if(token.getType() == Token::TOKEN_IDENTIFIER)
                   *out << " Lexem: " << token.getLexem();
@@ -84,7 +87,10 @@ int main(int argc, char *argv[])
         }
         catch(std::range_error e)
         {
-            *out << "Line: " << token.getLine() << " Column: " << token.getColumn() << ": Error while trying to parse '" << token.getLexem() << "': Out of range." << std::endl;
+            std::cout << "Line: " << token.getLine() 
+                      << " Column: " << token.getColumn() 
+                      << ": Error while trying to parse '" << token.getLexem() 
+                      << "': Out of range." << std::endl;
         }
     }
 
