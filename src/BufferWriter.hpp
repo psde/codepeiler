@@ -36,7 +36,7 @@ private:
 
         int sync()
         {
-            writer.flush();
+            //writer.flush();
             return 0;
         }
 
@@ -46,7 +46,7 @@ private:
                 char ch = c;
                 writer.write(&ch, 1);
             }
-            writer.flush();
+            //writer.flush();
             return 0;
         }
 
