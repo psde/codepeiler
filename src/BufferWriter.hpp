@@ -82,6 +82,7 @@ public:
     ~BufferWriter()
     {
         this->flush();
+        free(this->writeBuffer);
     }
 
     void write(const char* s, unsigned int length)
