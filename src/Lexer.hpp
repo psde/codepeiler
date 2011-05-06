@@ -11,9 +11,9 @@
 class Position
 {
     public:
-    unsigned int line, column;
+    unsigned int line, column, steps;
 
-    Position() : line(0), column(0) {};
+    Position() : line(0), column(0), steps(0) {};
 };
 
 class Lexer
@@ -53,7 +53,7 @@ private:
 
     char currentChar;
     Position pos;
-    unsigned int steps;
+    //unsigned int steps;
 
     void addTransition(LexerState from, char c, LexerState to);
     void addFinalState(LexerState from, Token::TType type);

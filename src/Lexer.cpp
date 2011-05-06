@@ -38,8 +38,6 @@ Lexer::Lexer(BufferReader *buffer)
     this->pos.column = 0;
 
     this->getChar();
-
-    this->steps = 0;
 }
 
 void Lexer::addTransition(LexerState from, char c, LexerState to)
@@ -110,7 +108,7 @@ void Lexer::setup()
 
 void Lexer::getChar()
 {
-    this->steps++;
+    this->pos.steps++;
     this->pos.column++;
     this->currentChar = this->buffer->getChar();
 
@@ -133,7 +131,7 @@ void Lexer::ungetChar(unsigned int count)
     // Possible fix: a) keep track of all lines and their length
     // b) Unget on a char-by-char basis, if we detect a \n, unget the whole line to get the line length
 
-    this->steps -= count + 1;
+    this->pos.steps -= count + 1;
     this->pos.column -= count + 1;
     this->buffer->ungetChar(count + 1);
     this->getChar();
@@ -190,7 +188,6 @@ Token Lexer::nextToken()
 
     String lexem = "";
 
-    int lastFinalSteps = this->steps;
     for(;;)
     {
         // Skip all whitespaces (spaces, tabs, etc...)
@@ -200,45 +197,34 @@ Token Lexer::nextToken()
             this->getChar();
             skipped = true;
 
-            /*if(state == STATE_BEGIN)
-                continue;
-            break;*/
         }
 
         if(skipped && state != STATE_BEGIN)
             break;
-        /*if(skipped)
-        {
-            if(state == STATE_BEGIN)
-                continue;
-            break;
-        }*/
 
         if(this->isComment())
-        {
             break;
-        }
 
         unsigned int nextState = this->transitions[state][currentChar];
 
-#ifdef LEXER_DEBUG
-        std::cout << LexerStateStrings[state] << " -- '" << currentChar << "' --> " << LexerStateStrings[nextState] << std::endl;
-#endif
+        #ifdef LEXER_DEBUG
+            std::cout << LexerStateStrings[state] << " -- '" << currentChar << "' --> " << LexerStateStrings[nextState] << std::endl;
+        #endif
 
         if(nextState && this->finalState[nextState])
         {
             lastFinal = nextState;
-            lastFinalSteps = steps;
-#ifdef LEXER_DEBUG
-            std::cout << LexerStateStrings[nextState] << " could be a final state!" << std::endl;
-#endif
+            #ifdef LEXER_DEBUG
+                std::cout << LexerStateStrings[nextState] << " could be a final state!" << std::endl;
+            #endif
         }
 
         if(!nextState)
         {
-#ifdef LEXER_DEBUG
-            std::cout << "No transition possible." << std::endl;
-#endif
+            #ifdef LEXER_DEBUG
+                std::cout << "No transition possible." << std::endl;
+            #endif
+            
             break;
         }
 
@@ -250,9 +236,9 @@ Token Lexer::nextToken()
 
     if(this->finalState[state])
     {
-#ifdef LEXER_DEBUG
-        std::cout << "We got a final state: " << LexerStateStrings[state] << std::endl;
-#endif
+        #ifdef LEXER_DEBUG
+            std::cout << "We got a final state: " << LexerStateStrings[state] << std::endl;
+        #endif
         token.setType(this->finalState[state]);
         token.setLexem(lexem);
         token.setPosition(lastPos.line, lastPos.column - (lexem.length() - 1));
@@ -263,7 +249,7 @@ Token Lexer::nextToken()
         token.setPosition(lastPos.line, lastPos.column - (lexem.length() - 1));
         lexem[lexem.length()-1] = '\0';
         token.setLexem(lexem);
-        this->ungetChar(this->steps - lastFinalSteps - 1);
+        this->ungetChar(this->pos.steps - lastPos.steps);
         this->pos = lastPos;
     }
     else
