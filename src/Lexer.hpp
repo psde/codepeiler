@@ -64,6 +64,8 @@ private:
     void getChar();
     void ungetChar(unsigned int count);
 
+    bool isComment();
+
 public:
     Lexer(BufferReader *buffer);
 

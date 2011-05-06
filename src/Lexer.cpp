@@ -139,6 +139,15 @@ void Lexer::ungetChar(unsigned int count)
     this->getChar();
 }
 
+bool Lexer::isComment()
+{
+    if(currentChar == '(' && this->buffer->peekChar() == '*')
+    {
+        return true;
+    }
+    return false;
+}
+
 // TODO: Big monolith, split this up in many small functions
 Token Lexer::nextToken()
 {
@@ -151,7 +160,7 @@ Token Lexer::nextToken()
         return token;
     }
 
-    if(currentChar == '(' && this->buffer->peekChar() == '*')
+    if(this->isComment()) 
     {
         Position commentStart = this->pos;
         while(true)
@@ -190,16 +199,22 @@ Token Lexer::nextToken()
         {
             this->getChar();
             skipped = true;
+
+            /*if(state == STATE_BEGIN)
+                continue;
+            break;*/
         }
 
-        if(skipped)
+        if(skipped && state != STATE_BEGIN)
+            break;
+        /*if(skipped)
         {
             if(state == STATE_BEGIN)
                 continue;
             break;
-        }
+        }*/
 
-        if(currentChar == '(' && this->buffer->peekChar() == '*')
+        if(this->isComment())
         {
             break;
         }
