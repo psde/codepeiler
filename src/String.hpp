@@ -86,14 +86,6 @@ class String
         }
 
         /*
-          Returns interpreted integer
-        */
-        long toInt()
-        {
-            return atoi(this->chars);
-        }
-
-        /*
           Returns the string length
         */
         unsigned int length()
