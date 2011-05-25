@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     BufferWriter *writer;
     std::ostream* out = &std::cout;
     Lexer *lex = new Lexer(buf);
-    Symtable symtable(100);
+    Symtable symtable(1024);
 
     if(output)
     {
