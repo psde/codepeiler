@@ -1,12 +1,14 @@
 #include <iostream>
 #include <iomanip>
 
+// TODO: Beautfiy this
 #include "String.hpp"
 #include "BufferReader.hpp"
 #include "BufferWriter.hpp"
 #include "Token.hpp"
 #include "Lexer.hpp"
 #include "Symtable.hpp"
+#include "Parser.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -32,6 +34,12 @@ int main(int argc, char *argv[])
     std::ostream* out = &std::cout;
     Lexer *lex = new Lexer(buf);
     Symtable symtable(1024);
+    Parser *parser = new Parser(lex);
+
+    ParseTree *foo = parser->parse();
+    return 0;
+
+    //TODO: Meh.
 
     if(output)
     {
