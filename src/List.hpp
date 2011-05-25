@@ -47,22 +47,6 @@ public:
 		this->values[size-1] = value;
 	}
 
-    // Last value needs to be 0
-    void append(type value1, type value ...)
-    {
-        va_list args;
-        va_start(args, value);
-
-        type t = value;
-        do
-        {
-            this->append(t);
-            t = va_arg(args, type);
-        } while(t);
-        
-        va_end(args);
-    }
-
 	/*void setValue(int index, type value) {
 		this->values[ index ] = value;
 	}*/
