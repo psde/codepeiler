@@ -35,7 +35,7 @@ class Pair {
 template <class type> 
 class Hashtable { 
 	private:
-		list<Pair<type> >* table;
+		List<Pair<type> >* table;
 		int size;
 
 		int hashcode(String key)
@@ -76,7 +76,7 @@ class Hashtable {
 		Hashtable(int size)
 			: size(size)
 		{
-			this->table = new list<Pair<type> >[size];
+			this->table = new List<Pair<type> >[size];
 		}
 
 		/*
