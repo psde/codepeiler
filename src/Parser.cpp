@@ -2,19 +2,6 @@
 
 #include <iostream>
 
-struct Rule {
-    int size;
-    Token::TType* tokens;
-
-    bool isTokenInRule(Token tok) const {
-        for(int i=0; i<size; i++)
-            if(tok.getType() == tokens[i])
-                return true;
-        return false;
-    }
-};
-
-// TODO: Dear science, C is fugly as hell. Beautify this, asap.
 Token::TType TOKENS_PROGSTART[] =
 {
     Token::TOKEN_PRINT,
@@ -60,7 +47,7 @@ ParseTree *Parser::parse()
 
 ParseTree *Parser::parseProg()
 { 
-    if(RULE_PROGSTART.isTokenInRule(currentToken))
+    if(RULE_PROGSTART.isTokenValid(currentToken))
     {
         std::cout << "Seems like it is in RULE_PROGSTART..." << std::endl;
         this->parseDecls();
