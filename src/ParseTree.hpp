@@ -4,8 +4,6 @@
 #include "ParseRule.hpp"
 #include "Token.hpp"
 
-struct ParserRule;
-
 class ParseTree
 {
 private:
