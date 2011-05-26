@@ -7,19 +7,7 @@
 #include "List.hpp"
 #include "Token.hpp"
 #include "String.hpp"
-
-struct Rule {
-    String name;
-    int size;
-    Token::TType* tokens;
-
-    bool isTokenValid(Token tok) const {
-        for(int i=0; i<size; i++)
-            if(tok.getType() == tokens[i])
-                return true; 
-        return false;
-    }   
-};  
+#include "ParseRule.hpp"
 
 class Parser
 {
