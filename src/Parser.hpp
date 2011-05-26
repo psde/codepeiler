@@ -18,7 +18,7 @@ private:
     Token currentToken;
     void nextToken();
 
-    ParseTree *buildTree(ParseRule rule);
+    ParseTree *buildTree(ParserRule rule);
 
     ParseTree *parseProg();
     ParseTree *parseDecls();

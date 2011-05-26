@@ -29,7 +29,7 @@ Parser::~Parser()
 
 }
 
-ParseTree *Parser::buildTree(ParseRule rule)
+ParseTree *Parser::buildTree(ParserRule rule)
 {
     return new ParseTree(rule, currentToken.getLine(), currentToken.getColumn());
 }
