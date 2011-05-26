@@ -12,7 +12,7 @@ Token::TType TOKENS_PROGSTART[] =
     Token::TOKEN_WHILE,
     Token::TOKEN_EOF
 };
-const Rule RULE_PROGSTART = {
+const ParserRule RULE_PROGSTART = {
     "RULE_PROGSTART",
     sizeof(TOKENS_PROGSTART) / sizeof(TOKENS_PROGSTART[0]),
     TOKENS_PROGSTART
@@ -21,7 +21,7 @@ const Rule RULE_PROGSTART = {
 Parser::Parser(Lexer *lexer)
  : lexer(lexer)
 {
-    this->setup();    
+
 }
 
 Parser::~Parser()
@@ -29,9 +29,9 @@ Parser::~Parser()
 
 }
 
-void Parser::setup()
+ParseTree *Parser::buildTree(ParseRule rule)
 {
-    
+    return new ParseTree(rule, currentToken.getLine(), currentToken.getColumn());
 }
 
 void Parser::nextToken()
@@ -55,15 +55,15 @@ ParseTree *Parser::parseProg()
         this->parseStatements();
     }
 
-    return new ParseTree();
+    return this->buildTree(RULE_PROGSTART);
 }
 
 ParseTree *Parser::parseDecls()
 {
-    return new ParseTree();
+    return this->buildTree(RULE_PROGSTART);
 }
 
 ParseTree *Parser::parseStatements()
 {
-    return new ParseTree();
+    return this->buildTree(RULE_PROGSTART);
 }

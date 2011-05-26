@@ -11,7 +11,7 @@ struct ParserRule {
             if(tok.getType() == tokens[i])
                 return true; 
         return false;
-    }   
+    }  
 };  
 
 
