@@ -13,6 +13,7 @@ Token::TType TOKENS_PROGSTART[] =
     Token::TOKEN_EOF
 };
 const Rule RULE_PROGSTART = {
+    "RULE_PROGSTART",
     sizeof(TOKENS_PROGSTART) / sizeof(TOKENS_PROGSTART[0]),
     TOKENS_PROGSTART
 };

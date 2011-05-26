@@ -6,8 +6,10 @@
 #include "ParseTree.hpp"
 #include "List.hpp"
 #include "Token.hpp"
+#include "String.hpp"
 
 struct Rule {
+    String name;
     int size;
     Token::TType* tokens;
 
