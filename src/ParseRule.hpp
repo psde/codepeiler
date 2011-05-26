@@ -1,6 +1,9 @@
 #ifndef PARSERULE_HPP
 #define PARSERULE_HPP
 
+#include "String.hpp"
+#include "Token.hpp"
+
 struct ParserRule {
     String name;
     int size;
