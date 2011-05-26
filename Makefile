@@ -6,7 +6,7 @@ DEBUGFLAGS := -O0 -g -DDEBUG -Wall -Wextra -pedantic -ansi $(CXXFLAGS)
 LIBS := 
 BIN = codepeiler
 
--include $(OBJS:.o=.d) #$(addsufix .d, $(OBJS))
+#-include $(OBJS:.o=.d) #$(addsufix .d, $(OBJS))
 
 release:
 	$(MAKE) CXXFLAGS="$(RELEASEFLAGS)" $(BIN)
