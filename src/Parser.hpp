@@ -21,7 +21,6 @@ private:
     Token currentToken;
     void nextToken();
 
-    bool isTokenInRule(Token tok, Token::TType *rule, int size);
     void setup();
 
     ParseTree *parseProg();

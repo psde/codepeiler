@@ -2,9 +2,20 @@
 
 #include <iostream>
 
+struct Rule {
+    int size;
+    Token::TType* tokens;
+
+    bool isTokenInRule(Token tok) const {
+        for(int i=0; i<size; i++)
+            if(tok.getType() == tokens[i])
+                return true;
+        return false;
+    }
+};
+
 // TODO: Dear science, C is fugly as hell. Beautify this, asap.
-int SIZE_RULE_PROGSTART = 7;
-Token::TType RULE_PROGSTART[] =
+Token::TType TOKENS_PROGSTART[] =
 {
     Token::TOKEN_PRINT,
     Token::TOKEN_READ,
@@ -13,6 +24,10 @@ Token::TType RULE_PROGSTART[] =
     Token::TOKEN_IF,
     Token::TOKEN_WHILE,
     Token::TOKEN_EOF
+};
+const Rule RULE_PROGSTART = {
+    sizeof(TOKENS_PROGSTART) / sizeof(TOKENS_PROGSTART[0]),
+    TOKENS_PROGSTART
 };
 
 Parser::Parser(Lexer *lexer)
@@ -24,16 +39,6 @@ Parser::Parser(Lexer *lexer)
 Parser::~Parser()
 {
 
-}
-
-bool Parser::isTokenInRule(Token tok, Token::TType *rule, int size)
-{
-    for(int i=0; i<size; i++)
-    {
-        if(tok.getType() == rule[i])
-            return true;
-    }
-    return false;
 }
 
 void Parser::setup()
@@ -55,7 +60,7 @@ ParseTree *Parser::parse()
 
 ParseTree *Parser::parseProg()
 { 
-    if(this->isTokenInRule(currentToken, RULE_PROGSTART, SIZE_RULE_PROGSTART))
+    if(RULE_PROGSTART.isTokenInRule(currentToken))
     {
         std::cout << "Seems like it is in RULE_PROGSTART..." << std::endl;
         this->parseDecls();
