@@ -1,1 +1,1 @@
-java -Djava.library.path="/home/mathias/devel/codepeiler/interpreter/i386/" -jar interpreter.jar
+java -Djava.library.path="i386/" -jar interpreter.jar
