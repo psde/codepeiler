@@ -32,13 +32,16 @@ int main(int argc, char *argv[])
     BufferReader *buf = new BufferReader(argv[1]);
     BufferWriter *writer;
     std::ostream* out = &std::cout;
-    Lexer *lex = new Lexer(buf);
-    Symtable symtable(1024);
+    
+    Symtable *symtable = new Symtable(1024);
+    
+    Lexer *lex = new Lexer(buf, symtable);
+    
     Parser *parser = new Parser(lex);
-
+    /*
     ParseTree *foo = parser->parse();
     return 0;
-
+*/
     //TODO: Meh.
 
     if(output)
@@ -55,7 +58,7 @@ int main(int argc, char *argv[])
 
         if(token.getType() == Token::TOKEN_EOF)
             break;
-
+/*
         if(token.getType() == Token::TOKEN_IDENTIFIER)
         {
             Entry* e;
@@ -72,7 +75,7 @@ int main(int argc, char *argv[])
             }
             token.setEntry(e);
         }
-        
+*/        
         unsigned long tokenInteger;
         try
         {
@@ -109,6 +112,7 @@ int main(int argc, char *argv[])
 
     delete buf;
     delete lex;
+    delete symtable;
 
     return 0;
 }

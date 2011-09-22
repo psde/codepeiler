@@ -29,9 +29,10 @@ String LexerStateStrings[] =
     "STATE_NOSTATE"
 };
 
-Lexer::Lexer(BufferReader *buffer)
+Lexer::Lexer(BufferReader *buffer, Symtable *symtable)
 {
     this->buffer = buffer;
+    this->symtable = symtable;
     this->setup();
 
     this->pos.line = 1;
@@ -257,6 +258,25 @@ Token Lexer::nextToken()
         token.setPosition(lastPos.line, lastPos.column);
         this->getChar();
     }
+
+    // Add token to symtable
+    if(token.getType() == Token::TOKEN_IDENTIFIER)
+    {
+        Entry* e;
+
+        if(symtable->contains(token.getLexem()))
+        {
+            e = symtable->get(token.getLexem());
+            token.setType(e->type);
+        }
+        else
+        {   
+            e = new Entry(token.getType(), token.getLexem());
+            symtable->put(token.getLexem(), e);
+        }
+        token.setEntry(e);
+    }
+
 
     return token;
 }

@@ -2,6 +2,7 @@
 #define LEXER_HPP
 
 #include <ctype.h>
+#include "Symtable.hpp"
 #include "Token.hpp"
 #include "BufferReader.hpp"
 #include "String.hpp"
@@ -47,6 +48,7 @@ private:
     };
 
     BufferReader *buffer;
+    Symtable *symtable;
 
     unsigned int transitions[STATE_NOSTATE+1][256];
     Token::TType finalState[STATE_NOSTATE+1];
@@ -67,7 +69,7 @@ private:
     bool isComment();
 
 public:
-    Lexer(BufferReader *buffer);
+    Lexer(BufferReader *buffer, Symtable *symtable);
 
     Token nextToken();
 };
