@@ -18,4 +18,23 @@ struct ParserRule {
 };  
 
 
+template<typename T>
+struct newParserRule {
+    const char* name;
+    std::size_t size;
+    T* v;
+
+    template<typename... Args>
+    newParserRule(const char* name, Args... tokens)
+     : name(name), size(sizeof...(tokens)),
+       v(new T[sizeof...(tokens)] { tokens... })
+    {}
+
+    ~newParserRule() {
+        delete[] v;
+    }
+};
+
+const newParserRule<Token::TType> ary("derp", Token::TOKEN_INT);
+
 #endif
