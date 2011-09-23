@@ -52,9 +52,9 @@ Token::TType TOKENS_STATEMENTS[] =
 {
     Token::TOKEN_PRINT,
     Token::TOKEN_READ,
-    Token::TOKEN_INT,
     Token::TOKEN_IDENTIFIER,
     Token::TOKEN_IF,
+    Token::TOKEN_ELSE,
     Token::TOKEN_WHILE,
     Token::TOKEN_EOF
 };
@@ -148,6 +148,7 @@ ParseTree *Parser::parseDecl()
             this->nextToken();
             this->nextToken();
             this->nextToken();
+            this->nextToken();
         }
         else
         {
@@ -163,6 +164,10 @@ ParseTree *Parser::parseDecl()
 
 ParseTree *Parser::parseStatements()
 {
-    std::cout << "RULE_STATEMENTS" << std::endl;
+    while(RULE_STATEMENTS.isTokenValid(currentToken))
+    {
+        std::cout << "RULE_STATEMENTS" << std::endl;
+        this->nextToken();
+    }
     return this->buildTree(RULE_PROG);
 }

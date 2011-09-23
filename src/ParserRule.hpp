@@ -1,5 +1,5 @@
-#ifndef PARSERULE_HPP
-#define PARSERULE_HPP
+#ifndef PARSERRULE_HPP
+#define PARSERRULE_HPP
 
 #include "String.hpp"
 #include "Token.hpp"

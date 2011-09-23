@@ -1,7 +1,7 @@
 #ifndef PARSETREE_HPP
 #define PARSETREE_HPP
 
-#include "ParseRule.hpp"
+#include "ParserRule.hpp"
 #include "Token.hpp"
 
 class ParseTreeLeaf;
