@@ -103,6 +103,9 @@ ParseTree *Parser::parse()
     return this->parseProg();
 }
 
+/*
+PROG ::= DECLS STATEMENTS
+*/
 ParseTree *Parser::parseProg()
 {
     if(RULE_PROG.isTokenValid(currentToken))
@@ -116,6 +119,10 @@ ParseTree *Parser::parseProg()
     throw std::runtime_error("todo...");
 }
 
+/*
+DECLS ::= DECL ; DECLS | 
+          <e>
+*/
 ParseTree *Parser::parseDecls()
 {
     while(RULE_DECLS.isTokenValid(currentToken))
@@ -127,6 +134,9 @@ ParseTree *Parser::parseDecls()
     return this->buildTree(RULE_DECLS);
 }
 
+/*
+DECL ::= int ARRAY identifier
+*/
 ParseTree *Parser::parseDecl()
 {
     if(RULE_DECL.isTokenValid(currentToken))
@@ -162,12 +172,75 @@ ParseTree *Parser::parseDecl()
     return this->buildTree(RULE_PROG);
 }
 
+/*
+STATEMENTS ::= STATEMENT ; STATEMENTS |
+               <e>
+*/
 ParseTree *Parser::parseStatements()
 {
     while(RULE_STATEMENTS.isTokenValid(currentToken))
     {
         std::cout << "RULE_STATEMENTS" << std::endl;
-        this->nextToken();
+        this->parseStatement();
     }
     return this->buildTree(RULE_PROG);
 }
+
+/*
+STATEMENT ::= identifier INDEX = EXP |
+              print ( EXP ) |
+              read ( EXP ) |
+              { STATEMENTS } |
+              if ( EXP ) STATEMENT else STATEMENT |
+              while ( EXP ) STATEMENT
+*/
+ParseTree *Parser::parseStatement()
+{
+    if(this->requireToken(Token::TOKEN_IDENTIFIER))
+    {
+        std::cout << "RULE_STATEMENT: IDENTIFIER = EXP;" << std::endl;
+        requireToken(Token::TOKEN_EQUAL, true);
+        this->parseExp();
+    }
+    else if(this->requireToken(Token::TOKEN_PRINT))
+    {
+        std::cout << "RULE_STATEMENT: print ( EXP );" << std::endl;
+        this->parseExp();
+    }
+    else
+    {
+        throw std::runtime_error("todo...");
+    }
+    return NULL;
+}
+
+/*
+EXP ::= EXP2 OP_EXP
+*/
+ParseTree *Parser::parseExp()
+{
+    std::cout << "RULE_EXP: TODO!" << std::endl;
+    return NULL;
+}
+
+/*
+EXP2 ::= ( EXP ) |
+         identifier INDEX |
+         integer |
+         - EXP2 |
+         ! EXP2
+*/
+
+/*
+INDEX ::= [ EXP ] |
+          <e>
+*/
+
+/*
+OP_EXP ::= OP EXP |
+           <e>
+*/
+
+/*
+OP ::= + | - | * | / | < | > | = | <=> | &
+*/
