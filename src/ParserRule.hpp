@@ -17,7 +17,7 @@ struct ParserRule {
     }  
 };  
 
-
+/*
 template<typename T>
 struct newParserRule {
     const char* name;
@@ -36,5 +36,5 @@ struct newParserRule {
 };
 
 const newParserRule<Token::TType> ary("derp", Token::TOKEN_INT);
-
+*/
 #endif
