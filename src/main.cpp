@@ -2,6 +2,10 @@
 //#define LEXER_DEBUG // Lexer is spamming stdout with debug crap
 #define NO_DIRECT_IO // Use this if developing on crypto fs
 
+#ifndef __GNUC__  
+    #error "You need GCC to compile this." 
+#endif 
+
 #include <iostream>
 #include <iomanip>
 
