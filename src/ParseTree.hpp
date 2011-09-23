@@ -4,6 +4,8 @@
 #include "ParseRule.hpp"
 #include "Token.hpp"
 
+class ParseTreeLeaf;
+
 class ParseTree
 {
 private:
@@ -17,6 +19,28 @@ public:
     {
 
     }
+
+    void addNode(ParseTree *node)
+    {
+
+    }
+
+    ParseTree* getNode(int index);
+    ParseTreeLeaf* getLeaf(int index);
+
+    int getNodeCount();
+    ParserRule getRule();
+    int getLine();
+    int getColumn();
+
+
+};
+
+class ParseTreeLeaf : public ParseTree
+{
+private:
+
+public:
 
 };
 

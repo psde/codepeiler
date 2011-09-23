@@ -38,10 +38,10 @@ int main(int argc, char *argv[])
     Lexer *lex = new Lexer(buf, symtable);
     
     Parser *parser = new Parser(lex);
-    /*
+
     ParseTree *foo = parser->parse();
     return 0;
-*/
+
     //TODO: Meh.
 
     if(output)
@@ -58,24 +58,7 @@ int main(int argc, char *argv[])
 
         if(token.getType() == Token::TOKEN_EOF)
             break;
-/*
-        if(token.getType() == Token::TOKEN_IDENTIFIER)
-        {
-            Entry* e;
 
-            if(symtable.contains(token.getLexem()))
-            {
-                e = symtable.get(token.getLexem());
-                token.setType(e->type);
-            }
-            else
-            {   
-                e = new Entry(token.getType(), token.getLexem());
-                symtable.put(token.getLexem(), e);
-            }
-            token.setEntry(e);
-        }
-*/        
         unsigned long tokenInteger;
         try
         {

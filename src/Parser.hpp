@@ -17,6 +17,7 @@ private:
     Lexer *lexer;
     Token currentToken;
     void nextToken();
+    bool requireToken(Token::TType tok, bool readNext = false);
 
     ParseTree *buildTree(ParserRule rule);
 
