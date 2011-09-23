@@ -71,8 +71,11 @@ public:
     BufferWriter(const char* file)
       : streambuf(*this), ostream(&streambuf)
     {
+#ifdef NO_DIRECT_IO
         this->fileDescriptor = open(file, O_DIRECT | O_CREAT | O_TRUNC | O_WRONLY, S_IRWXU);
-
+#else
+        this->fileDescriptor = open(file, O_CREAT | O_TRUNC | O_WRONLY, S_IRWXU);
+#endif
         this->writeBuffer = (char*)valloc(BufferWriter::BUFFER_SIZE);
         memset(this->writeBuffer, 0, BufferWriter::BUFFER_SIZE);
 

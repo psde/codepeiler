@@ -24,7 +24,11 @@ public:
     
     BufferReader(const char* file)
     {
+#ifdef NO_DIRECT_IO
+        this->fileDescriptor = open(file, O_RDONLY);
+#else
         this->fileDescriptor = open(file, O_DIRECT | O_RDONLY);
+#endif
         this->fileLength = lseek(this->fileDescriptor, 0, SEEK_END);
         lseek(this->fileDescriptor, 0, SEEK_SET);
         this->bufferPosition = 0;
