@@ -31,9 +31,9 @@ class ParseTree
 {
 private:
     ParserRule rule;
-    Position pos;
 
 protected:
+    Position pos;
     int nodeCount;
     ParseTree *nodes[3];
 
@@ -89,14 +89,20 @@ private:
     Token tok;
 
 public:
-    ParseTreeLeaf(Token tok, int line, int column)
-     : ParseTree(RULE_NONE, line, column)
+    ParseTreeLeaf(Token tok)
+     : ParseTree(RULE_NONE, tok.getLine(), tok.getColumn())
     {
         this->tok = tok;
     }
 
     void setArray(int size = 0) { this->array = true; this->arraySize = size; }
     bool isArray() { return this->array; }
+
+    void setToken(Token tok)
+    {
+        this->tok = tok;
+        this->pos = Position(tok.getLine(), tok.getColumn());
+    }
     Token getToken() { return this->tok; }
 };
 
