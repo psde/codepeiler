@@ -2,80 +2,6 @@
 
 #include <iostream>
 
-Token::TType TOKENS_PROG[] =
-{
-    Token::TOKEN_PRINT,
-    Token::TOKEN_READ,
-    Token::TOKEN_INT,
-    Token::TOKEN_IDENTIFIER,
-    Token::TOKEN_IF,
-    Token::TOKEN_WHILE,
-    Token::TOKEN_EOF
-};
-const ParserRule RULE_PROG = {
-    "RULE_PROG",
-    sizeof(TOKENS_PROG) / sizeof(TOKENS_PROG[0]),
-    TOKENS_PROG
-};
-
-Token::TType TOKENS_DECLS[] =
-{
-    Token::TOKEN_INT
-};
-const ParserRule RULE_DECLS = {
-    "RULE_DECLS",
-    sizeof(TOKENS_DECLS) / sizeof(TOKENS_DECLS[0]),
-    TOKENS_DECLS
-};
-
-const ParserRule RULE_DECL = {
-    "RULE_DECL",
-    sizeof(TOKENS_DECLS) / sizeof(TOKENS_DECLS[0]),
-    TOKENS_DECLS
-};
-
-const ParserRule RULE_TYPE_INT = {
-    "RULE_TYPE_INT",
-    sizeof(TOKENS_DECLS) / sizeof(TOKENS_DECLS[0]),
-    TOKENS_DECLS
-};
-
-Token::TType TOKENS_STATEMENTS[] =
-{
-    Token::TOKEN_PRINT,
-    Token::TOKEN_READ,
-    Token::TOKEN_IDENTIFIER,
-    Token::TOKEN_IF,
-    Token::TOKEN_ELSE,
-    Token::TOKEN_WHILE,
-    Token::TOKEN_EOF
-};
-const ParserRule RULE_STATEMENTS = {
-    "RULE_STATEMENTS",
-    sizeof(TOKENS_STATEMENTS) / sizeof(TOKENS_STATEMENTS[0]),
-    TOKENS_STATEMENTS
-};
-
-Token::TType TOKENS_OP[] =
-{
-    Token::TOKEN_PLUS, Token::TOKEN_MINUS, Token::TOKEN_MULT, Token::TOKEN_DIV, Token::TOKEN_LESSER, Token::TOKEN_GREATER, Token::TOKEN_EQUAL, Token::TOKEN_AND, Token::TOKEN_LER
-};
-const ParserRule RULE_OP = {
-    "RULE_OP",
-    sizeof(TOKENS_OP) / sizeof(TOKENS_OP[0]),
-    TOKENS_OP
-};
-
-Token::TType TOKENS_EXP2[] =
-{
-    Token::TOKEN_PAREN_L, Token::TOKEN_IDENTIFIER, Token::TOKEN_INTEGER, Token::TOKEN_MINUS, Token::TOKEN_NOT
-};
-const ParserRule RULE_EXP2 = {
-    "RULE_EXP2",
-    sizeof(TOKENS_EXP2) / sizeof(TOKENS_EXP2[0]),
-    TOKENS_EXP2
-};
-
 Parser::Parser(Lexer *lexer)
  : lexer(lexer)
 {
@@ -104,12 +30,16 @@ bool Parser::requireToken(Token::TType tok, bool readNext)
     if(currentToken.getType() == tok)
         isOk = true;
 
+    //std::cout << "RequireToken: " << Token::getTokenDescription(tok) << " =? " << currentToken.getTokenDescription() << (readNext ? " - reading next token." : "") << (isOk ? " isOk" : "")  << std::endl;
+
     if(readNext)
         this->nextToken();
+    return isOk;
 }
 
 ParseTree *Parser::parse()
 {
+    std::cout << std::endl << "Parsing:" << std::endl;
     this->nextToken();
     
     return this->parseProg();
@@ -196,7 +126,8 @@ ParseTree *Parser::parseStatements()
         this->parseStatement();
         if(!this->requireToken(Token::TOKEN_SEMICOLON, true))
         {
-            throw std::runtime_error("RULE_STATEMENTS: SEMICOLON EXPECTED");
+            std::cout << "RULE_STATEMENTS: SEMICOLON EXPECTED, GOT " << currentToken.getTokenDescription() << std::endl; 
+            throw std::runtime_error("");
         }
     }
     std::cout << "ENDING RULE_STATEMENTS" << std::endl;
@@ -217,13 +148,8 @@ ParseTree *Parser::parseStatement()
     if(this->requireToken(Token::TOKEN_IDENTIFIER))
     {
         this->nextToken();
-        std::cout << "RULE_STATEMENT: IDENTIFIER = EXP;" << std::endl;
-        if(requireToken(Token::TOKEN_BRACKET_L))
-        {
-            this->nextToken();
-            this->nextToken();
-            this->nextToken();
-        }
+        std::cout << "RULE_STATEMENT: IDENTIFIER INDEX = EXP;" << std::endl;
+        this->parseIndex();
         requireToken(Token::TOKEN_EQUAL, true);
         this->parseExp();
     }
@@ -279,6 +205,7 @@ ParseTree *Parser::parseExp2()
         else if(this->requireToken(Token::TOKEN_IDENTIFIER))
         {
             this->nextToken();
+            this->parseIndex();
         }
         else
         {
@@ -296,6 +223,12 @@ INDEX ::= [ EXP ] |
 ParseTree *Parser::parseIndex()
 {
     std::cout << "RULE_INDEX: TODO!" << std::endl;
+    if(this->requireToken(Token::TOKEN_BRACKET_L))
+    {
+        this->nextToken();
+        this->parseExp();
+        this->nextToken();
+    }
     return NULL;
 }
 
@@ -309,6 +242,7 @@ ParseTree *Parser::parseOpExp()
     if(RULE_OP.isTokenValid(currentToken))
     {
         this->parseOp();
+        this->parseExp();
     }
     return NULL;
 }

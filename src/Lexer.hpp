@@ -14,7 +14,11 @@ class Position
     public:
     unsigned int line, column, steps;
 
-    Position() : line(0), column(0), steps(0) {};
+    Position()
+     : line(0), column(0), steps(0) {};
+
+    Position(int line, int column, int steps = 0)
+     : line(line), column(column), steps(steps) {};
 };
 
 class Lexer
