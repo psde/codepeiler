@@ -1,0 +1,12 @@
+DS $n 1
+LC 3
+LC 4
+ADD
+LA $n
+STR
+LA $n
+LV
+PRI
+NOP
+NOP
+STP
