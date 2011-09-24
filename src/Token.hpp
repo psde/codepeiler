@@ -56,6 +56,7 @@ public:
     Token();
 
     String getTokenDescription();
+    static String getTokenDescription(TType type);
 
     void setPosition(int line, int column);
 

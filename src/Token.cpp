@@ -52,6 +52,11 @@ String Token::getTokenDescription()
     return TTypeStrings[this->tokenType];
 }
 
+String Token::getTokenDescription(TType type)
+{
+    return TTypeStrings[type];
+}
+
 void Token::setPosition(int line, int column)
 {
     this->lineNumber = line;
