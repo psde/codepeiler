@@ -5,3 +5,23 @@ a[0] = i;
 i = i + i;
 a[1] = i;
 a[2] = i * 3 + i * 2;
+
+print(a[1]);
+
+if(i > 1)
+{
+    print(i);
+}
+else
+{
+    i = 10;
+    print(i);
+}
+
+read(i);
+
+while(i > 1)
+{
+    i = i-1;
+    print(i);
+}
