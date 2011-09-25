@@ -21,18 +21,18 @@ public:
     ParserError(Token tok, ParserRule rule, String customMsg = "")
      : tok(tok), rule(rule)
     {
-        String msg = "Unexpected Token ";
+        String msg = "Unexpected Token '";
         msg += tok.getTokenDescription();
-        msg += " Line: ";
-        msg += (long)tok.getLine();
-        msg += " Column: ";
-        msg += (long)tok.getColumn();
-        msg += " Rule: ";
+        msg += "' in '";
         msg += rule.name;
+        msg += "' at line ";
+        msg += (long)tok.getLine();
+        msg += ", column ";
+        msg += (long)tok.getColumn();
 
         if(!(customMsg == ""))
         {
-            msg += " ";
+            msg += " - ";
             msg += customMsg;
         }
 
@@ -77,6 +77,7 @@ private:
     ParseTree *parseOpExp();
     ParseTree *parseOp();
 
+    void throwError(ParserRule rule = RULE_NONE, String msg = "");
 public:
 
     Parser(Lexer *lexer);

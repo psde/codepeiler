@@ -37,11 +37,15 @@ bool Parser::requireToken(Token::TType tok, bool readNext)
     return isOk;
 }
 
+void Parser::throwError(ParserRule rule, String msg)
+{
+    throw ParserError(currentToken, rule, msg);
+}
+
 ParseTree *Parser::parse()
 {
     std::cout << std::endl << "Parsing:" << std::endl;
     this->nextToken();
-    throw ParserError(currentToken, RULE_NONE, "Lol!");
     return this->parseProg();
 }
 
@@ -58,7 +62,7 @@ ParseTree *Parser::parseProg()
         tree->addNode(this->parseStatements());
         return tree;
     }
-    throw std::runtime_error("todo...");
+   this->throwError(RULE_PROG); 
 }
 
 /*
@@ -86,7 +90,7 @@ ParseTree *Parser::parseDecls()
         prev = tree;
        
         if(!this->requireToken(Token::TOKEN_SEMICOLON, true))
-            throw std::runtime_error("todo...");
+            this->throwError(RULE_DECL, "TOKEN_SEMICOLON expected.");
     }
     
     return top;
@@ -118,31 +122,31 @@ ParseTree *Parser::parseDecl()
 
             leaf = new ParseTreeLeaf(currentToken);
             if(!requireToken(Token::TOKEN_BRACKET_L, true))
-                throw std::runtime_error("todo...");
+                this->throwError(RULE_DECL, "TOKEN_BRACKET_L expected.");
             
             if(!requireToken(Token::TOKEN_INTEGER))
-                throw std::runtime_error("todo...");
+                this->throwError(RULE_DECL, "TOKEN_INTEGER expected.");
 
             leaf->setArray(currentToken.getULong());
             this->nextToken();
 
             if(!requireToken(Token::TOKEN_BRACKET_R, true))
-                throw std::runtime_error("todo...");
+                this->throwError(RULE_DECL, "TOKEN_BRACKET_R expected.");
            
             if(!requireToken(Token::TOKEN_IDENTIFIER))
-                throw std::runtime_error("todo...");
+                this->throwError(RULE_DECL, "TOKEN_IDENTIFIER expected.");
 
             leaf->setToken(currentToken);
             this->nextToken();
         }
         else
         {
-            throw std::runtime_error("todo...");
+            this->throwError(RULE_DECL, "Not implemented yet");
         }
 
         return tree;
     }
-    throw std::runtime_error("todo...");
+    this->throwError(RULE_DECL);
 }
 
 /*
@@ -164,14 +168,15 @@ ParseTree *Parser::parseStatements()
 
         tree->addNode(this->parseStatement());
 
+        if(prev)
+            prev->addNode(tree);
+        prev = tree;
 
         if(!this->requireToken(Token::TOKEN_SEMICOLON, true))
         {
-            std::cout << "RULE_STATEMENTS: SEMICOLON EXPECTED, GOT " << currentToken.getTokenDescription() << std::endl; 
-            throw std::runtime_error("");
+            this->throwError(RULE_STATEMENTS, "TOKEN_SEMICOLON expected.");
         }
     }
-    std::cout << "ENDING RULE_STATEMENTS" << std::endl;
     this->nextToken();
     return this->buildTree(RULE_PROG);
 }
@@ -210,7 +215,7 @@ ParseTree *Parser::parseStatement()
     }
     else
     {
-        throw std::runtime_error("todo...");
+        this->throwError(RULE_STATEMENT, "Not implemented.");
     }
     return NULL;
 }
@@ -220,7 +225,6 @@ EXP ::= EXP2 OP_EXP
 */
 ParseTree *Parser::parseExp()
 {
-    std::cout << "RULE_EXP: TODO!" << std::endl;
     this->parseExp2();
     this->parseOpExp();
     return NULL;
@@ -250,11 +254,11 @@ ParseTree *Parser::parseExp2()
         }
         else
         {
-            throw std::runtime_error("EXP2 todo...");
+            this->throwError(RULE_EXP2, "Not implemented.");
         }
         return NULL;
     }
-    throw std::runtime_error("EXP2 did not match!");
+    this->throwError(RULE_EXP2);
 }
 
 /*
@@ -299,5 +303,5 @@ ParseTree *Parser::parseOp()
         this->nextToken();
         return NULL;
     }
-    throw std::runtime_error("todo...");
+    throw ParserRule(RULE_OP);
 }
