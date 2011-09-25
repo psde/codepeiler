@@ -225,9 +225,10 @@ EXP ::= EXP2 OP_EXP
 */
 ParseTree *Parser::parseExp()
 {
-    this->parseExp2();
-    this->parseOpExp();
-    return NULL;
+    ParseTree *tree = this->buildTree(RULE_EXP);
+    tree->addNode(this->parseExp2());
+    tree->addNode(this->parseOpExp());
+    return tree;
 }
 
 /*
