@@ -22,6 +22,7 @@ extern const ParserRule RULE_PROG;
 extern const ParserRule RULE_DECLS;
 extern const ParserRule RULE_DECL;
 extern const ParserRule RULE_TYPE_INT;
+extern const ParserRule RULE_STATEMENT;
 extern const ParserRule RULE_STATEMENTS;
 extern const ParserRule RULE_OP;
 extern const ParserRule RULE_EXP2;

@@ -48,6 +48,12 @@ const ParserRule RULE_TYPE_INT = {
     TOKENS_DECLS
 };
 
+const ParserRule RULE_STATEMENT = {
+    "RULE_STATEMENT",
+    sizeof(TOKENS_NONE) / sizeof(TOKENS_NONE[0]),
+    TOKENS_NONE
+};
+
 Token::TType TOKENS_STATEMENTS[] =
 {
     Token::TOKEN_PRINT,
