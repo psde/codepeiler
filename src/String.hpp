@@ -119,6 +119,30 @@ class String
         }
 
         /*
+          Appends a long
+        */
+        void operator+=(long const& l)
+        {
+            char buf[sizeof(long)*8+1];
+            sprintf(buf, "%ld", l);
+
+            unsigned int length = stringLength(this->chars) + stringLength(buf) + 1;
+            char* newChars = new char[length];
+            
+            strcpy(newChars, this->chars);
+            newChars[length-1] = 0x00;
+
+            for(unsigned int i=stringLength(this->chars); i<length-1; i++)
+            {
+                newChars[i] = buf[i-stringLength(this->chars)];
+            }
+
+            delete[] this->chars;
+            this->chars = newChars;
+        }
+
+
+        /*
           Appends a char
         */
         void operator+=(char const& c)
