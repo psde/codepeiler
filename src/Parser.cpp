@@ -41,7 +41,7 @@ ParseTree *Parser::parse()
 {
     std::cout << std::endl << "Parsing:" << std::endl;
     this->nextToken();
-    throw ParserError(currentToken);    
+    throw ParserError(currentToken, RULE_NONE, "Lol!");
     return this->parseProg();
 }
 

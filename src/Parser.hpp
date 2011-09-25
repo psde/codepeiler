@@ -14,11 +14,12 @@ class ParserError : public std::exception
 {
 private:
     Token tok;
+    ParserRule rule;
     char *message;
 
 public:
-    ParserError(Token tok, String customMsg = "")
-     : tok(tok)
+    ParserError(Token tok, ParserRule rule, String customMsg = "")
+     : tok(tok), rule(rule)
     {
         String msg = "Unexpected Token ";
         msg += tok.getTokenDescription();
@@ -26,6 +27,8 @@ public:
         msg += (long)tok.getLine();
         msg += " Column: ";
         msg += (long)tok.getColumn();
+        msg += " Rule: ";
+        msg += rule.name;
 
         if(!(customMsg == ""))
         {
@@ -34,9 +37,9 @@ public:
         }
 
         message = new char[msg.length() + 1];
-        for(int i=0; i<msg.length();i++)
+        for(unsigned int i=0; i<msg.length();i++)
             message[i] = msg[i];
-        message[msg.length() + 1] = '\0';
+        message[msg.length()] = '\0';
     }
 
     Token getToken() { return this->tok; }
