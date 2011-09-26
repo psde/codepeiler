@@ -23,3 +23,7 @@ Exp2_2::~Exp2_2()
     delete this->index; 
 }
 
+Statement_4::~Statement_4()
+{
+    delete this->statements;
+}

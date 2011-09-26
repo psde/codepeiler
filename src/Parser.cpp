@@ -25,7 +25,7 @@ bool Parser::requireToken(Token::TType tok, bool readNext)
     if(currentToken.getType() == tok)
         isOk = true;
 
-    //std::cout << "RequireToken: " << Token::getTokenDescription(tok) << " =? " << currentToken.getTokenDescription() << (readNext ? " - reading next token." : "") << (isOk ? " isOk" : "")  << std::endl;
+    std::cout << "RequireToken: " << Token::getTokenDescription(tok) << " =? " << currentToken.getTokenDescription() << (readNext ? " - reading next token." : "") << (isOk ? " isOk" : "")  << std::endl;
 
     if(readNext)
         this->nextToken();
@@ -54,26 +54,12 @@ Prog* Parser::parseProg()
         std::cout << "RULE_PROG" << std::endl;
         Prog *prog = new Prog();
         prog->addDecls(this->parseDecls());
-        //prog->addStatements(this->parseStatements());
+        prog->addStatements(this->parseStatements());
         return prog;
     }
    this->throwError(RULE_PROG);
    return NULL;
 }
-/*
-ParseTree *Parser::parseProg()
-{
-    if(RULE_PROG.isTokenValid(currentToken))
-    {
-        std::cout << "RULE_PROG" << std::endl;
-        ParseTree *tree = this->buildTree(RULE_PROG);
-        tree->addNode(this->parseDecls());
-        tree->addNode(this->parseStatements());
-        return tree;
-    }
-   this->throwError(RULE_PROG); 
-}
-*/
 
 /*
 DECLS ::= DECL ; DECLS | 
@@ -180,31 +166,62 @@ Statement* Parser::parseStatement()
     {
         std::cout << "RULE_STATEMENT: IDENTIFIER INDEX = EXP;" << std::endl;
 
+        Statement_1 *statement = new Statement_1();
         this->nextToken();
-        this->parseIndex();
+        statement->setIndex(this->parseIndex());
         requireToken(Token::TOKEN_EQUAL, true);
-        this->parseExp();
-        return NULL;
+        statement->setExp(this->parseExp());
+        return statement;
     }
     else if(this->requireToken(Token::TOKEN_PRINT))
     {
         std::cout << "RULE_STATEMENT: print ( EXP );" << std::endl;
 
+        Statement_2 *statement = new Statement_2();
         this->nextToken();
         requireToken(Token::TOKEN_PAREN_L, true);
-        this->parseExp();
+        statement->setExp(this->parseExp());
         requireToken(Token::TOKEN_PAREN_R, true);
-        return NULL;
+        return statement;
     }
     else if(this->requireToken(Token::TOKEN_READ))
     {
         std::cout << "RULE_STATEMENT: read ( EXP );" << std::endl;
 
+        Statement_3 *statement = new Statement_3();
         this->nextToken();
         requireToken(Token::TOKEN_PAREN_L, true);
-        this->parseExp();
+        statement->setExp(this->parseExp());
         requireToken(Token::TOKEN_PAREN_R, true);
-        return NULL;
+        return statement;
+    }
+    else if(this->requireToken(Token::TOKEN_BRACE_L))
+    {
+        std::cout << "RULE_STATEMENT: { STATEMENTS }" << std::endl;
+
+        Statement_4 *statement = new Statement_4();
+        this->nextToken();
+        statement->setStatements(this->parseStatements());
+        this->nextToken();
+        return statement;
+    }
+    else if(this->requireToken(Token::TOKEN_IF))
+    {
+        std::cout << "RULE_STATEMENT: IF ( EXP ) STATEMENT else STATEMENT" << std::endl;
+
+        Statement_5 *statement = new Statement_5();
+        this->nextToken();
+        this->nextToken();
+        statement->setExp(this->parseExp());
+        this->nextToken();
+        statement->setStatement1(this->parseStatement());
+        if(requireToken(Token::TOKEN_ELSE))
+        {
+            std::cout << "RULE_STATEMENT: else" << std::endl;
+            this->nextToken();
+            statement->setStatement2(this->parseStatement());
+        }
+        return statement;
     }
     else
     {
@@ -259,6 +276,20 @@ Exp2* Parser::parseExp2()
             Exp2_3 *exp2 = new Exp2_3();
             exp2->setInteger(currentToken.getULong());
             this->nextToken();
+            return exp2;
+        }
+        else if(this->requireToken(Token::TOKEN_MINUS))
+        {
+            Exp2_4 *exp2 = new Exp2_4();
+            this->nextToken();
+            exp2->setExp2(this->parseExp2());
+            return exp2;
+        }
+        else if(this->requireToken(Token::TOKEN_NOT))
+        {
+            Exp2_5 *exp2 = new Exp2_5();
+            this->nextToken();
+            exp2->setExp2(this->parseExp2());
             return exp2;
         }
         else
