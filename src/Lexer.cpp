@@ -41,7 +41,7 @@ Lexer::Lexer(BufferReader *buffer, Symtable *symtable)
 
 void Lexer::addTransition(LexerState from, char c, LexerState to)
 {
-    this->transitions[from][c] = to;
+    this->transitions[from][(int)c] = to;
 }
 
 void Lexer::addFinalState(LexerState from, Token::TType type)
@@ -204,7 +204,7 @@ Token Lexer::nextToken()
         if(this->isComment())
             break;
 
-        unsigned int nextState = this->transitions[state][currentChar];
+        unsigned int nextState = this->transitions[state][(int)currentChar];
 
         #ifdef LEXER_DEBUG
             std::cout << LexerStateStrings[state] << " -- '" << currentChar << "' --> " << LexerStateStrings[nextState] << std::endl;
