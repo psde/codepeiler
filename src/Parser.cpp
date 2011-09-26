@@ -99,34 +99,6 @@ Decls* Parser::parseDecls()
 
     return decls;
 }
-/*
-ParseTree *Parser::parseDecls()
-{
-    ParseTree *top = NULL;
-    ParseTree *prev = NULL;
-
-    while(RULE_DECLS.isTokenValid(currentToken))
-    {
-        std::cout << "RULE_DECLS" << std::endl;
-
-        ParseTree *tree = this->buildTree(RULE_DECLS);
-        
-        if(top == NULL)
-            top = tree;
-
-        tree->addNode(this->parseDecl());
-
-        if(prev != NULL)
-            prev->addNode(tree);
-        prev = tree;
-       
-        if(!this->requireToken(Token::TOKEN_SEMICOLON, true))
-            this->throwError(RULE_DECL, "TOKEN_SEMICOLON expected.");
-    }
-    
-    return top;
-}
-*/
 
 /*
 DECL ::= int ARRAY identifier
@@ -170,61 +142,9 @@ Decl* Parser::parseDecl()
         }
 
         return decl;
-
     }
     this->throwError(RULE_DECL);
 }
-/*
-ParseTree *Parser::parseDecl()
-{
-    if(RULE_DECL.isTokenValid(currentToken))
-    {
-        std::cout << "RULE_DECL" << std::endl;
-
-        ParseTree *tree = this->buildTree(RULE_DECL);
-        tree->addNode(this->buildTree(RULE_TYPE_INT));
-        this->nextToken();
-       
-        ParseTreeLeaf *leaf;
-        // Identifier?
-        if(currentToken.getType() == Token::TOKEN_IDENTIFIER)
-        {
-            leaf = new ParseTreeLeaf(currentToken);
-            this->nextToken();
-        }
-        // Array?
-        else if(currentToken.getType() == Token::TOKEN_BRACKET_L)
-        {
-
-            leaf = new ParseTreeLeaf(currentToken);
-            if(!requireToken(Token::TOKEN_BRACKET_L, true))
-                this->throwError(RULE_DECL, "TOKEN_BRACKET_L expected.");
-            
-            if(!requireToken(Token::TOKEN_INTEGER))
-                this->throwError(RULE_DECL, "TOKEN_INTEGER expected.");
-
-            leaf->setArray(currentToken.getULong());
-            this->nextToken();
-
-            if(!requireToken(Token::TOKEN_BRACKET_R, true))
-                this->throwError(RULE_DECL, "TOKEN_BRACKET_R expected.");
-           
-            if(!requireToken(Token::TOKEN_IDENTIFIER))
-                this->throwError(RULE_DECL, "TOKEN_IDENTIFIER expected.");
-
-            leaf->setToken(currentToken);
-            this->nextToken();
-        }
-        else
-        {
-            this->throwError(RULE_DECL, "Not implemented yet");
-        }
-
-        return tree;
-    }
-    this->throwError(RULE_DECL);
-}
-*/
 
 /*
 STATEMENTS ::= STATEMENT ; STATEMENTS |
@@ -237,6 +157,9 @@ Statements* Parser::parseStatements()
     {
         std::cout << "RULE_STATEMENTS" << std::endl;
 
+        if(requireToken(Token::TOKEN_EOF))
+            break;
+
         statements->addStatement(this->parseStatement());
 
         if(!this->requireToken(Token::TOKEN_SEMICOLON, true))
@@ -245,35 +168,6 @@ Statements* Parser::parseStatements()
     this->nextToken();
     return statements;
 }
-/*
-   ParseTree *Parser::parseStatements()
-{
-    ParseTree *top = NULL;
-    ParseTree *prev = NULL;
-    
-    while(RULE_STATEMENTS.isTokenValid(currentToken))
-    {
-        std::cout << "RULE_STATEMENTS" << std::endl;
-        ParseTree *tree = this->buildTree(RULE_STATEMENTS);
-
-        if(top == NULL)
-            top = tree;
-
-        tree->addNode(this->parseStatement());
-
-        if(prev)
-            prev->addNode(tree);
-        prev = tree;
-
-        if(!this->requireToken(Token::TOKEN_SEMICOLON, true))
-        {
-            this->throwError(RULE_STATEMENTS, "TOKEN_SEMICOLON expected.");
-        }
-    }
-    this->nextToken();
-    return this->buildTree(RULE_PROG);
-}
-*/
 
 /*
 STATEMENT ::= identifier INDEX = EXP |
@@ -287,32 +181,39 @@ Statement* Parser::parseStatement()
 {
     if(this->requireToken(Token::TOKEN_IDENTIFIER))
     {
-        this->nextToken();
         std::cout << "RULE_STATEMENT: IDENTIFIER INDEX = EXP;" << std::endl;
+
+        this->nextToken();
         this->parseIndex();
         requireToken(Token::TOKEN_EQUAL, true);
         this->parseExp();
+        return NULL;
     }
     else if(this->requireToken(Token::TOKEN_PRINT))
     {
         std::cout << "RULE_STATEMENT: print ( EXP );" << std::endl;
+
+        this->nextToken();
         requireToken(Token::TOKEN_PAREN_L, true);
         this->parseExp();
         requireToken(Token::TOKEN_PAREN_R, true);
+        return NULL;
     }
     else if(this->requireToken(Token::TOKEN_READ))
     {
         std::cout << "RULE_STATEMENT: read ( EXP );" << std::endl;
+
+        this->nextToken();
         requireToken(Token::TOKEN_PAREN_L, true);
         this->parseExp();
         requireToken(Token::TOKEN_PAREN_R, true);
+        return NULL;
     }
     else
     {
-        this->throwError(RULE_STATEMENT, "Not implemented.");
+        this->throwError(RULE_STATEMENT, "RULE_STATEMENT Not implemented.");
     }
-    return NULL;
-
+    this->throwError(RULE_STATEMENT);
 }
 
 /*
@@ -323,7 +224,7 @@ Exp* Parser::parseExp()
     Exp *exp = new Exp();
     exp->addExp2(this->parseExp2());
     exp->addOpExp(this->parseOpExp());
-    return NULL;
+    return exp;
 }
 
 /*
@@ -335,33 +236,40 @@ EXP2 ::= ( EXP ) |
 */
 Exp2* Parser::parseExp2()
 {
-    return NULL;
-}
-/*
-ParseTree *Parser::parseExp2()
-{
     if(RULE_EXP2.isTokenValid(currentToken))
     {
         std::cout << "RULE_EXP2 " << currentToken.getTokenDescription() << std::endl;
 
-        if(this->requireToken(Token::TOKEN_INTEGER))
+        if(this->requireToken(Token::TOKEN_PAREN_L))
         {
+            Exp2_1 *exp2 = new Exp2_1();
             this->nextToken();
+            exp2->setExp(this->parseExp());
+            this->nextToken();
+            return exp2;
         }
         else if(this->requireToken(Token::TOKEN_IDENTIFIER))
         {
+            Exp2_2 *exp2 = new Exp2_2();
+            exp2->setIdentifier(currentToken.getLexem());
             this->nextToken();
-            this->parseIndex();
+            exp2->setIndex(this->parseIndex());
+            return exp2;
+        }
+        else if(this->requireToken(Token::TOKEN_INTEGER))
+        {
+            Exp2_3 *exp2 = new Exp2_3();
+            exp2->setInteger(currentToken.getULong());
+            this->nextToken();
+            return exp2;
         }
         else
         {
-            this->throwError(RULE_EXP2, "Not implemented.");
+            this->throwError(RULE_EXP2, "RULE_EXP2 Not implemented.");
         }
-        return NULL;
     }
     this->throwError(RULE_EXP2);
 }
-*/
 
 /*
 INDEX ::= [ EXP ] |
@@ -369,21 +277,16 @@ INDEX ::= [ EXP ] |
 */
 Index* Parser::parseIndex()
 {
-    return NULL;
-}
-/*
-ParseTree *Parser::parseIndex()
-{
-    std::cout << "RULE_INDEX: TODO!" << std::endl;
+    std::cout << "RULE_INDEX" << std::endl;
+    Index *index = new Index();
     if(this->requireToken(Token::TOKEN_BRACKET_L))
     {
         this->nextToken();
-        this->parseExp();
+        index->setExp(this->parseExp());
         this->nextToken();
     }
-    return NULL;
+    return index;
 }
-*/
 
 /*
 OP_EXP ::= OP EXP |
@@ -391,37 +294,53 @@ OP_EXP ::= OP EXP |
 */
 OpExp* Parser::parseOpExp()
 {
-    return NULL;
-}
-/*
-ParseTree *Parser::parseOpExp()
-{
-    std::cout << "RULE_OPEXP: TODO! " << currentToken.getTokenDescription() << std::endl;
+    std::cout << "RULE_OPEXP" << std::endl;
+    OpExp *opexp = new OpExp();
     if(RULE_OP.isTokenValid(currentToken))
     {
-        this->parseOp();
-        this->parseExp();
+        opexp->setOp(this->parseOp());
+        opexp->setExp(this->parseExp());
     }
-    return NULL;
+    return opexp;
 }
-*/
 
 /*
 OP ::= + | - | * | / | < | > | = | <=> | &
 */
 Op* Parser::parseOp()
 {
-    return NULL;
-}
-/*
-ParseTree *Parser::parseOp()
-{
     if(RULE_OP.isTokenValid(currentToken))
     {
         std::cout << "RULE_OP" << std::endl;
+
+        Op::OpType type;
+        switch(currentToken.getType())
+        {
+            case Token::TOKEN_PLUS:
+                type = Op::OP_PLUS; break;
+            case Token::TOKEN_MINUS:
+                type = Op::OP_MINUS; break;
+            case Token::TOKEN_MULT:
+                type = Op::OP_MULT; break;
+            case Token::TOKEN_DIV:
+                type = Op::OP_DIV; break;
+            case Token::TOKEN_LESSER:
+                type = Op::OP_LESSER; break;
+            case Token::TOKEN_GREATER:
+                type = Op::OP_GREATER; break;
+            case Token::TOKEN_EQUAL:
+                type = Op::OP_EQUAL; break;
+            case Token::TOKEN_LER:
+                type = Op::OP_LER; break;
+            case Token::TOKEN_AND:
+                type = Op::OP_AND; break;
+            default:
+                throw ParserRule(RULE_OP);
+        };
+
+        Op *op = new Op(type);
         this->nextToken();
-        return NULL;
+        return op;
     }
     throw ParserRule(RULE_OP);
 }
-*/

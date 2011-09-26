@@ -21,7 +21,7 @@ protected:
     String identifier;
 
 public:
-    IdentifierParseTree(String identifier)
+    IdentifierParseTree(String identifier = "")
      : identifier(identifier) {}
 
     String getIdentifier() { return this->identifier; }
@@ -59,23 +59,103 @@ public:
 
 class Op : public ParseTree
 {
+public:
+    enum OpType
+    {
+        OP_PLUS,
+        OP_MINUS,
+        OP_MULT,
+        OP_DIV,
+        OP_LESSER,
+        OP_EQUAL,
+        OP_GREATER,
+        OP_LER,
+        OP_AND
+    };
 
+protected:
+    OpType type;
+
+public:
+    Op(OpType type) { this->type = type; }
+
+    OpType getType() { return this->type; }
 };
 
+class Exp;
 class OpExp : public ParseTree
 {
+protected:
+    Op *op;
+    Exp *exp;
+public:
+    OpExp() : op(NULL), exp(NULL) {}
+    ~OpExp() { if(op != NULL) delete op; if(exp != NULL) delete exp; }
 
+    void setOp(Op *op) { this->op = op; }
+    Op* getOp() { return this->op; }
+
+    void setExp(Exp *exp) { this->exp = exp; }
+    Exp* getExp() { return this->exp; }
 };
 
 class Index : public ParseTree
 {
+protected:
+    Exp *exp;
 
+public:
+    Index() : exp(NULL) {}
+    ~Index() { if(exp != NULL) delete this->exp; }
+
+    void setExp(Exp *exp) { this->exp = exp; }
+    Exp* getExp() { return this->exp; }
 };
 
 class Exp2 : public ParseTree
-{
+{};
 
+/* ( EXP ) */
+class Exp2_1 : public Exp2
+{
+protected:
+    Exp *exp;
+public:
+    ~Exp2_1() { delete exp; }
+
+    void setExp(Exp *exp) { this->exp = exp; }
+    Exp* getExp() { return this->exp; }
 };
+
+/* identifier INDEX */
+class Exp2_2 : public Exp2, public IdentifierParseTree
+{
+protected:
+//    String identifier;
+    Index *index;
+
+public:
+    ~Exp2_2() { delete this->index; }
+
+/*    void setIdentifier(String identifier) { this->identifier = identifier; }
+    String getIdentifier() { return this->identifier; }*/
+
+    void setIndex(Index *index) { this->index = index; }
+    Index* getIndex() { return this->index; }
+};
+
+/* integer */
+class Exp2_3 : public Exp2
+{
+protected:
+    long integer;
+public:
+    void setInteger(long integer) { this->integer = integer; }
+    long getInteger() { return this->integer; }
+};
+
+/* - EXP2 */
+/* ! EXP2 */
 
 class Exp : public ParseTree
 {
@@ -128,110 +208,5 @@ public:
     void addStatements(Statements *statements) { this->statements = statements; }
     Statements* getStatements() { return this->statements; }
 };
-
-
-/*
-class ParseTreeLeaf;
-
-enum Type
-{
-    TYPE_ERROR = -1,
-    TYPE_NONE,
-    TYPE_INT
-};
-
-enum Operand
-{
-    OP_NONE = 0,
-    OP_PLUS,
-    OP_MINUS,
-    OP_MULT,
-    OP_DIV,
-    OP_LESSER,
-    OP_GREATER,
-    OP_EQUAL,
-    OP_AND
-};
-
-
-class ParseTree
-{
-private:
-    ParserRule rule;
-
-protected:
-    Position pos;
-    int nodeCount;
-    ParseTree *nodes[3];
-
-    Type type;
-    Operand op;
-
-public:
-    ParseTree(ParserRule rule, int line, int column)
-     : rule(rule), pos(line, column, 0), nodeCount(0), type(TYPE_NONE), op(OP_NONE)
-    {
-        for(int i=0; i<3; i++)
-            this->nodes[i] = NULL;
-    }
-
-    void addNode(ParseTree *node)
-    {
-        if(this->nodeCount >= 3)
-            throw std::runtime_error("ParseTree::addNode() - nodeCount >= 3");
-
-        this->nodes[this->nodeCount++] = node;
-    }
-
-    ParseTree* getNode(int index)
-    {
-        if(index >= 3)
-            throw std::runtime_error("ParseTree::getNode() - index >= 3");
-
-        return this->nodes[index];
-    }
-
-    ParseTreeLeaf* getLeaf(int index)
-    {
-        return (ParseTreeLeaf*)this->getNode(index);
-    }
-
-    int getNodeCount() { return this->nodeCount; }
-    ParserRule getRule() { return this->rule; }
-    Position getPosition() { return this->pos; }
-
-    void setOp(Operand op) { this->op = op; }
-    Operand getOp() { return this->op; }
-
-    void setType(Type type) { this->type = type; }
-    Type getType() { return this->type; }
-};
-
-class ParseTreeLeaf : public ParseTree
-{
-private:
-    bool array;
-    int arraySize;
-
-    Token tok;
-
-public:
-    ParseTreeLeaf(Token tok)
-     : ParseTree(RULE_NONE, tok.getLine(), tok.getColumn())
-    {
-        this->tok = tok;
-    }
-
-    void setArray(int size = 0) { this->array = true; this->arraySize = size; }
-    bool isArray() { return this->array; }
-
-    void setToken(Token tok)
-    {
-        this->tok = tok;
-        this->pos = Position(tok.getLine(), tok.getColumn());
-    }
-    Token getToken() { return this->tok; }
-};
-*/
 
 #endif
