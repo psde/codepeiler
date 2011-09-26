@@ -65,17 +65,16 @@ private:
 
     ParseTree *buildTree(ParserRule rule);
 
-    ParseTree *parseProg();
-    ParseTree *parseDecls();
-    ParseTree *parseDecl();
-    ParseTree *parseArray();
-    ParseTree *parseStatements();
-    ParseTree *parseStatement();
-    ParseTree *parseExp();
-    ParseTree *parseExp2();
-    ParseTree *parseIndex();
-    ParseTree *parseOpExp();
-    ParseTree *parseOp();
+    Prog* parseProg();
+    Decls* parseDecls();
+    Decl* parseDecl();
+    Statements* parseStatements();
+    Statement* parseStatement();
+    Exp* parseExp();
+    Exp2* parseExp2();
+    Index* parseIndex();
+    OpExp* parseOpExp();
+    Op* parseOp();
 
     void throwError(ParserRule rule = RULE_NONE, String msg = "");
 public:

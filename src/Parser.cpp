@@ -15,7 +15,7 @@ Parser::~Parser()
 
 ParseTree *Parser::buildTree(ParserRule rule)
 {
-    return new ParseTree(rule, currentToken.getLine(), currentToken.getColumn());
+    return NULL; 
 }
 
 void Parser::nextToken()
@@ -52,6 +52,19 @@ ParseTree *Parser::parse()
 /*
 PROG ::= DECLS STATEMENTS
 */
+Prog* Parser::parseProg()
+{
+    if(RULE_PROG.isTokenValid(currentToken))
+    {
+        std::cout << "RULE_PROG" << std::endl;
+        Prog *prog = new Prog();
+        prog->addDecls(this->parseDecls());
+        prog->addStatements(this->parseStatements());
+        return prog;
+    }
+   this->throwError(RULE_PROG); 
+}
+/*
 ParseTree *Parser::parseProg()
 {
     if(RULE_PROG.isTokenValid(currentToken))
@@ -64,11 +77,29 @@ ParseTree *Parser::parseProg()
     }
    this->throwError(RULE_PROG); 
 }
+*/
 
 /*
 DECLS ::= DECL ; DECLS | 
           <e>
 */
+Decls* Parser::parseDecls()
+{
+    Decls *decls = new Decls();
+
+    while(RULE_DECLS.isTokenValid(currentToken))
+    {
+        std::cout << "RULE_DECLS" << std::endl;
+
+        decls->addDecl(this->parseDecl());
+
+        if(!this->requireToken(Token::TOKEN_SEMICOLON, true))
+            this->throwError(RULE_DECL, "TOKEN_SEMICOLON expected.");
+    }
+
+    return decls;
+}
+/*
 ParseTree *Parser::parseDecls()
 {
     ParseTree *top = NULL;
@@ -95,10 +126,55 @@ ParseTree *Parser::parseDecls()
     
     return top;
 }
+*/
 
 /*
 DECL ::= int ARRAY identifier
 */
+Decl* Parser::parseDecl()
+{
+    if(RULE_DECL.isTokenValid(currentToken))
+    {
+        std::cout << "RULE_DECL" << std::endl;
+        Decl* decl = new Decl("");
+        this->nextToken();
+
+        if(currentToken == Token::TOKEN_IDENTIFIER)
+        {
+            decl->setIdentifier(currentToken.getLexem());
+            this->nextToken();
+        }
+        else if(currentToken == Token::TOKEN_BRACKET_L)
+        {
+            if(!requireToken(Token::TOKEN_BRACKET_L, true))
+                this->throwError(RULE_DECL, "TOKEN_BRACKET_L expected.");
+            
+            if(!requireToken(Token::TOKEN_INTEGER))
+                this->throwError(RULE_DECL, "TOKEN_INTEGER expected.");
+
+            decl->setArray(currentToken.getULong());
+            this->nextToken();
+
+            if(!requireToken(Token::TOKEN_BRACKET_R, true))
+                this->throwError(RULE_DECL, "TOKEN_BRACKET_R expected.");
+           
+            if(!requireToken(Token::TOKEN_IDENTIFIER))
+                this->throwError(RULE_DECL, "TOKEN_IDENTIFIER expected.");
+
+            decl->setIdentifier(currentToken.getLexem());
+            this->nextToken();
+        }
+        else
+        {
+            this->throwError(RULE_DECL);
+        }
+
+        return decl;
+
+    }
+    this->throwError(RULE_DECL);
+}
+/*
 ParseTree *Parser::parseDecl()
 {
     if(RULE_DECL.isTokenValid(currentToken))
@@ -148,12 +224,29 @@ ParseTree *Parser::parseDecl()
     }
     this->throwError(RULE_DECL);
 }
+*/
 
 /*
 STATEMENTS ::= STATEMENT ; STATEMENTS |
                <e>
 */
-ParseTree *Parser::parseStatements()
+Statements* Parser::parseStatements()
+{
+    Statements* statements = new Statements();
+    while(RULE_STATEMENTS.isTokenValid(currentToken))
+    {
+        std::cout << "RULE_STATEMENTS" << std::endl;
+
+        statements->addStatement(this->parseStatement());
+
+        if(!this->requireToken(Token::TOKEN_SEMICOLON, true))
+            this->throwError(RULE_STATEMENTS, "TOKEN_SEMICOLON expected.");
+    }
+    this->nextToken();
+    return statements;
+}
+/*
+   ParseTree *Parser::parseStatements()
 {
     ParseTree *top = NULL;
     ParseTree *prev = NULL;
@@ -180,6 +273,7 @@ ParseTree *Parser::parseStatements()
     this->nextToken();
     return this->buildTree(RULE_PROG);
 }
+*/
 
 /*
 STATEMENT ::= identifier INDEX = EXP |
@@ -189,7 +283,7 @@ STATEMENT ::= identifier INDEX = EXP |
               if ( EXP ) STATEMENT else STATEMENT |
               while ( EXP ) STATEMENT
 */
-ParseTree *Parser::parseStatement()
+Statement* Parser::parseStatement()
 {
     if(this->requireToken(Token::TOKEN_IDENTIFIER))
     {
@@ -218,17 +312,18 @@ ParseTree *Parser::parseStatement()
         this->throwError(RULE_STATEMENT, "Not implemented.");
     }
     return NULL;
+
 }
 
 /*
 EXP ::= EXP2 OP_EXP
 */
-ParseTree *Parser::parseExp()
+Exp* Parser::parseExp()
 {
-    ParseTree *tree = this->buildTree(RULE_EXP);
-    tree->addNode(this->parseExp2());
-    tree->addNode(this->parseOpExp());
-    return tree;
+    Exp *exp = new Exp();
+    exp->addExp2(this->parseExp2());
+    exp->addOpExp(this->parseOpExp());
+    return NULL;
 }
 
 /*
@@ -238,6 +333,11 @@ EXP2 ::= ( EXP ) |
          - EXP2 |
          ! EXP2
 */
+Exp2* Parser::parseExp2()
+{
+    return NULL;
+}
+/*
 ParseTree *Parser::parseExp2()
 {
     if(RULE_EXP2.isTokenValid(currentToken))
@@ -261,11 +361,17 @@ ParseTree *Parser::parseExp2()
     }
     this->throwError(RULE_EXP2);
 }
+*/
 
 /*
 INDEX ::= [ EXP ] |
           <e>
 */
+Index* Parser::parseIndex()
+{
+    return NULL;
+}
+/*
 ParseTree *Parser::parseIndex()
 {
     std::cout << "RULE_INDEX: TODO!" << std::endl;
@@ -277,11 +383,17 @@ ParseTree *Parser::parseIndex()
     }
     return NULL;
 }
+*/
 
 /*
 OP_EXP ::= OP EXP |
            <e>
 */
+OpExp* Parser::parseOpExp()
+{
+    return NULL;
+}
+/*
 ParseTree *Parser::parseOpExp()
 {
     std::cout << "RULE_OPEXP: TODO! " << currentToken.getTokenDescription() << std::endl;
@@ -292,10 +404,16 @@ ParseTree *Parser::parseOpExp()
     }
     return NULL;
 }
+*/
 
 /*
 OP ::= + | - | * | / | < | > | = | <=> | &
 */
+Op* Parser::parseOp()
+{
+    return NULL;
+}
+/*
 ParseTree *Parser::parseOp()
 {
     if(RULE_OP.isTokenValid(currentToken))
@@ -306,3 +424,4 @@ ParseTree *Parser::parseOp()
     }
     throw ParserRule(RULE_OP);
 }
+*/

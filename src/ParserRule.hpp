@@ -11,7 +11,7 @@ struct ParserRule {
 
     bool isTokenValid(Token tok) const {
         for(int i=0; i<size; i++)
-            if(tok.getType() == tokens[i])
+            if(tok == tokens[i])
                 return true; 
         return false;
     }  

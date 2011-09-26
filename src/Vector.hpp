@@ -1,9 +1,7 @@
 #ifndef _VECTOR_INCLUDED_
 #define _VECTOR_INCLUDED_
 
-/*
- * Vektor beliebiger Länge mit beliebigem Inhalt.
- */
+/* Simple vector implementation */
 template <class type>
 class Vector {
 	type* values;

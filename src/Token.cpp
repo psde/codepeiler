@@ -107,3 +107,8 @@ void Token::setType(TType token)
 {
     this->tokenType = token;
 }
+
+bool Token::operator==(TType const& t)
+{
+    return this->tokenType == t;
+}

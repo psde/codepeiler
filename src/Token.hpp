@@ -72,6 +72,8 @@ public:
 
     Token::TType getType();
     void setType(TType token);
+
+    bool operator==(TType const& t);
 };
 
 
