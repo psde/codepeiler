@@ -67,7 +67,7 @@ protected:
 public:
     Decls() { this->decls = new Vector<Decl*>(); }
 
-    //~Decls() { delete this->decls; }
+    ~Decls() { delete this->decls; }
   
     void addDecl(Decl *decl) { this->decls->append(decl); }
     Vector<Decl*>* getDecls() { return this->decls; }
@@ -121,7 +121,7 @@ protected:
     Exp *exp;
 public:
     OpExp() : op(NULL), exp(NULL) {}
-    //~OpExp() { if(op != NULL) delete op; if(exp != NULL) delete exp; }
+    ~OpExp();
 
     void setOp(Op *op) { this->op = op; }
     Op* getOp() { return this->op; }
@@ -139,7 +139,7 @@ protected:
 
 public:
     Index() : exp(NULL) {}
-    //~Index() { if(exp != NULL) delete this->exp; }
+    ~Index();
 
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
@@ -156,7 +156,7 @@ class Exp2_1 : public Exp2
 protected:
     Exp *exp;
 public:
-    //~Exp2_1() { delete exp; }
+    ~Exp2_1();
 
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
@@ -168,14 +168,10 @@ public:
 class Exp2_2 : public Exp2, public IdentifierParseTree
 {
 protected:
-//    String identifier;
     Index *index;
 
 public:
-    //~Exp2_2() { delete this->index; }
-
-/*    void setIdentifier(String identifier) { this->identifier = identifier; }
-    String getIdentifier() { return this->identifier; }*/
+    ~Exp2_2();
 
     void setIndex(Index *index) { this->index = index; }
     Index* getIndex() { return this->index; }
@@ -206,7 +202,7 @@ protected:
 
 public:
     Exp() {}
-    //~Exp() { delete this->exp2; delete this->opexp; }
+    ~Exp() { delete this->exp2; delete this->opexp; }
 
     void addExp2(Exp2 *exp2) { this->exp2 = exp2; }
     Exp2* getExp2() { return this->exp2; }
@@ -230,7 +226,7 @@ protected:
 public:
     Statements() { this->statements = new Vector<Statement*>(); }
 
-    //~Statements() { delete this->statements;  }
+    ~Statements() { delete this->statements;  }
 
     void addStatement(Statement *statement) { this->statements->append(statement); }
     Vector<Statement*>* getStatements() { return this->statements; }
@@ -246,7 +242,7 @@ protected:
 
 public:
     Prog() {}
-    //~Prog() { delete this->decls; delete this->statements; }
+    ~Prog() { delete this->decls; delete this->statements; }
 
     void addDecls(Decls *decls) { this->decls = decls; }
     Decls* getDecls() { return this->decls; }
