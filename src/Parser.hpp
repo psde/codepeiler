@@ -63,8 +63,6 @@ private:
     void nextToken();
     bool requireToken(Token::TType tok, bool readNext = false);
 
-    ParseTree *buildTree(ParserRule rule);
-
     Prog* parseProg();
     Decls* parseDecls();
     Decl* parseDecl();

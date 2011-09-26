@@ -13,11 +13,6 @@ Parser::~Parser()
 
 }
 
-ParseTree *Parser::buildTree(ParserRule rule)
-{
-    return NULL; 
-}
-
 void Parser::nextToken()
 {
     this->currentToken = this->lexer->nextToken();
@@ -59,10 +54,11 @@ Prog* Parser::parseProg()
         std::cout << "RULE_PROG" << std::endl;
         Prog *prog = new Prog();
         prog->addDecls(this->parseDecls());
-        prog->addStatements(this->parseStatements());
+        //prog->addStatements(this->parseStatements());
         return prog;
     }
-   this->throwError(RULE_PROG); 
+   this->throwError(RULE_PROG);
+   return NULL;
 }
 /*
 ParseTree *Parser::parseProg()
@@ -144,6 +140,7 @@ Decl* Parser::parseDecl()
         return decl;
     }
     this->throwError(RULE_DECL);
+    return NULL;
 }
 
 /*
@@ -214,6 +211,7 @@ Statement* Parser::parseStatement()
         this->throwError(RULE_STATEMENT, "RULE_STATEMENT Not implemented.");
     }
     this->throwError(RULE_STATEMENT);
+    return NULL;
 }
 
 /*
@@ -269,6 +267,7 @@ Exp2* Parser::parseExp2()
         }
     }
     this->throwError(RULE_EXP2);
+    return NULL;
 }
 
 /*

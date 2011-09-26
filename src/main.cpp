@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
     Parser *parser = new Parser(lex);
 
     ParseTree *foo = parser->parse();
+    std::cout << foo->dump() << std::endl;
     return 0;
 
     //TODO: Meh.
