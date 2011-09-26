@@ -5,7 +5,7 @@
 template <class type>
 class Vector {
 	type* values;
-	int   size, internalSize;
+	int size, internalSize;
 
     /* Resizes the vector */
 	void resize(int newSize)
@@ -13,7 +13,7 @@ class Vector {
 		if(newSize > this->internalSize)
 		{
 			int newInternalSize = newSize * 2;
-			type* temp = new type[ newInternalSize ];
+			type* temp = (type*)malloc(sizeof(type) * newInternalSize); //new type[ newInternalSize ];
 
 			int max = newInternalSize;
 			if(newInternalSize > this->internalSize) max = this->internalSize;
@@ -77,9 +77,9 @@ public:
 	}
 
     /* Get value from index */
-    char& operator[](int index)
+    type operator[](int index)
     {
-        return this->chars[index];
+        return this->values[index];
     }
 
 	/* Get size */

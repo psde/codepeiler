@@ -140,6 +140,7 @@ class Hashtable {
 			try
 			{
 				Pair<type>* pair = this->getPair(key);
+                pair->key = pair->key;
 				return true;
 			}
 			catch(...)
