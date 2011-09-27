@@ -12,7 +12,7 @@ class ParseTree
 protected:
 
 public:
-    //virtual void makeCode() = 0;
+    virtual String makeCode() = 0;
     virtual String dump() = 0;
 };
 
@@ -45,18 +45,8 @@ public:
     int getArraySize() { return this->arraySize; }
     void setArray(int size) { this->array = true; this->arraySize = size; }
 
-    String dump() 
-    { 
-        String str = "int ";
-        str += this->identifier;
-        if(this->array)
-        {
-            str += "[";
-            str += (long)this->arraySize;
-            str += "]";
-        }
-        return str;
-    }
+    String dump();   
+    String makeCode();
 };
 
 class Decls : public ParseTree
@@ -72,18 +62,8 @@ public:
     void addDecl(Decl *decl) { this->decls->append(decl); }
     Vector<Decl*>* getDecls() { return this->decls; }
 
-    String dump() 
-    {
-        String str = "";
-        for(int i=0; i<decls->getSize();i++)
-        {
-            Decl *decl = this->decls->getValue(i);
-            str += decl->dump();
-            
-            str += "; ";
-        }
-        return str;
-    } 
+    String dump();   
+    String makeCode();
 };
 
 class Op : public ParseTree
@@ -110,7 +90,8 @@ public:
 
     OpType getType() { return this->type; }
 
-    String dump();
+    String dump();  
+    String makeCode();
 };
 
 class Exp;
@@ -129,7 +110,8 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump();
+    String dump();  
+    String makeCode();
 };
 
 class Index : public ParseTree
@@ -144,7 +126,8 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump(); 
+    String dump();   
+    String makeCode();
 };
 
 class Exp2 : public ParseTree
@@ -161,7 +144,8 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump(); 
+    String dump();   
+    String makeCode();
 };
 
 /* identifier INDEX */
@@ -176,12 +160,8 @@ public:
     void setIndex(Index *index) { this->index = index; }
     Index* getIndex() { return this->index; }
 
-    String dump() 
-    {
-        String str = this->identifier;
-        str += index->dump();
-        return str; 
-    }
+    String dump();   
+    String makeCode();
 };
 
 /* integer */
@@ -193,12 +173,8 @@ public:
     void setInteger(long integer) { this->integer = integer; }
     long getInteger() { return this->integer; }
 
-    String dump() 
-    {
-        String str = "";
-        str += integer;
-        return str; 
-    }
+    String dump();   
+    String makeCode();
 };
 
 /* - EXP2 */
@@ -212,7 +188,8 @@ public:
     void setExp2(Exp2 *exp2) { this->exp2 = exp2; }
     Exp2* getExp2() { return this->exp2; }
 
-    String dump();
+    String dump();  
+    String makeCode();
 };
 
 /* ! EXP2 */
@@ -226,7 +203,8 @@ public:
     void setExp2(Exp2 *exp2) { this->exp2 = exp2; }
     Exp2* getExp2() { return this->exp2; }
 
-    String dump();
+    String dump();  
+    String makeCode();
 };
 
 class Exp : public ParseTree
@@ -245,12 +223,8 @@ public:
     void addOpExp(OpExp *opexp) { this->opexp = opexp; }
     OpExp* getOpExp() { return this->opexp; }
 
-    String dump() 
-    { 
-        String str = exp2->dump();
-        str += opexp->dump();
-        return str;
-    }
+    String dump();   
+    String makeCode();
 };
 
 class Statement : public ParseTree
@@ -275,15 +249,8 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump() 
-    {
-        String str = this->identifier;
-        if(index != NULL)
-            str += index->dump();
-        str += " = ";
-        str += exp->dump();
-        return str; 
-    }
+    String dump();   
+    String makeCode();
 };
 
 /* print ( EXP ) */
@@ -297,13 +264,8 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump() 
-    {
-        String str = "print( ";
-        str += exp->dump();
-        str += " )";
-        return str; 
-    }
+    String dump();   
+    String makeCode();
 };
 
 /* read ( EXP )*/
@@ -317,13 +279,9 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump() 
-    {
-        String str = "read( ";
-        str += exp->dump();
-        str += " )";
-        return str; 
-    }};
+    String dump();   
+    String makeCode();
+};
 
 class Statements;
 /* { STATEMENTS } */
@@ -337,7 +295,8 @@ public:
     void setStatements(Statements* statements) { this->statements = statements; }
     Statements* getStatements() { return this->statements; }
 
-    String dump(); 
+    String dump();   
+    String makeCode();
 };
 
 /* if ( EXP ) STATEMENT else STATEMENT */
@@ -360,19 +319,8 @@ public:
     void setStatement2(Statement* statement) { this->statement2 = statement; }
     Statement* getStatement2() { return this->statement2; }
 
-    String dump() 
-    {
-        String str = "if(";
-        str += exp->dump();
-        str += ")";
-        str += statement1->dump();
-        if(this->statement2 != NULL)
-        {
-            str += " else ";
-            str += statement2->dump();
-        }
-        return str; 
-    }
+    String dump();   
+    String makeCode();
 };
 
 /* while ( EXP ) statement */
@@ -390,14 +338,8 @@ public:
     void setStatement(Statement* statement) { this->statement = statement; }
     Statement* getStatement() { return this->statement; }
 
-    String dump() 
-    {
-        String str = "while(";
-        str += exp->dump();
-        str += ") ";
-        str += statement->dump();
-        return str; 
-    }
+    String dump();  
+    String makeCode();
 };
 
 class Statements : public ParseTree
@@ -412,19 +354,8 @@ public:
     void addStatement(Statement *statement) { this->statements->append(statement); }
     Vector<Statement*>* getStatements() { return this->statements; }
 
-    String dump() 
-    { 
-        String str = "";
-        for(int i=0; i<statements->getSize();i++)
-        {
-            Statement *statement = this->statements->getValue(i);
-            str += statement->dump();
-            
-            str += ";\n";
-        }
-        return str;
-       
-    }
+    String dump(); 
+    String makeCode();
 };
 
 class Prog : public ParseTree 
@@ -443,16 +374,8 @@ public:
     void addStatements(Statements *statements) { this->statements = statements; }
     Statements* getStatements() { return this->statements; }
 
-    String dump() 
-    {
-        String str = "Dumping decls:\n";
-        str += this->decls->dump();
-        str += "\n";
-        str += "Dumping statements:\n";
-        str += this->statements->dump();
-        str += "\n";
-        return str;
-    }
+    String dump(); 
+    String makeCode();
 };
 
 #endif

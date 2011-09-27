@@ -105,8 +105,7 @@ Decls* Parser::parseDecls()
 #endif
         decls->addDecl(this->parseDecl());
 
-        if(!this->requireToken(Token::TOKEN_SEMICOLON, true))
-            this->throwError(RULE_DECL, "TOKEN_SEMICOLON expected.");
+        this->requireToken(RULE_DECLS, Token::TOKEN_SEMICOLON, true, true);
     }
 
     return decls;
@@ -133,20 +132,14 @@ Decl* Parser::parseDecl()
         }
         else if(currentToken == Token::TOKEN_BRACKET_L)
         {
-            if(!requireToken(Token::TOKEN_BRACKET_L, true))
-                this->throwError(RULE_DECL, "TOKEN_BRACKET_L expected.");
-            
-            if(!requireToken(Token::TOKEN_INTEGER))
-                this->throwError(RULE_DECL, "TOKEN_INTEGER expected.");
+            this->requireToken(RULE_DECL, Token::TOKEN_BRACKET_L, true, true);
+            this->requireToken(RULE_DECL, Token::TOKEN_INTEGER, true);
 
             decl->setArray(currentToken.getULong());
             this->nextToken();
 
-            if(!requireToken(Token::TOKEN_BRACKET_R, true))
-                this->throwError(RULE_DECL, "TOKEN_BRACKET_R expected.");
-           
-            if(!requireToken(Token::TOKEN_IDENTIFIER))
-                this->throwError(RULE_DECL, "TOKEN_IDENTIFIER expected.");
+            this->requireToken(RULE_DECL, Token::TOKEN_BRACKET_R, true, true);
+            this->requireToken(RULE_DECL, Token::TOKEN_IDENTIFIER, true);
 
             decl->setIdentifier(currentToken.getLexem());
             this->nextToken();
@@ -175,15 +168,13 @@ Statements* Parser::parseStatements()
         std::cout << "RULE_STATEMENTS" << std::endl;
 #endif
 
-        if(requireToken(Token::TOKEN_EOF))
+        if(this->requireToken(Token::TOKEN_EOF))
             break;
 
         statements->addStatement(this->parseStatement());
 
-        if(!this->requireToken(Token::TOKEN_SEMICOLON, true))
-            this->throwError(RULE_STATEMENTS, "TOKEN_SEMICOLON expected.");
+        this->requireToken(RULE_STATEMENTS, Token::TOKEN_SEMICOLON, true, true);
     }
-    //this->nextToken();
     return statements;
 }
 
@@ -207,7 +198,7 @@ Statement* Parser::parseStatement()
         statement->setIdentifier(currentToken.getLexem());
         this->nextToken();
         statement->setIndex(this->parseIndex());
-        requireToken(Token::TOKEN_EQUAL, true);
+        this->requireToken(RULE_STATEMENT, Token::TOKEN_EQUAL, true, true);
         statement->setExp(this->parseExp());
         return statement;
     }
@@ -219,9 +210,9 @@ Statement* Parser::parseStatement()
 
         Statement_2 *statement = new Statement_2();
         this->nextToken();
-        requireToken(Token::TOKEN_PAREN_L, true);
+        this->requireToken(RULE_STATEMENT, Token::TOKEN_PAREN_L, true, true);
         statement->setExp(this->parseExp());
-        requireToken(Token::TOKEN_PAREN_R, true);
+        this->requireToken(RULE_STATEMENT, Token::TOKEN_PAREN_R, true, true);
         return statement;
     }
     else if(this->requireToken(Token::TOKEN_READ))
@@ -232,9 +223,9 @@ Statement* Parser::parseStatement()
 #endif
 
         Statement_3 *statement = new Statement_3();
-        requireToken(Token::TOKEN_PAREN_L, true);
+        this->requireToken(RULE_STATEMENT, Token::TOKEN_PAREN_L, true, true);
         statement->setExp(this->parseExp());
-        requireToken(Token::TOKEN_PAREN_R, true);
+        this->requireToken(RULE_STATEMENT, Token::TOKEN_PAREN_R, true, true);
         return statement;
     }
     else if(this->requireToken(Token::TOKEN_BRACE_L))
@@ -257,12 +248,12 @@ Statement* Parser::parseStatement()
 #endif
 
         Statement_5 *statement = new Statement_5();
-        this->nextToken();
+        this->requireToken(RULE_STATEMENT, Token::TOKEN_PAREN_L, true, true);
         statement->setExp(this->parseExp());
-        this->nextToken();
+        this->requireToken(RULE_STATEMENT, Token::TOKEN_PAREN_R, true, true);
         statement->setStatement1(this->parseStatement());
 
-        if(requireToken(Token::TOKEN_ELSE))
+        if(this->requireToken(Token::TOKEN_ELSE))
         {
             this->nextToken();
             statement->setStatement2(this->parseStatement());
@@ -448,4 +439,5 @@ Op* Parser::parseOp()
         return op;
     }
     throw ParserRule(RULE_OP);
+    return NULL;
 }
