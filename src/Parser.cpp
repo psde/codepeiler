@@ -148,7 +148,7 @@ Statements* Parser::parseStatements()
         if(!this->requireToken(Token::TOKEN_SEMICOLON, true))
             this->throwError(RULE_STATEMENTS, "TOKEN_SEMICOLON expected.");
     }
-    this->nextToken();
+    //this->nextToken();
     return statements;
 }
 
@@ -186,10 +186,10 @@ Statement* Parser::parseStatement()
     }
     else if(this->requireToken(Token::TOKEN_READ))
     {
+        this->nextToken();
         std::cout << "RULE_STATEMENT: read ( EXP );" << std::endl;
 
         Statement_3 *statement = new Statement_3();
-        this->nextToken();
         requireToken(Token::TOKEN_PAREN_L, true);
         statement->setExp(this->parseExp());
         requireToken(Token::TOKEN_PAREN_R, true);
@@ -197,16 +197,18 @@ Statement* Parser::parseStatement()
     }
     else if(this->requireToken(Token::TOKEN_BRACE_L))
     {
+        this->nextToken();
         std::cout << "RULE_STATEMENT: { STATEMENTS }" << std::endl;
 
         Statement_4 *statement = new Statement_4();
-        this->nextToken();
         statement->setStatements(this->parseStatements());
-        this->nextToken();
+        if(!this->requireToken(Token::TOKEN_BRACE_R, true))
+            this->throwError(RULE_STATEMENT);
         return statement;
     }
     else if(this->requireToken(Token::TOKEN_IF))
     {
+        this->nextToken();
         std::cout << "RULE_STATEMENT: IF ( EXP ) STATEMENT else STATEMENT" << std::endl;
 
         Statement_5 *statement = new Statement_5();
@@ -215,12 +217,32 @@ Statement* Parser::parseStatement()
         statement->setExp(this->parseExp());
         this->nextToken();
         statement->setStatement1(this->parseStatement());
+
+        std::cout << "MEH " << currentToken.getTokenDescription() << std::endl;
+
         if(requireToken(Token::TOKEN_ELSE))
         {
             std::cout << "RULE_STATEMENT: else" << std::endl;
             this->nextToken();
             statement->setStatement2(this->parseStatement());
         }
+        return statement;
+    }
+    else if(this->requireToken(Token::TOKEN_WHILE))
+    {
+        this->nextToken();
+        
+        std::cout << "RULE_STATEMENT: while ( EXP ) statement" << std::endl;
+
+        Statement_6 *statement = new Statement_6();
+
+        if(!this->requireToken(Token::TOKEN_PAREN_L, true))
+            this->throwError(RULE_STATEMENT);
+        statement->setExp(this->parseExp());
+        
+        if(!this->requireToken(Token::TOKEN_PAREN_R, true))
+            this->throwError(RULE_STATEMENT);
+        statement->setStatement(this->parseStatement());
         return statement;
     }
     else
@@ -236,6 +258,7 @@ EXP ::= EXP2 OP_EXP
 */
 Exp* Parser::parseExp()
 {
+    std::cout << "RULE_EXP ::= EXP2 OP_EXP" << std::endl;
     Exp *exp = new Exp();
     exp->addExp2(this->parseExp2());
     exp->addOpExp(this->parseOpExp());
@@ -253,7 +276,7 @@ Exp2* Parser::parseExp2()
 {
     if(RULE_EXP2.isTokenValid(currentToken))
     {
-        std::cout << "RULE_EXP2 " << currentToken.getTokenDescription() << std::endl;
+        std::cout << "RULE_EXP2" << std::endl;
 
         if(this->requireToken(Token::TOKEN_PAREN_L))
         {
@@ -324,10 +347,10 @@ OP_EXP ::= OP EXP |
 */
 OpExp* Parser::parseOpExp()
 {
-    std::cout << "RULE_OPEXP" << std::endl;
     OpExp *opexp = new OpExp();
     if(RULE_OP.isTokenValid(currentToken))
     {
+        std::cout << "RULE_OPEXP" << std::endl;
         opexp->setOp(this->parseOp());
         opexp->setExp(this->parseExp());
     }
