@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 
     char* outputFile;
     bool output = false;
-
+    bool lexerOut = false;
     if(argc == 3)
     {
         outputFile = argv[2];
@@ -45,18 +45,11 @@ int main(int argc, char *argv[])
     Lexer *lex = new Lexer(buf, symtable);
     
     Parser *parser = new Parser(lex);
-
-    ParseTree *foo = parser->parse();
+    
+    std::cout << "Parsing..." << std::endl;
+    ParseTree *tree = parser->parse();
     //std::cout << foo->dump() << std::endl;
     //std::cout << "Making code:" << std::endl << foo->makeCode() << std::endl;
-
-    writer = new BufferWriter("codeout");
-    out = &writer->stream();
-    *out << foo->makeCode();
-    delete writer;
-    return 0;
-
-    //TODO: Meh.
 
     if(output)
     {
@@ -65,8 +58,11 @@ int main(int argc, char *argv[])
     }
     *out << std::setiosflags(std::ios::left);
 
-    Token token;
-    while(true)
+    std::cout << "Generating code..." << std::endl;
+    *out << tree->makeCode() << std::endl;
+
+    /*Token token;
+    while(lexerOut && true)
     {
         token = lex->nextToken();
 
@@ -100,7 +96,7 @@ int main(int argc, char *argv[])
                       << ": Error while trying to parse '" << token.getLexem() 
                       << "': Out of range." << std::endl;
         }
-    }
+    }*/
 
     if(output)
     {
@@ -111,5 +107,6 @@ int main(int argc, char *argv[])
     delete lex;
     delete symtable;
 
+    std::cout << "Done." << std::endl;
     return 0;
 }

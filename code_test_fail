@@ -1,0 +1,5 @@
+int f = 3;
+f = abc;
+pront (f);
+
+while(true) {};

@@ -44,7 +44,7 @@ bool Parser::requireToken(ParserRule rule, Token::TType tok, bool throwError, bo
 
     if(!isOk && throwError)
     {
-        String str = "requireToken failed, ";
+        String str = "";
         str += Token::getTokenDescription(tok);
         str += " expected.";
         this->throwError(rule, str);
