@@ -1,4 +1,4 @@
-#define PARSER_DEBUG 
+//#define PARSER_DEBUG 
 #include "Parser.hpp"
 #include <iostream>
 
@@ -264,7 +264,6 @@ Statement* Parser::parseStatement()
 
         if(requireToken(Token::TOKEN_ELSE))
         {
-            std::cout << "RULE_STATEMENT: else" << std::endl;
             this->nextToken();
             statement->setStatement2(this->parseStatement());
         }

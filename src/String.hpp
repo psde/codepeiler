@@ -118,6 +118,21 @@ class String
             strcpy(this->chars, s.chars);
         }
 
+        String operator+(const char *c1)
+        {
+            String str(this->chars);
+            String str2(c1);
+            str += str2;
+            return str;
+        }
+
+        String operator+(const String &s)
+        {
+            String str(this->chars);
+            str += s;
+            return str;
+        }
+
         /*
           Appends a long
         */
@@ -195,6 +210,11 @@ class String
         {
             os << str.chars;
             return os;
+        }
+
+        const char* getChars()
+        {
+            return this->chars;
         }
 };
 

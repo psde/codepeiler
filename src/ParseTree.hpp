@@ -28,7 +28,7 @@ public:
     String getIdentifier() { return this->identifier; }
     void setIdentifier(String identifier) { this->identifier = identifier; }
 
-    String dump() { return ""; }
+    String dump() { return "!!THIS SHOULD NOT HAPPEN!!"; }
 };
 
 class Decl : public IdentifierParseTree
@@ -91,7 +91,7 @@ class Op : public ParseTree
 public:
     enum OpType
     {
-        OP_PLUS,
+        OP_PLUS = 0,
         OP_MINUS,
         OP_MULT,
         OP_DIV,
@@ -110,7 +110,7 @@ public:
 
     OpType getType() { return this->type; }
 
-    String dump() { return ""; }
+    String dump();
 };
 
 class Exp;
@@ -129,7 +129,7 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump() { return ""; }
+    String dump();
 };
 
 class Index : public ParseTree
@@ -144,7 +144,7 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump() { return ""; }
+    String dump(); 
 };
 
 class Exp2 : public ParseTree
@@ -161,7 +161,7 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump() { return ""; }
+    String dump(); 
 };
 
 /* identifier INDEX */
@@ -176,7 +176,12 @@ public:
     void setIndex(Index *index) { this->index = index; }
     Index* getIndex() { return this->index; }
 
-    String dump() { return ""; }
+    String dump() 
+    {
+        String str = this->identifier;
+        str += index->dump();
+        return str; 
+    }
 };
 
 /* integer */
@@ -188,7 +193,12 @@ public:
     void setInteger(long integer) { this->integer = integer; }
     long getInteger() { return this->integer; }
 
-    String dump() { return ""; }
+    String dump() 
+    {
+        String str = "";
+        str += integer;
+        return str; 
+    }
 };
 
 /* - EXP2 */
@@ -202,7 +212,7 @@ public:
     void setExp2(Exp2 *exp2) { this->exp2 = exp2; }
     Exp2* getExp2() { return this->exp2; }
 
-    String dump() { return ""; }
+    String dump();
 };
 
 /* ! EXP2 */
@@ -216,7 +226,7 @@ public:
     void setExp2(Exp2 *exp2) { this->exp2 = exp2; }
     Exp2* getExp2() { return this->exp2; }
 
-    String dump() { return ""; }
+    String dump();
 };
 
 class Exp : public ParseTree
@@ -235,7 +245,12 @@ public:
     void addOpExp(OpExp *opexp) { this->opexp = opexp; }
     OpExp* getOpExp() { return this->opexp; }
 
-    String dump() { return ""; }
+    String dump() 
+    { 
+        String str = exp2->dump();
+        str += opexp->dump();
+        return str;
+    }
 };
 
 class Statement : public ParseTree
@@ -260,7 +275,15 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump() { return ""; }
+    String dump() 
+    {
+        String str = this->identifier;
+        if(index != NULL)
+            str += index->dump();
+        str += " = ";
+        str += exp->dump();
+        return str; 
+    }
 };
 
 /* print ( EXP ) */
@@ -274,7 +297,13 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump() { return ""; }
+    String dump() 
+    {
+        String str = "print( ";
+        str += exp->dump();
+        str += " )";
+        return str; 
+    }
 };
 
 /* read ( EXP )*/
@@ -288,8 +317,13 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump() { return ""; }
-};
+    String dump() 
+    {
+        String str = "read( ";
+        str += exp->dump();
+        str += " )";
+        return str; 
+    }};
 
 class Statements;
 /* { STATEMENTS } */
@@ -303,7 +337,7 @@ public:
     void setStatements(Statements* statements) { this->statements = statements; }
     Statements* getStatements() { return this->statements; }
 
-    String dump() { return ""; }
+    String dump(); 
 };
 
 /* if ( EXP ) STATEMENT else STATEMENT */
@@ -320,13 +354,25 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
     
-    void setStatement1(Statement* statement) { this->statement2 = statement; }
+    void setStatement1(Statement* statement) { this->statement1 = statement; }
     Statement* getStatement1() { return this->statement1; }
 
     void setStatement2(Statement* statement) { this->statement2 = statement; }
     Statement* getStatement2() { return this->statement2; }
 
-    String dump() { return ""; }
+    String dump() 
+    {
+        String str = "if(";
+        str += exp->dump();
+        str += ")";
+        str += statement1->dump();
+        if(this->statement2 != NULL)
+        {
+            str += " else ";
+            str += statement2->dump();
+        }
+        return str; 
+    }
 };
 
 /* while ( EXP ) statement */
@@ -344,7 +390,14 @@ public:
     void setStatement(Statement* statement) { this->statement = statement; }
     Statement* getStatement() { return this->statement; }
 
-    String dump() { return ""; }
+    String dump() 
+    {
+        String str = "while(";
+        str += exp->dump();
+        str += ") ";
+        str += statement->dump();
+        return str; 
+    }
 };
 
 class Statements : public ParseTree
@@ -359,7 +412,19 @@ public:
     void addStatement(Statement *statement) { this->statements->append(statement); }
     Vector<Statement*>* getStatements() { return this->statements; }
 
-    String dump() { return ""; }
+    String dump() 
+    { 
+        String str = "";
+        for(int i=0; i<statements->getSize();i++)
+        {
+            Statement *statement = this->statements->getValue(i);
+            str += statement->dump();
+            
+            str += ";\n";
+        }
+        return str;
+       
+    }
 };
 
 class Prog : public ParseTree 
@@ -382,6 +447,9 @@ public:
     {
         String str = "Dumping decls:\n";
         str += this->decls->dump();
+        str += "\n";
+        str += "Dumping statements:\n";
+        str += this->statements->dump();
         str += "\n";
         return str;
     }
