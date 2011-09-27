@@ -7,6 +7,7 @@
 #include "String.hpp"
 #include "Vector.hpp"
 
+
 class ParseTree
 {
 protected:
@@ -82,10 +83,8 @@ public:
         OP_AND
     };
 
-protected:
     OpType type;
 
-public:
     Op(OpType type) { this->type = type; }
 
     OpType getType() { return this->type; }
@@ -97,10 +96,10 @@ public:
 class Exp;
 class OpExp : public ParseTree
 {
-protected:
+public:
     Op *op;
     Exp *exp;
-public:
+    
     OpExp() : op(NULL), exp(NULL) {}
     ~OpExp();
 

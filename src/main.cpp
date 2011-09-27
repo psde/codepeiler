@@ -47,7 +47,13 @@ int main(int argc, char *argv[])
     Parser *parser = new Parser(lex);
 
     ParseTree *foo = parser->parse();
-    std::cout << foo->dump() << std::endl;
+    //std::cout << foo->dump() << std::endl;
+    //std::cout << "Making code:" << std::endl << foo->makeCode() << std::endl;
+
+    writer = new BufferWriter("codeout");
+    out = &writer->stream();
+    *out << foo->makeCode();
+    delete writer;
     return 0;
 
     //TODO: Meh.

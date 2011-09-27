@@ -35,6 +35,6 @@ while ( i < 5 ) {
 
 print(array[4]); (* => 4 *)
 
-print(ergebnis); (* => 8 *)
+print(ergebnis); (* => 10 *)
 
 print(test);     (* => 5 *)

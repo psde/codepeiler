@@ -1,97 +1,243 @@
 #include "ParseTree.hpp"
 
+static long& uniqueId()
+{
+    static long id = 1;
+    return id;
+}
+
+static long getUniqueId()
+{
+    return uniqueId()++;
+}
+
 String Decl::makeCode()
 {
-    return "";
+    String str = "DS $";
+    str += identifier;
+    str += " ";
+    if(this->array)
+        str += (long)this->arraySize; 
+    else
+        str += "1";
+    str += "\n";
+    return str;
 }
 
 String Decls::makeCode()
 {
-    return "";
+    String str = "";
+    for(int i=0; i<decls->getSize();i++)
+    {
+        Decl *decl = this->decls->getValue(i);
+        str += decl->makeCode();
+    }
+    return str;
 }
 
 String Op::makeCode()
 {
-    return "";
+    String items[] = { "ADD", "SUB", "MUL", "DIV", "LES", "EQU", ">", "<=>", "ADD", "!" };
+
+    String str = items[this->type];
+    str += "\n";
+    return str;
 }
 
 String OpExp::makeCode()
 {
-    return "";
+    String str = exp->makeCode();
+    str += op->makeCode();
+    return str;
 }
 
 String Index::makeCode()
 {
-    return "";
+    if(this->exp == NULL)
+        return "";
+    String str = exp->makeCode();
+    str += "ADD\n";
+    return str;
 }
 
 String Exp2_1::makeCode()
 {
-    return "";
+    return exp->makeCode();
 }
 
 String Exp2_2::makeCode()
 {
-    return "";
+    String str = "LA $";
+    str += identifier;
+    str += "\n";
+
+    str += index->makeCode();
+    str += "LV\n";
+    return str;
 }
 
 String Exp2_3::makeCode()
 {
-    return "";
+    String str = "LC ";
+    str += integer;
+    str += "\n";
+    return str;
 }
 
 String Exp2_4::makeCode()
 {
-    return "";
+    String str = "LC 0\n";
+    str += exp2->makeCode();
+    str += "SUB\n";
+    return str;
 }
 
 String Exp2_5::makeCode()
 {
-    return "";
+    String str = exp2->makeCode();
+    str += "NOT\n";
+    return str;
 }
 
 String Exp::makeCode()
 {
-    return "";
+    String str = "";
+    Op *op = opexp->op;
+    if(op == NULL)
+    {
+        str += exp2->makeCode();
+    }
+    else
+    {
+        switch(op->type)
+        {
+            case Op::OP_GREATER:
+                str += opexp->makeCode();
+                str += exp2->makeCode();
+                str += "LES\n";
+                break;
+            case Op::OP_LER:
+                str += opexp->makeCode();
+                str += exp2->makeCode();
+                str += "NOT\n";
+                break;
+            default:
+                str += exp2->makeCode();
+                str += opexp->makeCode();
+                break;
+        }
+    }
+    return str;
 }
 
 String Statement_1::makeCode()
 {
-    return "";
+    String str = exp->makeCode();
+    str += "LA $";
+    str += identifier;
+    str += "\n";
+    str += index->makeCode();
+    str += "STR\n";
+    return str;
 }
 
 String Statement_2::makeCode()
 {
-    return "";
+    String str = exp->makeCode();
+    str += "PRI\n";
+    return str;
 }
 
 String Statement_3::makeCode()
 {
-    return "";
+    String str = exp->makeCode();
+    str += "REA\n";
+    return str;
 }
 
 String Statement_4::makeCode()
 {
-    return "";
+    return statements->makeCode();
 }
 
 String Statement_5::makeCode()
 {
-    return "";
+    String str = exp->makeCode();
+
+    int jmp1 = getUniqueId();
+    int jmp2 = getUniqueId();
+
+    str += "JIN #jmp";
+    str += jmp1;
+    str += "\n";
+
+    str += statement1->makeCode();
+    
+    str += "JMP #jmp";
+    str += jmp2;
+    str += "\n";
+
+    str += "#jmp";
+    str += jmp1;
+    str += " NOP\n";
+
+    if(statement2 != NULL)
+    {
+        str += statement2->makeCode();    
+    }
+
+    str += "#jmp";
+    str += jmp2;
+    str += " NOP\n";
+
+    return str;
 }
 
 String Statement_6::makeCode()
 {
-    return "";
+    String str = "";
+
+    int jmp1 = getUniqueId();
+    int jmp2 = getUniqueId();
+
+    str += "#jmp";
+    str += jmp1;
+    str += " NOP\n";
+    
+    str += exp->makeCode();
+
+    str += "JIN #jmp";
+    str += jmp2;
+    str += "\n";
+
+    str += statement->makeCode();
+
+    str += "JMP #jmp";
+    str += jmp1;
+    str += "\n";
+
+    str += "#jmp";
+    str += jmp2;
+    str += " NOP\n";
+
+    return str;
 }
 
 String Statements::makeCode()
 {
-    return "";
+    String str = "";
+    for(int i=0; i<statements->getSize();i++)
+    {
+        Statement *statement = this->statements->getValue(i);
+        str += statement->makeCode();
+    }
+    return str;
 }
 
 String Prog::makeCode()
 {
-    return "";
+    String str = this->decls->makeCode();
+    str += this->statements->makeCode();
+    return str;
 }
 
