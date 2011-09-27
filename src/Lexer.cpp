@@ -1,3 +1,4 @@
+//#define LEXER_DEBUG
 #include "Lexer.hpp"
 
 String LexerStateStrings[] =

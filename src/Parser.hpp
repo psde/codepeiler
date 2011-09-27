@@ -62,6 +62,7 @@ private:
     Token currentToken;
     void nextToken();
     bool requireToken(Token::TType tok, bool readNext = false);
+    bool requireToken(ParserRule rule, Token::TType tok, bool throwError, bool readNext = false);
 
     Prog* parseProg();
     Decls* parseDecls();
