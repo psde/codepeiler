@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     std::cout << "Parsing... "; // << std::endl;
     try
     {
-        parser->parse();
+        tree = parser->parse();
     } 
     catch (ParserError err)
     {
