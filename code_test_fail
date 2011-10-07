@@ -1,4 +1,5 @@
-int f = 3;
+int f;
+int[0] a;
 f = abc;
 pront (f);
 

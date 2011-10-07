@@ -15,6 +15,7 @@ protected:
 public:
     virtual String makeCode() = 0;
     virtual String dump() = 0;
+    virtual String typeCheck() = 0;
 };
 
 class IdentifierParseTree : public ParseTree
@@ -47,6 +48,7 @@ public:
     void setArray(int size) { this->array = true; this->arraySize = size; }
 
     String dump();   
+    String typeCheck();
     String makeCode();
 };
 
@@ -63,7 +65,8 @@ public:
     void addDecl(Decl *decl) { this->decls->append(decl); }
     Vector<Decl*>* getDecls() { return this->decls; }
 
-    String dump();   
+    String dump();    
+    String typeCheck(); 
     String makeCode();
 };
 
@@ -89,7 +92,8 @@ public:
 
     OpType getType() { return this->type; }
 
-    String dump();  
+    String dump();   
+    String typeCheck();
     String makeCode();
 };
 
@@ -109,7 +113,8 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump();  
+    String dump();   
+    String typeCheck();
     String makeCode();
 };
 
@@ -125,7 +130,8 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump();   
+    String dump();    
+    String typeCheck();
     String makeCode();
 };
 
@@ -143,7 +149,8 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump();   
+    String dump();    
+    String typeCheck();
     String makeCode();
 };
 
@@ -159,7 +166,8 @@ public:
     void setIndex(Index *index) { this->index = index; }
     Index* getIndex() { return this->index; }
 
-    String dump();   
+    String dump();    
+    String typeCheck();
     String makeCode();
 };
 
@@ -172,7 +180,8 @@ public:
     void setInteger(long integer) { this->integer = integer; }
     long getInteger() { return this->integer; }
 
-    String dump();   
+    String dump();    
+    String typeCheck();
     String makeCode();
 };
 
@@ -187,7 +196,8 @@ public:
     void setExp2(Exp2 *exp2) { this->exp2 = exp2; }
     Exp2* getExp2() { return this->exp2; }
 
-    String dump();  
+    String dump();   
+    String typeCheck();
     String makeCode();
 };
 
@@ -202,7 +212,8 @@ public:
     void setExp2(Exp2 *exp2) { this->exp2 = exp2; }
     Exp2* getExp2() { return this->exp2; }
 
-    String dump();  
+    String dump();   
+    String typeCheck();
     String makeCode();
 };
 
@@ -222,7 +233,8 @@ public:
     void addOpExp(OpExp *opexp) { this->opexp = opexp; }
     OpExp* getOpExp() { return this->opexp; }
 
-    String dump();   
+    String dump();    
+    String typeCheck();
     String makeCode();
 };
 
@@ -248,7 +260,8 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump();   
+    String dump();    
+    String typeCheck();
     String makeCode();
 };
 
@@ -263,7 +276,8 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump();   
+    String dump();  
+    String typeCheck();
     String makeCode();
 };
 
@@ -278,7 +292,8 @@ public:
     void setExp(Exp *exp) { this->exp = exp; }
     Exp* getExp() { return this->exp; }
 
-    String dump();   
+    String dump();    
+    String typeCheck();
     String makeCode();
 };
 
@@ -294,7 +309,8 @@ public:
     void setStatements(Statements* statements) { this->statements = statements; }
     Statements* getStatements() { return this->statements; }
 
-    String dump();   
+    String dump();    
+    String typeCheck();
     String makeCode();
 };
 
@@ -318,7 +334,8 @@ public:
     void setStatement2(Statement* statement) { this->statement2 = statement; }
     Statement* getStatement2() { return this->statement2; }
 
-    String dump();   
+    String dump();    
+    String typeCheck();
     String makeCode();
 };
 
@@ -337,7 +354,8 @@ public:
     void setStatement(Statement* statement) { this->statement = statement; }
     Statement* getStatement() { return this->statement; }
 
-    String dump();  
+    String dump();   
+    String typeCheck();
     String makeCode();
 };
 
@@ -353,7 +371,8 @@ public:
     void addStatement(Statement *statement) { this->statements->append(statement); }
     Vector<Statement*>* getStatements() { return this->statements; }
 
-    String dump(); 
+    String dump();  
+    String typeCheck();
     String makeCode();
 };
 
@@ -373,7 +392,8 @@ public:
     void addStatements(Statements *statements) { this->statements = statements; }
     Statements* getStatements() { return this->statements; }
 
-    String dump(); 
+    String dump();  
+    String typeCheck();
     String makeCode();
 };
 

@@ -1,6 +1,8 @@
 // Debug stuff...
 #define NO_DIRECT_IO // Use this if developing on crypto fs
 
+#define VERSION "0.1"
+
 #ifndef __GNUC__  
     #error "You need GCC to compile this." 
 #endif 
@@ -27,9 +29,11 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    std::cout << std::endl << "Codepeiler v" << VERSION << " started." << std::endl;
+
     char* outputFile;
     bool output = false;
-    bool lexerOut = false;
+    //bool lexerOut = false;
     if(argc == 3)
     {
         outputFile = argv[2];
@@ -39,27 +43,60 @@ int main(int argc, char *argv[])
     BufferReader *buf = new BufferReader(argv[1]);
     BufferWriter *writer;
     std::ostream* out = &std::cout;
-    
+ 
+    if(output)
+    {
+        std::cout << "Using file '" << outputFile << "' for code output." << std::endl;
+        writer = new BufferWriter(outputFile);
+        out = &writer->stream();
+    }
+    else
+    {
+        std::cout << "Using stdout for code output." << std::endl;
+    }
+
     Symtable *symtable = new Symtable(1024);
     
     Lexer *lex = new Lexer(buf, symtable);
     
     Parser *parser = new Parser(lex);
-    
-    std::cout << "Parsing..." << std::endl;
-    ParseTree *tree = parser->parse();
-    //std::cout << foo->dump() << std::endl;
-    //std::cout << "Making code:" << std::endl << foo->makeCode() << std::endl;
+   
+    ParseTree *tree;
+    std::cout << "Parsing... "; // << std::endl;
+    try
+    {
+        parser->parse();
+    } 
+    catch (ParserError err)
+    {
+        std::cout << "failed." << std::endl;
+        std::cout << err.what() << std::endl;
+        std::cout << "Exiting." << std::endl;
+        return 1;
+    }
+    std::cout << "done." << std::endl;
 
     if(output)
     {
         writer = new BufferWriter(outputFile);
         out = &writer->stream();
     }
-    *out << std::setiosflags(std::ios::left);
+    //*out << std::setiosflags(std::ios::left);
 
-    std::cout << "Generating code..." << std::endl;
+    std::cout << "Type checking... ";
+    String typecheck = tree->typeCheck();
+    if(!(typecheck == ""))
+    {
+        std::cout << "failed." << std::endl;
+        std::cout << typecheck << std::endl;
+        return 1;
+    }
+
+    std::cout << "done." << std::endl;
+
+    std::cout << "Generating code... ";
     *out << tree->makeCode() << std::endl;
+    std::cout << "done." << std::endl;
 
     /*Token token;
     while(lexerOut && true)
@@ -107,6 +144,6 @@ int main(int argc, char *argv[])
     delete lex;
     delete symtable;
 
-    std::cout << "Done." << std::endl;
+    std::cout << "Finished." << std::endl;
     return 0;
 }
