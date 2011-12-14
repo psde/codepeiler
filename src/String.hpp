@@ -223,6 +223,11 @@ class String
             return true;
         }
 
+        bool operator!=(String const& s)
+        {
+            return !(*this == s);
+        }
+
         /*
           << blah   
         */
@@ -233,6 +238,7 @@ class String
         }
 
         const char* getChars()
+
         {
             return this->chars;
         }

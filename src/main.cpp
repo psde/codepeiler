@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 
     std::cout << "Type checking... ";
     String typecheck = tree->typeCheck();
-    if(!(typecheck == ""))
+    if(typecheck != "")
     {
         std::cout << "failed." << std::endl;
         std::cout << typecheck << std::endl;
