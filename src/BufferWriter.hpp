@@ -98,8 +98,8 @@ public:
 
     void flush()
     {
-        ::write(this->fileDescriptor, writeBuffer, BufferWriter::BUFFER_SIZE);
-        memset(this->writeBuffer, 0, BufferWriter::BUFFER_SIZE);
+        ssize_t writtenSize = ::write(this->fileDescriptor, writeBuffer, BufferWriter::BUFFER_SIZE);
+        memset(this->writeBuffer, 0, writtenSize);
         this->bufferPosition = 0;
     }
 };

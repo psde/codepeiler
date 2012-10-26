@@ -208,14 +208,16 @@ Token Lexer::nextToken()
         unsigned int nextState = this->transitions[state][(int)currentChar];
 
         #ifdef LEXER_DEBUG
-            std::cout << LexerStateStrings[state] << " -- '" << currentChar << "' --> " << LexerStateStrings[nextState] << std::endl;
+            std::cout << LexerStateStrings[state] << " -- '" << currentChar << "' --> "
+                      << LexerStateStrings[nextState] << std::endl;
         #endif
 
         if(nextState && this->finalState[nextState])
         {
             lastFinal = nextState;
             #ifdef LEXER_DEBUG
-                std::cout << LexerStateStrings[nextState] << " could be a final state!" << std::endl;
+                std::cout << LexerStateStrings[nextState] << " could be a final state!" 
+                          << std::endl;
             #endif
         }
 

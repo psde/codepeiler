@@ -1,6 +1,4 @@
 int f;
-int[0] a;
-f = abc;
 pront (f);
 
 while(true) {};
