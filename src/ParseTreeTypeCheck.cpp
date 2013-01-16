@@ -94,7 +94,7 @@ String Statement_2::typeCheck()
 
 String Statement_3::typeCheck()
 {
-    return exp->typeCheck();
+    return "";
 }
 
 String Statement_4::typeCheck()
