@@ -7,6 +7,38 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "src/ParseTree.cpp",
+			"settings":
+			{
+				"buffer_size": 328,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/ParseTree.hpp",
+			"settings":
+			{
+				"buffer_size": 8170,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/Parser.cpp",
+			"settings":
+			{
+				"buffer_size": 11434,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/Parser.hpp",
+			"settings":
+			{
+				"buffer_size": 1816,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "make",
 	"command_palette":
@@ -94,8 +126,119 @@
 	"groups":
 	[
 		{
+			"selected": 3,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/ParseTree.cpp",
+					"settings":
+					{
+						"buffer_size": 328,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/ParseTree.hpp",
+					"settings":
+					{
+						"buffer_size": 8170,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 898.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/Parser.cpp",
+					"settings":
+					{
+						"buffer_size": 11434,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/Parser.hpp",
+					"settings":
+					{
+						"buffer_size": 1816,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 390.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],
