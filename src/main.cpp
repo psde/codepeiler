@@ -1,7 +1,6 @@
-// Debug stuff...
 #define NO_DIRECT_IO // Use this if developing on crypto fs
 
-#define VERSION "0.1"
+#define VERSION "0.2"
 
 #ifndef __GNUC__  
     #error "You need GCC to compile this." 
@@ -10,7 +9,6 @@
 #include <iostream>
 #include <iomanip>
 
-// TODO: Beautfiy this
 #include "String.hpp"
 #include "BufferReader.hpp"
 #include "BufferWriter.hpp"
@@ -54,10 +52,8 @@ int main(int argc, char *argv[])
     {
         std::cout << "Using stdout for code output." << std::endl;
     }
-
-    Symtable *symtable = new Symtable(1024);
     
-    Lexer *lex = new Lexer(buf, symtable);
+    Lexer *lex = new Lexer(buf);
     
     Parser *parser = new Parser(lex);
    
@@ -71,7 +67,6 @@ int main(int argc, char *argv[])
     {
         std::cout << "failed." << std::endl;
         std::cout << err.what() << std::endl;
-        std::cout << "Exiting." << std::endl;
         return 1;
     }
     std::cout << "done." << std::endl;
@@ -142,8 +137,6 @@ int main(int argc, char *argv[])
 
     delete buf;
     delete lex;
-    delete symtable;
 
-    std::cout << "Finished." << std::endl;
     return 0;
 }

@@ -2,12 +2,10 @@
 #define LEXER_HPP
 
 #include <ctype.h>
-#include "Symtable.hpp"
 #include "Token.hpp"
-#include "BufferReader.hpp"
-#include "String.hpp"
 
-//#define LEXER_DEBUG
+class BufferReader;
+class Symtable;
 
 class Position
 {
@@ -73,7 +71,7 @@ private:
     bool isComment();
 
 public:
-    Lexer(BufferReader *buffer, Symtable *symtable);
+    Lexer(BufferReader *buffer);
 
     Token nextToken();
 };

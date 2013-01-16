@@ -1,5 +1,12 @@
-//#define LEXER_DEBUG
+#include "BufferReader.hpp"
+#include "Symtable.hpp"
+#include "String.hpp"
+
 #include "Lexer.hpp"
+
+#ifdef _DEBUG
+#define LEXER_DEBUG
+#endif
 
 String LexerStateStrings[] =
 {
@@ -28,10 +35,10 @@ String LexerStateStrings[] =
     "STATE_NOSTATE"
 };
 
-Lexer::Lexer(BufferReader *buffer, Symtable *symtable)
+Lexer::Lexer(BufferReader *buffer)
 {
     this->buffer = buffer;
-    this->symtable = symtable;
+    this->symtable = new Symtable(4096);
     this->setup();
 
     this->pos.line = 1;
