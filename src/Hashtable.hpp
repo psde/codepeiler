@@ -1,11 +1,8 @@
-#ifndef HASHTABLE_HPP
-#define HASHTABLE_HPP
+#pragma once
 
 #include "List.hpp"
 #include "String.hpp"
 #include <exception>
-
-//using namespace std;
 
 class KeyNotFoundException : std::exception
 {
@@ -70,8 +67,7 @@ class Hashtable {
 	public: 
 
 		/*
-		 * Konstruktor
-		 * Nimmt einen Integer an, der die Größe der Tabelle festlegt.
+		 * Constructor, builds the hashtable with a certain size.
 		 */
 		Hashtable(int size)
 			: size(size)
@@ -80,7 +76,7 @@ class Hashtable {
 		}
 
 		/*
-		 * Dekonstruktor zur Speicherfreigabe
+		 * Deconstructor
 		 */
 		~Hashtable()
 		{
@@ -88,7 +84,8 @@ class Hashtable {
 		}
 
 		/*
-		 * Fügt ein Element in die Hashtabelle hinzu.
+		 * Adds and entry to the hashtable.
+		 * Returns true if the key is new, false if this is not the first element with that key
 		 */
 		bool put(String key, type value)
 		{
@@ -105,8 +102,8 @@ class Hashtable {
 		}
 
 		/*
-		 * Gibt ein Element anhand des Schlüssels zurück.
-		 * Wirft eine KeyNotFoundException wenn der Schlüssel nicht enthalten ist.
+		 * Returns element by key
+		 * Throws KeyNotFoundException if the key is not found
 		 */
 		type get(String key)
 		{
@@ -114,7 +111,7 @@ class Hashtable {
 		}
 
 		/*
-		 * Entfernt einen Schlüssel aus der Hashtabelle
+		 * Removes the key
 		 */
 		bool remove(String key)
 		{
@@ -133,7 +130,7 @@ class Hashtable {
 		}
 
 		/*
-		 * Überprüft, ob ein Schlüssel in der Hahstabelle enthalten ist
+		 * Checks if key is inside
 		 */
 		bool contains(String key)
 		{
@@ -149,5 +146,3 @@ class Hashtable {
 			}
 		}
 }; 
-
-#endif

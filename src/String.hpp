@@ -1,5 +1,4 @@
-#ifndef STRING_HPP
-#define STRING_HPP
+#pragma once
 
 #include <iostream>
 #include <ostream>
@@ -118,6 +117,9 @@ class String
             strcpy(this->chars, s.chars);
         }
 
+        /*
+          Concat with char*
+        */
         String operator+(const char *c1)
         {
             String str(this->chars);
@@ -126,6 +128,9 @@ class String
             return str;
         }
 
+        /*
+          Concat with String
+        */
         String operator+(const String &s)
         {
             String str(this->chars);
@@ -133,6 +138,9 @@ class String
             return str;
         }
 
+        /*
+          Appends an int
+        */
         void operator+=(int const& l)
         {
             char buf[sizeof(int)*8+1];
@@ -223,6 +231,9 @@ class String
             return true;
         }
 
+        /*
+          Checks for inequality
+        */
         bool operator!=(String const& s)
         {
             return !(*this == s);
@@ -237,11 +248,13 @@ class String
             return os;
         }
 
+
+        /*
+          Wtf... at least this is const..
+        */
         const char* getChars()
 
         {
             return this->chars;
         }
 };
-
-#endif

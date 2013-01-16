@@ -1,5 +1,4 @@
-#ifndef SYMTABLE_HPP
-#define SYMTABLE_HPP
+#pragma once
 
 #include "Hashtable.hpp"
 #include "Token.hpp"
@@ -12,6 +11,11 @@ public:
         this->initSymbols();
     };    
 
+    /*
+      Adds symbols to the symtable, this is used so that the lexer does not
+      has to keep track of these. Lexer reads these as "identifier", the
+      symtable overrides it with this existing tokens.
+    */
     void initSymbols()
     {
         this->put("print", new Entry(Token::TOKEN_PRINT, "print"));
@@ -22,5 +26,3 @@ public:
         this->put("int", new Entry(Token::TOKEN_INT, "int"));
     }
 };
-
-#endif
