@@ -1,0 +1,40 @@
+(* Deklarationen *)
+
+int test;
+
+int [5] array;
+
+int ergebnis;
+
+int i;
+
+(* Initialisierungen *)
+
+i = 0;
+
+test = 0;
+
+ergebnis = 0;
+
+(* while-Iteration *)
+
+while ( i < 5 ) {
+
+	array[i] = test;
+
+	test = test + 1;
+
+	ergebnis = ergebnis + array[i];
+
+	i = i + 1;
+
+};
+
+
+(* Resultate *)
+
+print(array[4]); (* => 4 *)
+
+print(ergebnis); (* => 10 *)
+
+print(test);     (* => 5 *)
