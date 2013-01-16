@@ -1,4 +1,3 @@
-# vim: set tabstop=4 noexpandtab:
 OBJS = $(addsuffix .o,$(basename $(wildcard src/*.cpp)))
 CXXFLAGS := -MD
 RELEASEFLAGS := -O3 -DNDEBUG $(CXXFLAGS)
