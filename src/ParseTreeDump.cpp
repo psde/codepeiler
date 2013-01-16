@@ -123,7 +123,7 @@ String Statement_2::dump()
 String Statement_3::dump()
 {
     String str = "read( ";
-    str += exp->dump();
+    str += identifier;
     str += " )";
     return str; 
 }

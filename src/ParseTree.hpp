@@ -38,7 +38,10 @@ protected:
 
 public:
     Decl(String identifier = "")
-     : IdentifierParseTree(identifier) {}
+     : IdentifierParseTree(identifier) 
+      , arraySize(0)
+      , array(false)
+      {}
 
     bool getArray() { return this->array; }
     int getArraySize() { return this->arraySize; }
@@ -141,6 +144,9 @@ class Exp2_1 : public Exp2
 protected:
     Exp *exp;
 public:
+    Exp2_1()
+    : exp(NULL) {}
+
     ~Exp2_1();
 
     void setExp(Exp *exp) { this->exp = exp; }
@@ -158,6 +164,9 @@ protected:
     Index *index;
 
 public:
+    Exp2_2()
+    : IdentifierParseTree(""), index(NULL) {}
+
     ~Exp2_2();
 
     void setIndex(Index *index) { this->index = index; }
@@ -174,6 +183,9 @@ class Exp2_3 : public Exp2
 protected:
     long integer;
 public:
+    Exp2_3()
+    : integer(0) {}
+
     void setInteger(long integer) { this->integer = integer; }
     long getInteger() { return this->integer; }
 
@@ -188,6 +200,9 @@ class Exp2_4 : public Exp2
 protected:
     Exp2 *exp2;
 public:
+    Exp2_4()
+    : exp2(NULL) {}
+
     ~Exp2_4() { delete this->exp2; }
 
     void setExp2(Exp2 *exp2) { this->exp2 = exp2; }
@@ -204,6 +219,9 @@ class Exp2_5 : public Exp2
 protected:
     Exp2 *exp2;
 public:
+    Exp2_5()
+    : exp2(NULL) {}
+
     ~Exp2_5() { delete this->exp2; }
 
     void setExp2(Exp2 *exp2) { this->exp2 = exp2; }
@@ -221,7 +239,10 @@ protected:
     OpExp* opexp;
 
 public:
-    Exp() {}
+    Exp()
+     : exp2(NULL)
+     , opexp(NULL) {}
+
     ~Exp() { delete this->exp2; delete this->opexp; }
 
     void addExp2(Exp2 *exp2) { this->exp2 = exp2; }
@@ -248,7 +269,7 @@ protected:
     Index *index;
     Exp *exp;
 public:
-    Statement_1() : index(NULL), exp(NULL) {}
+    Statement_1() : IdentifierParseTree(""), index(NULL), exp(NULL) {}
     ~Statement_1() { if(this->index != NULL) delete this->index; delete this->exp; }
 
     void setIndex(Index* index) { this->index = index; }
@@ -268,6 +289,9 @@ class Statement_2 : public Statement
 protected:
     Exp *exp;
 public:
+    Statement_2()
+    : exp(NULL) {}
+
     ~Statement_2() { delete this->exp; }
 
     void setExp(Exp *exp) { this->exp = exp; }
@@ -278,16 +302,13 @@ public:
     String makeCode();
 };
 
-/* read ( EXP )*/
-class Statement_3 : public Statement
+/* read ( identifier INDEX )*/
+class Statement_3 : public Statement, public IdentifierParseTree
 {
-protected:
-    Exp *exp;
 public:
-    ~Statement_3() { delete this->exp; }
-
-    void setExp(Exp *exp) { this->exp = exp; }
-    Exp* getExp() { return this->exp; }
+    Statement_3()
+    : IdentifierParseTree("") {}
+    ~Statement_3() { }
 
     String dump();    
     String typeCheck();
@@ -301,6 +322,8 @@ class Statement_4 : public Statement
 protected:
     Statements *statements;
 public:
+    Statement_4()
+    : statements(NULL) {}
     ~Statement_4(); 
 
     void setStatements(Statements* statements) { this->statements = statements; }
@@ -343,6 +366,8 @@ protected:
     Exp *exp;
     Statement *statement;
 public:
+    Statement_6()
+    : statement(NULL), exp(NULL) {}
     ~Statement_6() { delete this->statement; delete this->exp; }
 
     void setExp(Exp *exp) { this->exp = exp; }
@@ -380,7 +405,7 @@ protected:
     Statements *statements;
 
 public:
-    Prog() {}
+    Prog() : decls(NULL), statements(NULL) {}
     ~Prog() { delete this->decls; delete this->statements; }
 
     void addDecls(Decls *decls) { this->decls = decls; }

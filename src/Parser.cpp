@@ -181,7 +181,7 @@ Statements* Parser::parseStatements()
 /*
 STATEMENT ::= identifier INDEX = EXP |
               print ( EXP ) |
-              read ( EXP ) |
+              read ( identifier INDEX ) |
               { STATEMENTS } |
               if ( EXP ) STATEMENT else STATEMENT |
               while ( EXP ) STATEMENT
@@ -224,7 +224,9 @@ Statement* Parser::parseStatement()
 
         Statement_3 *statement = new Statement_3();
         this->requireToken(RULE_STATEMENT, Token::TOKEN_PAREN_L, true, true);
-        statement->setExp(this->parseExp());
+        this->requireToken(RULE_STATEMENT, Token::TOKEN_IDENTIFIER, true);
+        statement->setIdentifier(currentToken.getLexem());
+        this->nextToken();
         this->requireToken(RULE_STATEMENT, Token::TOKEN_PAREN_R, true, true);
         return statement;
     }

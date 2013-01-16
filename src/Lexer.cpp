@@ -146,7 +146,7 @@ void Lexer::ungetChar(unsigned int count)
 
 bool Lexer::isComment()
 {
-    if(currentChar == '(' && this->buffer->peekChar() == '*')
+    if(currentChar == '/' && this->buffer->peekChar() == '*')
     {
         return true;
     }
@@ -165,16 +165,21 @@ Token Lexer::nextToken()
         return token;
     }
 
-    if(this->isComment()) 
+    while(this->isComment()) 
     {
         Position commentStart = this->pos;
         while(true)
         {
-            if(currentChar == '*' && this->buffer->peekChar() == ')')
+            if(currentChar == '*' && this->buffer->peekChar() == '/')
             {
                 // do this twice, so that ')' is not the current char anymore
                 this->getChar();
                 this->getChar();
+                while(isspace(currentChar))
+                {
+                    this->getChar();
+
+                }
                 break;
             }
 
@@ -246,7 +251,7 @@ Token Lexer::nextToken()
     if(this->finalState[state])
     {
         #ifdef LEXER_DEBUG
-            std::cout << "We got a final state: " << LexerStateStrings[state] << std::endl;
+            std::cout << "We got a final state: " << LexerStateStrings[state] << " lexem: " << lexem << std::endl;
         #endif
         token.setType(this->finalState[state]);
         token.setLexem(lexem);

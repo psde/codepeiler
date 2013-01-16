@@ -8,7 +8,9 @@ static long& uniqueId()
 
 static long getUniqueId()
 {
-    return uniqueId()++;
+    static long id = 1;
+    id++;
+    return id;
 }
 
 String Decl::makeCode()
@@ -37,7 +39,7 @@ String Decls::makeCode()
 
 String Op::makeCode()
 {
-    String items[] = { "ADD", "SUB", "MUL", "DIV", "LES", "EQU", ">", "<=>", "ADD", "!" };
+    String items[] = { "ADD", "SUB", "MUL", "DIV", "LES", "EQU", ">", "<!>", "AND", "!" };
 
     String str = items[this->type];
     str += "\n";
@@ -150,8 +152,11 @@ String Statement_2::makeCode()
 
 String Statement_3::makeCode()
 {
-    String str = exp->makeCode();
-    str += "REA\n";
+    String str = "REA\n";
+    str += "LA $";
+    str += identifier;
+    str += "\n";
+    str += "STR\n";
     return str;
 }
 
@@ -238,6 +243,7 @@ String Prog::makeCode()
 {
     String str = this->decls->makeCode();
     str += this->statements->makeCode();
+    str += "STP\n";
     return str;
 }
 
