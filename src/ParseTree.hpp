@@ -1,12 +1,9 @@
-#ifndef PARSETREE_HPP
-#define PARSETREE_HPP
+#pragma once
 
 #include "ParserRule.hpp"
 #include "Token.hpp"
-#include "Lexer.hpp"
 #include "String.hpp"
 #include "Vector.hpp"
-
 
 class ParseTree
 {
@@ -396,5 +393,3 @@ public:
     String typeCheck();
     String makeCode();
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef LIST_HPP
-#define LIST_HPP
+#pragma once
 
 #include <cstdarg>
 
@@ -77,5 +76,3 @@ public:
 		this->size -= 1;
 	}
 };
-
-#endif

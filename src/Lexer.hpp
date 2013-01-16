@@ -1,5 +1,4 @@
-#ifndef LEXER_HPP
-#define LEXER_HPP
+#pragma once
 
 #include <ctype.h>
 #include "Token.hpp"
@@ -75,5 +74,3 @@ public:
 
     Token nextToken();
 };
-
-#endif
