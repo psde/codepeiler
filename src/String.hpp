@@ -14,8 +14,8 @@ class String
         char* chars;
 
         /*
-          Returns the length of a char array
-        */
+         * Returns the length of a char array
+         */
         unsigned int stringLength(char const *string)
         {
             unsigned int length;
@@ -28,8 +28,8 @@ class String
 
     public:
         /*
-          Constructor with no arguments
-        */
+         * Constructor with no arguments
+         */
         String()
         {
             this->chars = new char[1];
@@ -37,8 +37,8 @@ class String
         }
 
         /*
-          Constructor with passed char array
-        */
+         * Constructor with passed char array
+         */
         String(char const *s)
         {
             this->chars = new char[stringLength(s) + 1];
@@ -46,8 +46,8 @@ class String
         }
 
         /*
-          Constructor with passed string object
-        */
+         * Constructor with passed string object
+         */
         String(String const &stringObj)
         {
             this->chars = new char[stringLength(stringObj.chars) + 1];
@@ -55,24 +55,24 @@ class String
         }
 
         /*
-          Deconstructor
-        */
+         * Deconstructor
+         */
         ~String()
         {
             delete[] this->chars;
         }
         
         /*
-          Returns interpreted long
-        */
+         * Returns interpreted long
+         */
         long toLong()
         {
             return strtol(this->chars, NULL, 10);
         }
         
         /*
-          Returns interpreted unsigned long
-        */
+         * Returns interpreted unsigned long
+         */
         unsigned long toULong()
         {
             unsigned long l = strtoul(this->chars, NULL, 10);
@@ -85,8 +85,8 @@ class String
         }
 
         /*
-          Returns the string length
-        */
+         * Returns the string length
+         */
         unsigned int length()
         {
             //return stringLength(this.chars);
@@ -100,16 +100,16 @@ class String
         }
 
         /*
-          Returns the char at a passed index 
-        */
+         * Returns the char at a passed index 
+         */
         char& operator[](int index)
         {
             return this->chars[index];
         }
 
         /*
-          Sets the string to a passed string object
-        */
+         * Sets the string to a passed string object
+         */
         void operator=(String const& s)
         {
             delete[] this->chars;
@@ -118,8 +118,8 @@ class String
         }
 
         /*
-          Concat with char*
-        */
+         * Concat with char*
+         */
         String operator+(const char *c1)
         {
             String str(this->chars);
@@ -129,8 +129,8 @@ class String
         }
 
         /*
-          Concat with String
-        */
+         * Concat with String
+         */
         String operator+(const String &s)
         {
             String str(this->chars);
@@ -139,8 +139,8 @@ class String
         }
 
         /*
-          Appends an int
-        */
+         * Appends an int
+         */
         void operator+=(int const& l)
         {
             char buf[sizeof(int)*8+1];
@@ -162,8 +162,8 @@ class String
         }
 
         /*
-          Appends a long
-        */
+         * Appends a long
+         */
         void operator+=(long const& l)
         {
             char buf[sizeof(long)*8+1];
@@ -186,8 +186,8 @@ class String
 
 
         /*
-          Appends a char
-        */
+         * Appends a char
+         */
         void operator+=(char const& c)
         {
             unsigned int length = stringLength(this->chars) + 2;
@@ -202,8 +202,8 @@ class String
         }
         
         /*
-          Appends a string
-        */
+         * Appends a string
+         */
         void operator+=(String const& s)
         {
             char* newChars = new char[stringLength(s.chars) + stringLength(this->chars) + 1];
@@ -216,8 +216,8 @@ class String
         }
 
         /*
-          Checks for equality
-        */
+         * Checks for equality
+         */
         bool operator==(String const& s)
         {
             if(this->length() != stringLength(s.chars))
@@ -232,16 +232,16 @@ class String
         }
 
         /*
-          Checks for inequality
-        */
+         * Checks for inequality
+         */
         bool operator!=(String const& s)
         {
             return !(*this == s);
         }
 
         /*
-          << blah   
-        */
+         * << blah   
+         */
         friend std::ostream& operator<<(std::ostream& os, String const& str)
         {
             os << str.chars;
@@ -250,8 +250,8 @@ class String
 
 
         /*
-          Wtf... at least this is const..
-        */
+         * Wtf... at least this is const..
+         */
         const char* getChars()
 
         {

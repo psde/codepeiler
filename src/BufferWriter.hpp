@@ -1,5 +1,4 @@
-#ifndef BUFFERWRITER_HPP
-#define BUFFERWRITER_HPP
+#pragma once
 
 #include <errno.h>
 #include <iostream>
@@ -103,5 +102,3 @@ public:
         this->bufferPosition = 0;
     }
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef BUFFER_HPP
-#define BUFFER_HPP
+#pragma once
 
 #include <iostream>
 #include <stdlib.h>
@@ -99,5 +98,3 @@ public:
     }
 
 };
-
-#endif

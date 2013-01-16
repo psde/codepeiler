@@ -1,5 +1,4 @@
-#ifndef _VECTOR_INCLUDED_
-#define _VECTOR_INCLUDED_
+#pragma once
 
 /* Simple vector implementation */
 template <class type>
@@ -88,5 +87,3 @@ public:
 		return this->size;
 	}
 };
-
-#endif // _VECTOR_INCLUDED_
