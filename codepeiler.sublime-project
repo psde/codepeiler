@@ -1,15 +1,19 @@
 {
 	"folders":
 	[
-		{
-	        "path": "src",
-            "file_exclude_patterns": ["*.o", "*.d"]
-		}
+        {
+            "path": ".",
+            "file_exclude_patterns": ["*.o", "*.d", "codepeiler"]
+        }
 	],
+    "settings":
+    {
+        "tab_size": 4
+    },
     "build_systems":
     [
         {
-            "name": "make",
+            "name": "Codepeiler - make",
             "cmd": ["make clean", "make", ""],
             "working_dir": "$project_path",
             "path": "/usr/local/bin:/usr/bin/:/bin/",
