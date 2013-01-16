@@ -89,9 +89,8 @@ int main(int argc, char *argv[])
 
     std::cout << "done." << std::endl;
 
-    std::cout << "Generating code... ";
+    std::cout << "Generating code... " << std::endl;
     *out << tree->makeCode() << std::endl;
-    std::cout << "done." << std::endl;
 
     /*Token token;
     while(lexerOut && true)

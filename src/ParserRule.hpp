@@ -1,5 +1,4 @@
-#ifndef PARSERRULE_HPP
-#define PARSERRULE_HPP
+#pragma once
 
 #include "String.hpp"
 #include "Token.hpp"
@@ -47,4 +46,3 @@ struct newParserRule {
 
 const newParserRule<Token::TType> ary("derp", Token::TOKEN_INT);
 */
-#endif

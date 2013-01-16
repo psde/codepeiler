@@ -1,5 +1,4 @@
-#ifndef PARSER_HPP
-#define PARSER_HPP
+#pragma once
 
 #include <exception>
 #include "ParserRule.hpp"
@@ -84,5 +83,3 @@ public:
     ParseTree *parse();
     
 };
-
-#endif

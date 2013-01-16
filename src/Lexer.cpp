@@ -91,7 +91,7 @@ void Lexer::setup()
     this->addFinalState(STATE_IDENTIFIER, Token::TOKEN_IDENTIFIER);
     this->addFinalState(STATE_INTEGER, Token::TOKEN_INTEGER);
 
-    this->addTransition(STATE_SIGN_LESSER, '=', STATE_SIGN_LER_INC);
+    this->addTransition(STATE_SIGN_LESSER, '!', STATE_SIGN_LER_INC);
     this->addTransition(STATE_SIGN_LER_INC, '>', STATE_SIGN_LER);
     this->addFinalState(STATE_SIGN_LER, Token::TOKEN_LER);
 
