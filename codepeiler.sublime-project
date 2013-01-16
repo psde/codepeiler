@@ -2,7 +2,7 @@
 	"folders":
 	[
 		{
-			"path": "src",
+	        "path": "src",
             "file_exclude_patterns": ["*.o", "*.d"]
 		}
 	],
