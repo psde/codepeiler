@@ -38,9 +38,9 @@ protected:
 
 public:
     Decl(String identifier = "")
-     : IdentifierParseTree(identifier) 
-      , arraySize(0)
+     : IdentifierParseTree(identifier)
       , array(false)
+      , arraySize(0)
       {}
 
     bool getArray() { return this->array; }
@@ -367,7 +367,10 @@ protected:
     Statement *statement;
 public:
     Statement_6()
-    : statement(NULL), exp(NULL) {}
+    : exp(NULL) 
+    , statement(NULL)
+    { }
+
     ~Statement_6() { delete this->statement; delete this->exp; }
 
     void setExp(Exp *exp) { this->exp = exp; }
