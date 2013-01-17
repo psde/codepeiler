@@ -1,5 +1,5 @@
 NAME = codepeiler
-LIBRARIES = Buffer
+LIBRARIES = Buffer Lexer Parser
 
 BINARIES = $(LIBARIES:%=lib%.a) $(NAME)
 BINPATHS = $(BINARIES:%=bin/%)
@@ -7,14 +7,15 @@ SRCPATHS = $(LIBRARIES:%=src/lib%/) src/$(NAME)/
 
 all: release
 
-.PHONY: release
+.PHONY: release debug clean
 release:
 	$(foreach project, $(SRCPATHS), $(MAKE) -C $(project) release;)
+	cp bin/$(NAME) .
 
-.PHONY: debug
 debug:
 	$(foreach project, $(SRCPATHS), $(MAKE) -C $(project) release;)
+	cp bin/$(NAME) .
 
-.PHONY: clean
 clean:
 	$(foreach project, $(SRCPATHS), $(MAKE) -C $(project) clean;)
+	rm -f $(NAME)

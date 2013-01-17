@@ -1,5 +1,5 @@
 # Project config
-NAME = Buffer
+NAME = Lexer
 LIBS = 
 
 # Include library.mk

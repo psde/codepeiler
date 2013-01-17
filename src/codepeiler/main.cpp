@@ -12,11 +12,10 @@
 #include <libStd/String.hpp>
 #include <libBuffer/BufferReader.hpp>
 #include <libBuffer/BufferWriter.hpp>
-
-#include "Token.hpp"
-#include "Lexer.hpp"
-#include "Symtable.hpp"
-#include "Parser.hpp"
+#include <libLexer/Token.hpp>
+#include <libLexer/Lexer.hpp>
+#include <libLexer/Symtable.hpp>
+#include <libParser/Parser.hpp>
 
 int main(int argc, char *argv[])
 {

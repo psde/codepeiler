@@ -1,7 +1,7 @@
 #pragma once
 
 #include <libStd/String.hpp>
-#include "Token.hpp"
+#include <libLexer/Token.hpp>
 
 struct ParserRule {
     String name;

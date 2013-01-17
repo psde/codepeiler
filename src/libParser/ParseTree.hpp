@@ -2,9 +2,9 @@
 
 #include <libStd/String.hpp>
 #include <libStd/Vector.hpp>
+#include <libLexer/Token.hpp>
 
 #include "ParserRule.hpp"
-#include "Token.hpp"
 
 class ParseTree
 {

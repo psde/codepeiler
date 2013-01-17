@@ -1,6 +1,6 @@
 # Project config
-NAME = Buffer
-LIBS = 
+NAME = Parser
+LIBS = -lLexer
 
 # Include library.mk
 include ../library.mk

@@ -1,15 +1,16 @@
 #pragma once
 
 #include <exception>
+#include <iostream>
 
 #include <libStd/String.hpp>
 #include <libStd/List.hpp>
+#include <libLexer/Token.hpp>
+#include <libLexer/Lexer.hpp>
+#include <libLexer/Token.hpp>
 
 #include "ParserRule.hpp"
-#include "Token.hpp"
-#include "Lexer.hpp"
 #include "ParseTree.hpp"
-#include "Token.hpp"
 
 class ParserError : public std::exception
 {
