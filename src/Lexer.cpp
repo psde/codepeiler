@@ -4,7 +4,7 @@
 
 #include "Lexer.hpp"
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 #define LEXER_DEBUG
 #endif
 
@@ -158,7 +158,7 @@ Token Lexer::nextToken()
 {
     Token token;
 
-    if(this->buffer->peekChar() == 0x00)
+    if(currentChar /*this->buffer->peekChar()*/ == 0x00)
     {
         token.setType(Token::TOKEN_EOF);
         token.setPosition(this->pos.line, this->pos.column);
@@ -172,7 +172,7 @@ Token Lexer::nextToken()
         {
             if(currentChar == '*' && this->buffer->peekChar() == '/')
             {
-                // do this twice, so that ')' is not the current char anymore
+                // do this twice, so that '/' is not the current char anymore
                 this->getChar();
                 this->getChar();
                 while(isspace(currentChar))
