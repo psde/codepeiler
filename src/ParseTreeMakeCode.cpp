@@ -39,11 +39,20 @@ String Decls::makeCode()
 
 String Op::makeCode()
 {
-    String items[] = { "ADD", "SUB", "MUL", "DIV", "LES", "EQU", ">", "<!>", "AND", "!" };
+    //                  ADD    SUB    MUL    DUV    LES    EQU   >  <!>   AND   !
+    String items[] = { "ADD", "SUB", "MUL", "DIV", "LES", "EQU", "", "", "AND", "" };
 
-    String str = items[this->type];
-    str += "\n";
-    return str;
+    String op = items[this->type];
+    if(op != "")
+    {
+        String str = op;
+        str += "\n";
+        return str;
+    }
+    else
+    {
+        return "";
+    }
 }
 
 String OpExp::makeCode()
@@ -178,22 +187,27 @@ String Statement_5::makeCode()
 
     str += statement1->makeCode();
     
-    str += "JMP #jmp";
-    str += jmp2;
-    str += "\n";
+    // else
+    if(statement2 != NULL)
+    {
+        str += "JMP #jmp";
+        str += jmp2;
+        str += "\n";
+    }
 
     str += "#jmp";
     str += jmp1;
     str += " NOP\n";
 
+    // else
     if(statement2 != NULL)
     {
         str += statement2->makeCode();    
-    }
 
-    str += "#jmp";
-    str += jmp2;
-    str += " NOP\n";
+        str += "#jmp";
+        str += jmp2;
+        str += " NOP\n";
+    }
 
     return str;
 }
