@@ -40,7 +40,7 @@ String Decls::makeCode()
 String Op::makeCode()
 {
     //                  ADD    SUB    MUL    DUV    LES    EQU   >  <!>   AND   !
-    String items[] = { "ADD", "SUB", "MUL", "DIV", "LES", "EQU", "", "", "AND", "" };
+    String items[] = { "ADD", "SUB", "MUL", "DIV", "LES", "EQU", "", "EQU", "AND", "" };
 
     String op = items[this->type];
     if(op != "")
@@ -128,8 +128,8 @@ String Exp::makeCode()
                 str += "LES\n";
                 break;
             case Op::OP_LER:
-                str += opexp->makeCode();
                 str += exp2->makeCode();
+                str += opexp->makeCode();
                 str += "NOT\n";
                 break;
             default:

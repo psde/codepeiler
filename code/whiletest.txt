@@ -4,6 +4,16 @@ int c;
 int d;
 
 
+
+a = 10;
+
+while( a <!> 0 )
+{
+    print(a);
+    a = a - 1;
+};
+
+/*
 a = 2;
 b = 4; 
 d = 2;
@@ -13,6 +23,8 @@ d = b / a;
 c = c + (b / a);
 print(c);
 print(d);
+
+*/
 
 /*
 a = 0;
