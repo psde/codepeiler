@@ -1,0 +1,43 @@
+/* berechnet PI */
+
+float a;
+float b;
+float t;
+float x;
+float tempa;
+float pi;
+
+float sqrt;
+int i;
+
+a = float 1;
+
+/* b := sqrt( 0.5 );*/
+i = 20;
+sqrt = 0.5 / float 2;
+while(0 < i){
+ sqrt = (sqrt + (0.5/sqrt))/ float 2;
+ i = i -1;
+};
+b = sqrt;
+
+t = 0.25;
+x = float 1;
+while (0.0001 < (a-b)){
+ tempa = a;
+ a = (a+b) / float 2;
+
+/*  b := sqrt( tempa*b ); */
+i = 20;
+sqrt = (tempa*b) / float 2;
+while(0 < i){
+ sqrt = (sqrt + ((tempa*b)/sqrt))/ float 2;
+ i = i -1;
+};
+b = sqrt;
+
+ t = t - (x*(a-tempa)*(a-tempa));
+ x = (float 2)*x;
+};
+pi = ((a+b)*(a+b)) / ((float 4)*t);
+print(pi);

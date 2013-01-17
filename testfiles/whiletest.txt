@@ -1,0 +1,54 @@
+int a;
+int b;
+int c;
+int d;
+
+
+
+a = 10;
+
+while( a <!> 0 )
+{
+    print(a);
+    a = a - 1;
+};
+
+/*
+a = 2;
+b = 4; 
+d = 2;
+c = (a * b) - d;
+d = b / a;
+
+c = c + (b / a);
+print(c);
+print(d);
+
+*/
+
+/*
+a = 0;
+b = 0;
+c = 1000;
+
+while( (a < 10) & (b < 10))
+{
+print(a);
+print(b);
+a = a + 1;
+b = b + 1;
+};
+
+print(c);
+
+
+a = 10;
+b = 0;
+
+if( 0 < a)
+{
+print(a);
+};
+
+
+*/
