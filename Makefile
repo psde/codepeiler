@@ -13,7 +13,7 @@ release:
 	cp bin/$(NAME) .
 
 debug:
-	$(foreach project, $(SRCPATHS), $(MAKE) -C $(project) release;)
+	$(foreach project, $(SRCPATHS), $(MAKE) -C $(project) debug;)
 	cp bin/$(NAME) .
 
 clean:
