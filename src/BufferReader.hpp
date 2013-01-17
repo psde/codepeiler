@@ -11,7 +11,7 @@
 class BufferReader
 {
 private:
-    static const int BUFFER_SIZE = 1024 * 4;
+    static const int BUFFER_SIZE = 1024 * 8;
     int fileDescriptor;
     ssize_t fileLength;
     ssize_t filePosition;
