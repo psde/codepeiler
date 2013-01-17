@@ -1,6 +1,0 @@
-int i;
-int d;
-int r;
-int args;
-
-print(r);

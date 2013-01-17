@@ -1,5 +1,0 @@
-int n;
-int[3] m;
-n = 3 + 4;
-n = 3*n--5;
-print (n);
