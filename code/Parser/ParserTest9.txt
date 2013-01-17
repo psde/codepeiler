@@ -1,0 +1,15 @@
+int a;
+int b;
+int c;
+int d;
+int[5] e;
+
+a = 2 + 4;
+b = a + 6;
+c = a + b;
+d = a * b;
+
+print(a);
+print(b);
+print(c);
+print(d);

@@ -1,0 +1,14 @@
+int a;
+int b;
+
+a = 10;
+read(c);
+
+if(a < c)
+{
+print(c);
+}
+else
+{
+print(a);
+};

@@ -1,0 +1,141 @@
+int x;
+float y;
+int i;
+int i1;
+
+float f;
+float f1;
+
+
+x = ((3+5)-(3 + 4))*(4 / ((2*3)+-5));
+x = (1+1)*(x + 2 - 1*(1+1));
+print(x);
+print(8);
+
+x = 1;
+x = x +1;
+x = x + x + 1;
+print (x);
+print (5);
+y = 1.1;
+y = y + 1.1;
+y = y + y + 1.1;
+print (y);
+print (5.5);
+y = y + float x;
+print (y);
+print (10.5);
+
+
+
+i = 3;
+print(i);
+print(3);
+
+f = 4.5;
+print(f);
+print(4.5);
+
+print(1111);
+read(i);
+print(i);
+
+print(222.22);
+read(f);
+print(f);
+
+
+{i = 33; f= 44.44;};
+
+if (0) { i = 5; print(i);}
+else {f = 5.5; print (f);};
+print(5.5);
+
+if (1) { i = 5; print(i);}
+else {f = 5.5; print (f);};
+print(5);
+
+i = 6;
+i = i -1;
+print (i);
+print (5);
+
+while (i){ print(i); i = i -1;};
+print (5);
+print (4);
+print (3);
+print (2);
+print (1);
+
+i = (3333);
+print (i);
+print(3333);
+
+i1= 4444;
+i = i1;
+print (i);
+print(4444);
+
+i = -i1;
+print (i);
+print(-4444);
+
+i = !i1;
+print (i);
+print (0);
+
+
+f1 = 4444.4444;
+f = -f1;
+print (f);
+print(-4444.4444);
+
+i = 11;
+f = float i;
+print( f);
+print(11.0);
+
+print (3 +4);
+print(7);
+print ( 3-4);
+print(-1);
+print (3 * 4);
+print(12);
+print (44 / 4);
+print(11);
+print (4 < 3);
+print(0);
+print ( 3 < 4);
+print(1);
+print ( 3 = 4);
+print(0);
+print ( 3 = 3);
+print(1);
+print ( 0 & 4);
+print(0);
+print ( 3 & 4);
+print(1);
+
+print (3.5 +4.66);
+print (8.16);
+print ( 3.5-4.6);
+print (-1.1);
+print (3.5 * 4.6);
+print (16.1);
+print (44.4 / 4.0);
+print (11.1);
+print (4.4 < 3.3);
+print (0);
+print ( 3.3 < 4.4);
+print (1);
+print ( 3.3 = 4.3);
+print (0);
+print ( 3.3 = 3.3);
+print (1);
+print(1234567890);
+
+
+
+
+
+
