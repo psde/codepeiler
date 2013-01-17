@@ -4,7 +4,7 @@
 
 #include "Lexer.hpp"
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 #define LEXER_DEBUG
 #endif
 
