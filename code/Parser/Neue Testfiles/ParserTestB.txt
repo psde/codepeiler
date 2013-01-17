@@ -1,0 +1,10 @@
+int a;
+int b;
+int c;
+
+a = 10;
+b = 30;
+c = 0;
+
+c = (b / a) + ((3 * a) - 20);
+print(c);

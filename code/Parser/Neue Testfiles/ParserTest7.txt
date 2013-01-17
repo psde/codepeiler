@@ -1,0 +1,13 @@
+int a;
+int b;
+int c;
+int d;
+
+b = 2;
+c = 3;
+
+a = ((5 + b) - (2 + 4));
+b = ((a + 5) / 3);
+
+print(a);
+print(d);

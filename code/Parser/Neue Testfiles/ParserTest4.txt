@@ -1,0 +1,19 @@
+int a;
+int b;
+int c;
+int d;
+int e;
+
+a = 3;
+b = a * 5;
+c = a + b;
+d = 15 / a;
+e = 0;
+
+while(a > c){
+a = a + 1;
+if(a <=> 10)
+{
+e = e + 1;
+};
+};
