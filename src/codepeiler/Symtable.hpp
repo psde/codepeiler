@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hashtable.hpp"
+#include <libStd/Hashtable.hpp>
 #include "Token.hpp"
 
 class Symtable : public Hashtable<Entry*>

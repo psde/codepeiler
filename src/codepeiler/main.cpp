@@ -9,9 +9,10 @@
 #include <iostream>
 #include <iomanip>
 
-#include "String.hpp"
-#include "BufferReader.hpp"
-#include "BufferWriter.hpp"
+#include <libStd/String.hpp>
+#include <libBuffer/BufferReader.hpp>
+#include <libBuffer/BufferWriter.hpp>
+
 #include "Token.hpp"
 #include "Lexer.hpp"
 #include "Symtable.hpp"

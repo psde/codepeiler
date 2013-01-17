@@ -1,6 +1,11 @@
 #pragma once
 
 #include <ctype.h>
+
+#include <libStd/String.hpp>
+#include <libBuffer/BufferReader.hpp>
+
+#include "Symtable.hpp"
 #include "Token.hpp"
 
 class BufferReader;

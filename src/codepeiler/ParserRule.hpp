@@ -1,6 +1,6 @@
 #pragma once
 
-#include "String.hpp"
+#include <libStd/String.hpp>
 #include "Token.hpp"
 
 struct ParserRule {

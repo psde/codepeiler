@@ -1,36 +1,20 @@
-# Configuration
-BIN = codepeiler
-BINDIR = bin
-SOURCEDIR = src
+NAME = codepeiler
+LIBRARIES = Buffer
 
-# Generic makefile
-SRCS = $(wildcard $(SOURCEDIR)/*.cpp)
-OBJS = $(patsubst $(SOURCEDIR)/%.cpp, $(BINDIR)/%.o, $(SRCS))
-DEPS = $(OBJS:.o=.d)
-CXXFLAGS := #-MM
-RELEASEFLAGS := -O3 -DNDEBUG $(CXXFLAGS)
-DEBUGFLAGS := -O0 -g -DDEBUG -Wall -Wextra -pedantic -ansi $(CXXFLAGS)
-LIBS := 
+BINARIES = $(LIBARIES:%=lib%.a) $(NAME)
+BINPATHS = $(BINARIES:%=bin/%)
+SRCPATHS = $(LIBRARIES:%=src/lib%/) src/$(NAME)/
 
 all: release
 
+.PHONY: release
 release:
-	$(MAKE) CXXFLAGS="$(RELEASEFLAGS)" $(BIN)
+	$(foreach project, $(SRCPATHS), $(MAKE) -C $(project) release;)
 
+.PHONY: debug
 debug:
-	$(MAKE) CXXFLAGS="$(DEBUGFLAGS)" $(BIN)
-
-#depend: .depend
-#.depend: $(SRCS)
-#	$(CXX) $(CXXFLAGS) -MM $^ -MF  ./.depend;
-#include .depend
-
-$(BINDIR)/%.o: $(SOURCEDIR)/%.cpp $(INCS)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-
-$(BIN): $(OBJS)
-	$(CXX) -o $@ $(OBJS) $(LIBS)
+	$(foreach project, $(SRCPATHS), $(MAKE) -C $(project) release;)
 
 .PHONY: clean
 clean:
-	$(RM) $(BIN) $(OBJS) $(DEPS)
+	$(foreach project, $(SRCPATHS), $(MAKE) -C $(project) clean;)

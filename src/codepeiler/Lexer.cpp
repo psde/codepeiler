@@ -1,7 +1,3 @@
-#include "BufferReader.hpp"
-#include "Symtable.hpp"
-#include "String.hpp"
-
 #include "Lexer.hpp"
 
 #ifdef DEBUG

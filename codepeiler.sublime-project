@@ -13,8 +13,15 @@
     "build_systems":
     [
         {
-            "name": "Codepeiler - make",
-            "cmd": ["make clean", "make", ""],
+            "name": "Codepeiler - make release",
+            "cmd": ["make clean && make release && ./codepeiler"],
+            "working_dir": "$project_path",
+            "path": "/usr/local/bin:/usr/bin/:/bin/",
+            "shell": true
+        },
+        {
+            "name": "Codepeiler - make debug",
+            "cmd": ["make clean && make debug && ./codepeiler"],
             "working_dir": "$project_path",
             "path": "/usr/local/bin:/usr/bin/:/bin/",
             "shell": true

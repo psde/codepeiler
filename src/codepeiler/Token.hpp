@@ -1,7 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include "String.hpp"
+
+#include <libStd/String.hpp>
 
 class Entry;
 
