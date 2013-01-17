@@ -1,7 +1,7 @@
 OBJS = $(addsuffix .o,$(basename $(wildcard src/*.cpp)))
 CXXFLAGS := -MD
 RELEASEFLAGS := -O3 -DNDEBUG $(CXXFLAGS)
-DEBUGFLAGS := -O0 -g -D_DEBUG -Wall -Wextra -pedantic -ansi $(CXXFLAGS)
+DEBUGFLAGS := -O0 -g -DDEBUG -Wall -Wextra -pedantic -ansi $(CXXFLAGS)
 LIBS := 
 BIN = codepeiler
 

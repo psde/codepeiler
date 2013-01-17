@@ -1,4 +1,7 @@
-//#define PARSER_DEBUG 
+#ifdef DEBUG
+#define PARSER_DEBUG 
+#endif
+
 #include "Parser.hpp"
 #include <iostream>
 
