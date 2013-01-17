@@ -17,7 +17,7 @@ private:
     {
         this->writeBuffer[bufferPosition++] = c;
 
-        if(this->bufferPosition > BufferWriter::BUFFER_SIZE)
+        if(this->bufferPosition >= BufferWriter::BUFFER_SIZE)
             this->flush();
     }
 
