@@ -76,7 +76,7 @@ public:
         this->fileDescriptor = open(file, O_CREAT | O_TRUNC | O_WRONLY, S_IRWXU);
 #endif
         this->writeBuffer = (char*)valloc(BufferWriter::BUFFER_SIZE);
-        memset(this->writeBuffer, 0, BufferWriter::BUFFER_SIZE);
+        memset(this->writeBuffer, 0x20, BufferWriter::BUFFER_SIZE);
 
         this->bufferPosition = 0;
     }
