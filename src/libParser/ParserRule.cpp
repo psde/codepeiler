@@ -17,8 +17,7 @@ Token::TType TOKENS_PROG[] =
     Token::TOKEN_INT,
     Token::TOKEN_IDENTIFIER,
     Token::TOKEN_IF,
-    Token::TOKEN_WHILE,
-    Token::TOKEN_EOF
+    Token::TOKEN_WHILE
 };
 const ParserRule RULE_PROG = {
     "RULE_PROG",

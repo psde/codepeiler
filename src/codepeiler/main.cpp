@@ -1,6 +1,6 @@
 #define NO_DIRECT_IO // Use this if developing on crypto fs
 
-#define VERSION "0.2"
+#define VERSION "0.4"
 
 #ifndef __GNUC__  
     #error "You need GCC to compile this." 
@@ -45,8 +45,8 @@ int main(int argc, char *argv[])
     if(output)
     {
         std::cout << "Using file '" << outputFile << "' for code output." << std::endl;
-        writer = new BufferWriter(outputFile);
-        out = &writer->stream();
+        /*writer = new BufferWriter(outputFile);
+        out = &writer->stream();*/
     }
     else
     {
