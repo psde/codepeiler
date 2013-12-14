@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include <libStd/String.hpp>
 #include <libStd/Vector.hpp>
 #include <libLexer/Token.hpp>
@@ -11,7 +13,9 @@ class ParseTree
 protected:
 
 public:
-    virtual String makeCode() = 0;
+    virtual ~ParseTree()
+    {}
+    virtual void makeCode(std::ostream *out) = 0;
     virtual String dump() = 0;
     virtual String typeCheck() = 0;
 };
@@ -50,7 +54,7 @@ public:
 
     String dump();   
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 class Decls : public ParseTree
@@ -68,7 +72,7 @@ public:
 
     String dump();    
     String typeCheck(); 
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 class Op : public ParseTree
@@ -95,7 +99,7 @@ public:
 
     String dump();   
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 class Exp;
@@ -116,7 +120,7 @@ public:
 
     String dump();   
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 class Index : public ParseTree
@@ -133,7 +137,7 @@ public:
 
     String dump();    
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 class Exp2 : public ParseTree
@@ -155,7 +159,7 @@ public:
 
     String dump();    
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 /* identifier INDEX */
@@ -175,7 +179,7 @@ public:
 
     String dump();    
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 /* integer */
@@ -192,7 +196,7 @@ public:
 
     String dump();    
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 /* - EXP2 */
@@ -211,7 +215,7 @@ public:
 
     String dump();   
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 /* ! EXP2 */
@@ -230,7 +234,7 @@ public:
 
     String dump();   
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 class Exp : public ParseTree
@@ -254,7 +258,7 @@ public:
 
     String dump();    
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 class Statement : public ParseTree
@@ -281,7 +285,7 @@ public:
 
     String dump();    
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 /* print ( EXP ) */
@@ -300,7 +304,7 @@ public:
 
     String dump();  
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 /* read ( identifier INDEX )*/
@@ -313,7 +317,7 @@ public:
 
     String dump();    
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 class Statements;
@@ -332,7 +336,7 @@ public:
 
     String dump();    
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 /* if ( EXP ) STATEMENT else STATEMENT */
@@ -357,7 +361,7 @@ public:
 
     String dump();    
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 /* while ( EXP ) statement */
@@ -382,7 +386,7 @@ public:
 
     String dump();   
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 class Statements : public ParseTree
@@ -399,7 +403,7 @@ public:
 
     String dump();  
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };
 
 class Prog : public ParseTree 
@@ -420,5 +424,5 @@ public:
 
     String dump();  
     String typeCheck();
-    String makeCode();
+    void makeCode(std::ostream *out);
 };

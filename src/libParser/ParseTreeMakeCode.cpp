@@ -13,251 +13,234 @@ static long getUniqueId()
     return id;
 }
 
-String Decl::makeCode()
+void Decl::makeCode(std::ostream *out)
 {
-    String str = "DS $";
-    str += identifier;
-    str += " ";
+    *out << "DS $";
+    *out << identifier;
+    *out << " ";
     if(this->array)
-        str += (long)this->arraySize; 
+        *out << (long)this->arraySize; 
     else
-        str += "1";
-    str += "\n";
-    return str;
+        *out << "1";
+    *out << "\n";
 }
 
-String Decls::makeCode()
+void Decls::makeCode(std::ostream *out)
 {
-    String str = "";
+    *out << "";
     for(int i=0; i<decls->getSize();i++)
     {
         Decl *decl = this->decls->getValue(i);
-        str += decl->makeCode();
+        decl->makeCode(out);
     }
-    return str;
 }
 
-String Op::makeCode()
+void Op::makeCode(std::ostream *out)
 {
     //                  ADD    SUB    MUL    DUV    LES    EQU   >  <!>   AND   !
-    String items[] = { "ADD", "SUB", "MUL", "DIV", "LES", "EQU", "", "EQU", "AND", "" };
+    static String items[] = { "ADD", "SUB", "MUL", "DIV", "LES", "EQU", "", "EQU", "AND", "" };
 
     String op = items[this->type];
     if(op != "")
     {
-        String str = op;
-        str += "\n";
-        return str;
+        *out << op;
+        *out << "\n";
     }
     else
     {
-        return "";
+        return; //return "";
     }
 }
 
-String OpExp::makeCode()
+void OpExp::makeCode(std::ostream *out)
 {
-    String str = exp->makeCode();
-    str += op->makeCode();
-    return str;
+    exp->makeCode(out);
+    op->makeCode(out);
 }
 
-String Index::makeCode()
+void Index::makeCode(std::ostream *out)
 {
     if(this->exp == NULL)
-        return "";
-    String str = exp->makeCode();
-    str += "ADD\n";
-    return str;
+        return; //return "";
+    exp->makeCode(out);
+    *out << "ADD\n";
 }
 
-String Exp2_1::makeCode()
+void Exp2_1::makeCode(std::ostream *out)
 {
-    return exp->makeCode();
+    return exp->makeCode(out);
 }
 
-String Exp2_2::makeCode()
+void Exp2_2::makeCode(std::ostream *out)
 {
-    String str = "LA $";
-    str += identifier;
-    str += "\n";
+    *out << "LA $";
+    *out << identifier;
+    *out << "\n";
 
-    str += index->makeCode();
-    str += "LV\n";
-    return str;
+    index->makeCode(out);
+    *out << "LV\n";
 }
 
-String Exp2_3::makeCode()
+void Exp2_3::makeCode(std::ostream *out)
 {
-    String str = "LC ";
-    str += integer;
-    str += "\n";
-    return str;
+    *out << "LC ";
+    *out << integer;
+    *out << "\n";
 }
 
-String Exp2_4::makeCode()
+void Exp2_4::makeCode(std::ostream *out)
 {
-    String str = "LC 0\n";
-    str += exp2->makeCode();
-    str += "SUB\n";
-    return str;
+    *out << "LC 0\n";
+    exp2->makeCode(out);
+    *out << "SUB\n";
 }
 
-String Exp2_5::makeCode()
+void Exp2_5::makeCode(std::ostream *out)
 {
-    String str = exp2->makeCode();
-    str += "NOT\n";
-    return str;
+    exp2->makeCode(out);
+    *out << "NOT\n";
 }
 
-String Exp::makeCode()
+void Exp::makeCode(std::ostream *out)
 {
-    String str = "";
+    *out << "";
     Op *op = opexp->op;
     if(op == NULL)
     {
-        str += exp2->makeCode();
+        exp2->makeCode(out);
     }
     else
     {
         switch(op->type)
         {
             case Op::OP_GREATER:
-                str += opexp->makeCode();
-                str += exp2->makeCode();
-                str += "LES\n";
+                opexp->makeCode(out);
+                exp2->makeCode(out);
+                *out << "LES\n";
                 break;
             case Op::OP_LER:
-                str += exp2->makeCode();
-                str += opexp->makeCode();
-                str += "NOT\n";
+                exp2->makeCode(out);
+                opexp->makeCode(out);
+                *out << "NOT\n";
                 break;
             default:
-                str += exp2->makeCode();
-                str += opexp->makeCode();
+                exp2->makeCode(out);
+                opexp->makeCode(out);
                 break;
         }
     }
-    return str;
 }
 
-String Statement_1::makeCode()
+void Statement_1::makeCode(std::ostream *out)
 {
-    String str = exp->makeCode();
-    str += "LA $";
-    str += identifier;
-    str += "\n";
-    str += index->makeCode();
-    str += "STR\n";
-    return str;
+    exp->makeCode(out);
+    *out << "LA $";
+    *out << identifier;
+    *out << "\n";
+    index->makeCode(out);
+    *out << "STR\n";
 }
 
-String Statement_2::makeCode()
+void Statement_2::makeCode(std::ostream *out)
 {
-    String str = exp->makeCode();
-    str += "PRI\n";
-    return str;
+    exp->makeCode(out);
+    *out << "PRI\n";
 }
 
-String Statement_3::makeCode()
+void Statement_3::makeCode(std::ostream *out)
 {
-    String str = "REA\n";
-    str += "LA $";
-    str += identifier;
-    str += "\n";
-    str += "STR\n";
-    return str;
+    *out << "REA\n";
+    *out << "LA $";
+    *out << identifier;
+    *out << "\n";
+    *out << "STR\n";
 }
 
-String Statement_4::makeCode()
+void Statement_4::makeCode(std::ostream *out)
 {
-    return statements->makeCode();
+    return statements->makeCode(out);
 }
 
-String Statement_5::makeCode()
+void Statement_5::makeCode(std::ostream *out)
 {
-    String str = exp->makeCode();
+    exp->makeCode(out);
 
     int jmp1 = getUniqueId();
     int jmp2 = getUniqueId();
 
-    str += "JIN #jmp";
-    str += jmp1;
-    str += "\n";
+    *out << "JIN #jmp";
+    *out << jmp1;
+    *out << "\n";
 
-    str += statement1->makeCode();
+    statement1->makeCode(out);
     
     // else
     if(statement2 != NULL)
     {
-        str += "JMP #jmp";
-        str += jmp2;
-        str += "\n";
+        *out << "JMP #jmp";
+        *out << jmp2;
+        *out << "\n";
     }
 
-    str += "#jmp";
-    str += jmp1;
-    str += " NOP\n";
+    *out << "#jmp";
+    *out << jmp1;
+    *out << " NOP\n";
 
     // else
     if(statement2 != NULL)
     {
-        str += statement2->makeCode();    
+        statement2->makeCode(out);    
 
-        str += "#jmp";
-        str += jmp2;
-        str += " NOP\n";
+        *out << "#jmp";
+        *out << jmp2;
+        *out << " NOP\n";
     }
 
-    return str;
 }
 
-String Statement_6::makeCode()
+void Statement_6::makeCode(std::ostream *out)
 {
-    String str = "";
+    *out << "";
 
     int jmp1 = getUniqueId();
     int jmp2 = getUniqueId();
 
-    str += "#jmp";
-    str += jmp1;
-    str += " NOP\n";
+    *out << "#jmp";
+    *out << jmp1;
+    *out << " NOP\n";
     
-    str += exp->makeCode();
+    exp->makeCode(out);
 
-    str += "JIN #jmp";
-    str += jmp2;
-    str += "\n";
+    *out << "JIN #jmp";
+    *out << jmp2;
+    *out << "\n";
 
-    str += statement->makeCode();
+    statement->makeCode(out);
 
-    str += "JMP #jmp";
-    str += jmp1;
-    str += "\n";
+    *out << "JMP #jmp";
+    *out << jmp1;
+    *out << "\n";
 
-    str += "#jmp";
-    str += jmp2;
-    str += " NOP\n";
+    *out << "#jmp";
+    *out << jmp2;
+    *out << " NOP\n";
 
-    return str;
 }
 
-String Statements::makeCode()
+void Statements::makeCode(std::ostream *out)
 {
-    String str = "";
+    *out << "";
     for(int i=0; i<statements->getSize();i++)
     {
         Statement *statement = this->statements->getValue(i);
-        str += statement->makeCode();
+        statement->makeCode(out);
     }
-    return str;
 }
 
-String Prog::makeCode()
+void Prog::makeCode(std::ostream *out)
 {
-    String str = this->decls->makeCode();
-    str += this->statements->makeCode();
-    str += "STP\n";
-    return str;
+    this->decls->makeCode(out);
+    this->statements->makeCode(out);
+    *out << "STP\n";
 }
 

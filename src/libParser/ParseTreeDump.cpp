@@ -39,7 +39,7 @@ String OpExp::dump()
 
 String Op::dump()
 {
-    String items[] = { "+", "-", "*", "/", "<", "=", ">", "<=>", "&", "!" };
+    static String items[] = { "+", "-", "*", "/", "<", "=", ">", "<=>", "&", "!" };
 
     String str = " ";
     str += items[this->type];

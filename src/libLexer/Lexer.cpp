@@ -34,7 +34,8 @@ String LexerStateStrings[] =
 Lexer::Lexer(BufferReader *buffer)
 {
     this->buffer = buffer;
-    this->symtable = new Symtable(4096);
+    //this->symtable = new Symtable(4096);
+    this->symtable = new Symtable(32);
     this->setup();
 
     this->pos.line = 1;
